@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INSAYDER - 1xBet & WinWin Futbol Prognozlari</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #0a0a1a; color: #fff; line-height: 1.6; overflow-x: hidden; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        /* Suzib yuruvchi toplar */
+        .floating-balls {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.4;
+        }
+        .ball {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #00cc66, #006633);
+            box-shadow: 0 0 20px rgba(0, 204, 102, 0.5);
+            animation: float 15s infinite linear;
+        }
+        @keyframes float {
+            0% { transform: translateY(100vh) translateX(0) rotate(0deg); }
+            100% { transform: translateY(-100px) translateX(100px) rotate(360deg); }
+        }
+        
+        header { background: linear-gradient(135deg, #0d2338 0%, #1a3a5f 100%); padding: 1rem 0; box-shadow: 0 2px 15px rgba(0,0,0,0.5); position: sticky; top: 0; z-index: 100; }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.8rem; font-weight: bold; display: flex; align-items: center; color: #00cc66; }
+        .logo span { color: #fff; }
+        nav ul { display: flex; list-style: none; }
+        nav ul li { margin-left: 20px; }
+        nav ul li a { color: white; text-decoration: none; font-weight: 500; transition: color 0.3s; padding: 8px 12px; border-radius: 4px; }
+        nav ul li a:hover, nav ul li a.active { background: #00cc66; color: #0a0a1a; }
+        
+        .banner { 
+            background: linear-gradient(rgba(10, 10, 26, 0.85), rgba(10, 10, 26, 0.9)), 
+                        url('https://images.unsplash.com/photo-1575361204480-aadea25e6e68?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2071&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 60px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        .banner h1 { font-size: 2.3rem; margin-bottom: 20px; color: #00cc66; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+        .banner p { font-size: 1.1rem; max-width: 800px; margin: 0 auto 30px; }
+        .promo-code { background: rgba(0, 204, 102, 0.2); border: 2px dashed #00cc66; display: inline-block; padding: 15px 30px; border-radius: 8px; font-size: 1.5rem; font-weight: bold; margin-bottom: 30px; }
+        .cta-button { display: inline-block; background: #00cc66; color: #0a0a1a; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 1.2rem; transition: all 0.3s; margin: 0 10px; }
+        .cta-button:hover { background: #00b359; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0, 204, 102, 0.4); }
+        .cta-button.secondary { background: transparent; border: 2px solid #00cc66; color: #00cc66; }
+        .cta-button.secondary:hover { background: #00cc66; color: #0a0a1a; }
+        
+        /* Kupon olish bo'limi - yuqoriga ko'chirildi */
+        .coupon-section {
+            background: linear-gradient(135deg, #1a3a5f 0%, #0d2338 100%);
+            padding: 40px 0;
+            margin: 30px 0;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .coupon-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+        
+        .coupon-info h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #00cc66;
+        }
+        
+        .coupon-steps {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+        
+        .coupon-steps li {
+            margin-bottom: 15px;
+            padding-left: 30px;
+            position: relative;
+        }
+        
+        .coupon-steps li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #00cc66;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .wins-section { margin: 50px 0; }
+        .section-title { font-size: 1.8rem; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #00cc66; color: #00cc66; display: flex; align-items: center; }
+        .section-title i { margin-right: 10px; }
+        .wins-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .win-card { background: #1a1a2e; border-radius: 8px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: transform 0.3s; }
+        .win-card:hover { transform: translateY(-5px); }
+        .win-header { background: #00cc66; color: #0a0a1a; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .win-amount { font-size: 1.5rem; font-weight: bold; }
+        .win-body { padding: 20px; }
+        .match-info { margin-bottom: 15px; }
+        .teams { font-size: 1.2rem; margin-bottom: 5px; }
+        .match-date { color: #aaa; font-size: 0.9rem; }
+        .bet-details { display: flex; justify-content: space-between; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #333; }
+        .bet-type { font-weight: bold; }
+        .bet-odds { color: #00cc66; font-weight: bold; }
+        .user-info { display: flex; align-items: center; }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; background: #333; margin-right: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        
+        .main-content { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; margin: 30px 0; }
+        
+        .news-card { background: #1a1a2e; border-radius: 8px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.3); margin-bottom: 20px; }
+        .news-content { padding: 20px; }
+        .news-title { font-size: 1.3rem; margin-bottom: 10px; color: #00cc66; }
+        .news-excerpt { color: #ccc; margin-bottom: 15px; }
+        .news-meta { display: flex; justify-content: space-between; color: #888; font-size: 0.9rem; }
+        
+        .sidebar-widget { background: #1a1a2e; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .widget-title { font-size: 1.2rem; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #333; color: #00cc66; }
+        .registration-form { margin-top: 20px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; color: #ccc; }
+        .form-group input { width: 100%; padding: 12px; background: #0a0a1a; border: 1px solid #333; border-radius: 4px; color: #fff; }
+        .form-group input:focus { outline: none; border-color: #00cc66; }
+        .submit-btn { width: 100%; padding: 12px; background: #00cc66; color: #0a0a1a; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: background 0.3s; }
+        .submit-btn:hover { background: #00b359; }
+        .telegram-widget { text-align: center; padding: 20px; background: linear-gradient(135deg, #1a3a5f 0%, #0d2338 100%); border-radius: 8px; }
+        .telegram-icon { font-size: 3rem; margin-bottom: 15px; color: #0088cc; }
+        
+        .platforms { display: flex; justify-content: center; gap: 20px; margin: 30px 0; }
+        .platform-card { background: #1a1a2e; border-radius: 8px; padding: 20px; text-align: center; flex: 1; max-width: 300px; }
+        .platform-logo { font-size: 2rem; margin-bottom: 15px; }
+        
+        footer { background: #0d0d1a; padding: 40px 0 20px; margin-top: 50px; }
+        .footer-content { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-bottom: 30px; }
+        .footer-column h3 { font-size: 1.2rem; margin-bottom: 20px; color: #00cc66; }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 10px; }
+        .footer-links a { color: #ccc; text-decoration: none; transition: color 0.3s; }
+        .footer-links a:hover { color: #00cc66; }
+        .copyright { text-align: center; padding-top: 20px; border-top: 1px solid #333; color: #888; }
+        
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: #1a1a2e; padding: 30px; border-radius: 8px; max-width: 500px; width: 90%; text-align: center; box-shadow: 0 5px 25px rgba(0,0,0,0.5); }
+        .modal h3 { color: #00cc66; margin-bottom: 15px; font-size: 1.5rem; }
+        .modal p { margin-bottom: 20px; color: #ccc; }
+        .modal-close { background: #00cc66; color: #0a0a1a; border: none; padding: 10px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; transition: background 0.3s; }
+        .modal-close:hover { background: #00b359; }
+        
+        @media (max-width: 768px) {
+            .main-content, .footer-content { grid-template-columns: 1fr; }
+            .header-content { flex-direction: column; text-align: center; }
+            nav ul { margin-top: 15px; flex-wrap: wrap; justify-content: center; }
+            nav ul li { margin: 5px 10px; }
+            .banner h1 { font-size: 1.8rem; }
+            .wins-grid { grid-template-columns: 1fr; }
+            .platforms { flex-direction: column; align-items: center; }
+            .coupon-container { grid-template-columns: 1fr; }
+        }
+        
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        .pulse { animation: pulse 2s infinite; }
+    </style>
+</head>
+<body>
+    <!-- Suzib yuruvchi toplar -->
+    <div class="floating-balls" id="floating-balls"></div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">INSAYDER<span>PRO</span></div>
+                <nav>
+                    <ul>
+                        <li><a href="#" class="active">Bosh Sahifa</a></li>
+                        <li><a href="#">Stavkalar</a></li>
+                        <li><a href="#">G'alabalar</a></li>
+                        <li><a href="#">Prognozlar</a></li>
+                        <li><a href="#">Kuponlar</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="banner">
+        <div class="container">
+            <h1>INSAYDER - Futbol oyinlariga Ishonchli Prognozlariga A'zo Bo'ling!</h1>
+            <p>1xbet va winwin kontoralari uchun xar kuni top oyinlardan kun ekspreslari INSAYDER jamoasi tomonidan berib boriladi. INSAYDER promokodi bilan ro'yhatdan oting va g'alaba qilishni boshlang!</p>
+            
+            <div class="promo-code pulse">
+                INSAYDER - Bepul kuponlar uchun maxsus promokod
+            </div>
+            
+            <div>
+                <a href="https://reffpa.com/L?tag=d_4147173m_1599c_&site=4147173&ad=1599&r=registration" class="cta-button">1xBet'da Ro'yxatdan O'tish</a>
+                <a href="https://refpa168704.pro/L?tag=d_4543807m_64485c_&site=4543807&ad=64485" class="cta-button">WinWin'da Ro'yxatdan O'tish</a>
+                <a href="https://t.me/Ttolazitorbot" class="cta-button secondary">Telegram Botga Azo bo'lish</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Kupon olish bo'limi - yuqoriga ko'chirildi -->
+    <section class="coupon-section">
+        <div class="container">
+            <div class="coupon-container">
+                <div class="coupon-info">
+                    <h2>Bepul Kupon Olish</h2>
+                    <p>INSAYDER jamoasi tomonidan bonuslar va bepul kuponlar oling. Bugungi top o'yinlarga kupon olish uchun ID raqamingizni tasdiqlang!</p>
+                    
+                    <ul class="coupon-steps">
+                        <li>"INSAYDER" promokodi bilan 1xBet yoki WinWin'dan ro'yxatdan o'ting</li>
+                        <li>Ro'yxatdan o'tib ID raqamingizni oling</li>
+                        <li>ID raqamingiz va telefon raqamingizni yuboring</li>
+                        <li>Bepul kuponlarni oling va g'alaba qozoning!</li>
+                    </ul>
+                </div>
+                
+                <div class="sidebar-widget">
+                    <h3 class="widget-title">Kupon Olish Formasi</h3>
+                    <p>ID raqamingiz va telefon raqamingizni yuboring va bepul kupon oling</p>
+                    
+                    <form class="registration-form" id="coupon-form">
+                        <div class="form-group">
+                            <label for="user-id">1xBet yoki WinWin ID Raqamingiz</label>
+                            <input type="text" id="user-id" name="user-id" placeholder="Masalan: 45879213" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Telefon Raqamingiz</label>
+                            <input type="tel" id="phone" name="phone" placeholder="+998 XX XXX-XX-XX" required>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">ID va Telefon Raqamni Yuborish</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="platforms">
+            <div class="platform-card">
+                <div class="platform-logo">🎰</div>
+                <h3>1xBet</h3>
+                <p>Dunyoning eng yirik bukmeker kontorasi. INSAYDER promokodi bilan ro'yxatdan o'ting va bonus oling.</p>
+                <a href="https://reffpa.com/L?tag=d_4147173m_1599c_&site=4147173&ad=1599&r=registration" class="cta-button" style="margin-top: 15px;">Ro'yxatdan O'tish</a>
+            </div>
+            
+            <div class="platform-card">
+                <div class="platform-logo">💰</div>
+                <h3>WinWin</h3>
+                <p>O'zbekistonning eng ishonchli bukmeker kontorasi. INSAYDER promokodi bilan ro'yxatdan o'ting.</p>
+                <a href="https://refpa168704.pro/L?tag=d_4543807m_64485c_&site=4543807&ad=64485" class="cta-button" style="margin-top: 15px;">Ro'yxatdan O'tish</a>
+            </div>
+        </div>
+    </div>
+
+    <section class="wins-section">
+        <div class="container">
+            <h2 class="section-title"><i>🏆</i> So'nggi Futbol O'yinlarida Qozonilgan G'alabalar</h2>
+            
+            <div class="wins-grid">
+                <div class="win-card">
+                    <div class="win-header">
+                        <div class="win-amount">$1.245</div>
+                        <div class="win-badge">G'alaba</div>
+                    </div>
+                    <div class="win-body">
+                        <div class="match-info">
+                            <div class="teams">Bazel vs SHututgard</div>
+                            <div class="match-date">03.10.2025</div>
+                        </div>
+                        <div class="bet-details">
+                            <div class="bet-type">Bazel g'alaba</div>
+                            <div class="bet-odds">3.45</div>
+                        </div>
+                        <div class="user-info">
+                            <div class="user-avatar">A</div>
+                            <div>
+                                <div>Akmal J.</div>
+                                <div class="match-date">ID: 45879213</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="win-card">
+                    <div class="win-header">
+                        <div class="win-amount">$380</div>
+                        <div class="win-badge">G'alaba</div>
+                    </div>
+                    <div class="win-body">
+                        <div class="match-info">
+                            <div class="teams">Nottingem Forest vs Midtyulland</div>
+                            <div class="match-date">03.10.2025</div>
+                        </div>
+                        <div class="bet-details">
+                            <div class="bet-type">Umumiy gol lar > 2.5</div>
+                            <div class="bet-odds">1.80</div>
+                        </div>
+                        <div class="user-info">
+                            <div class="user-avatar">S</div>
+                            <div>
+                                <div>Sanjar T.</div>
+                                <div class="match-date">ID: 63254178</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="win-card">
+                    <div class="win-header">
+                        <div class="win-amount">$220</div>
+                        <div class="win-badge">G'alaba</div>
+                    </div>
+                    <div class="win-body">
+                        <div class="match-info">
+                            <div class="teams">Feynoord vs Aston villa</div>
+                            <div class="match-date">03.10.2025</div>
+                        </div>
+                        <div class="bet-details">
+                            <div class="bet-type">Aton villia Maglub bolmaydi 2X</div>
+                            <div class="bet-odds">1.79</div>
+                        </div>
+                        <div class="user-info">
+                            <div class="user-avatar">N</div>
+                            <div>
+                                <div>Nigora K.</div>
+                                <div class="match-date">ID: 78541236</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="main-content">
+            <main>
+                <div class="news-card">
+                    <div class="news-content">
+                        <h3 class="news-title">Futbol Ishonchli Prognozlari</h3>
+                        <p class="news-excerpt">
+                            Har kuni professional tahlilchilar tomonidan tayyorlangan ishonchli futbol prognozlari. 
+                            Premier League, La Liga, Serie A va boshqa yirik chempionatlardagi eng muhim o'yinlar 
+                            uchun aniq bashoratlar.
+                        </p>
+                        <div class="news-meta">
+                            <span>Prognozlar</span>
+                            <span>Yangilandi: 2 soat oldin</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="news-card">
+                    <div class="news-content">
+                        <h3 class="news-title">INSAYDER Jamoasi</h3>
+                        <p class="news-excerpt">
+                            INSAYDER jamoasi - futbol bo'yicha professional tahlilchilar guruhi. 
+                            Bizning maqsadimiz - sizga eng ishonchli prognozlarni taqdim etish va 
+                            g'alaba qozonishingizga yordam berish. Har kuni yangi kuponlar va 
+                            ekspresslar bilan!
+                        </p>
+                        <div class="news-meta">
+                            <span>Jamoamiz</span>
+                            <span>Yangilandi: Bugun</span>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            
+            <aside>
+                <div class="sidebar-widget telegram-widget">
+                    <div class="telegram-icon">📱</div>
+                    <h3>Telegram Botimizga A'zo Bo'ling</h3>
+                    <p>Kunlik bepul prognozlar va kuponlar olish uchun</p>
+                    <a href="https://t.me/insayderaibt" class="cta-button" style="margin-top: 15px;">Botga O'tish</a>
+                </div>
+                
+                <div class="sidebar-widget">
+                    <h3 class="widget-title">Platformalarda Ro'yxatdan O'tish</h3>
+                    <p>INSAYDER promokodidan foydalaning va bonus oling</p>
+                    <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                        <a href="https://reffpa.com/L?tag=d_4147173m_1599c_&site=4147173&ad=1599&r=registration" class="cta-button" style="text-align: center;">1xBet Ro'yxatdan O'tish</a>
+                        <a href="https://refpa168704.pro/L?tag=d_4543807m_64485c_&site=4543807&ad=64485" class="cta-button" style="text-align: center;">WinWin Ro'yxatdan O'tish</a>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <div class="modal" id="success-modal">
+        <div class="modal-content">
+            <h3>Muvaffaqiyatli Yuborildi!</h3>
+            <p>ID raqamingiz va telefon raqamingiz qabul qilindi. Tez orada bepul kupon olasiz!</p>
+            <button class="modal-close" onclick="closeModal()">Yopish</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>INSAYDER PRO</h3>
+                    <p>Eng yaxshi futbol stavkalari va ishonchli prognozlar. INSAYDER promokodi bilan ro'yxatdan o'ting va g'alaba qozoning!</p>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Tez Havolalar</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Bosh Sahifa</a></li>
+                        <li><a href="#">Stavkalar</a></li>
+                        <li><a href="#">G'alabalar</a></li>
+                        <li><a href="#">Prognozlar</a></li>
+                        <li><a href="#">Kuponlar</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Bog'lanish</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://t.me/insayderaibt">Telegram Bot</a></li>
+                        <li><a href="https://1xbet.com">1xBet Vebsayt</a></li>
+                        <li><a href="https://winwin.uz">WinWin Vebsayt</a></li>
+                        <li><a href="#">Yordam</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2023 INSAYDER PRO. Barcha huquqlar himoyalangan. 18+ 
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Suzib yuruvchi toplarni yaratish
+        function createFloatingBalls() {
+            const container = document.getElementById('floating-balls');
+            const ballCount = 15;
+            
+            for (let i = 0; i < ballCount; i++) {
+                const ball = document.createElement('div');
+                ball.classList.add('ball');
+                
+                // Tasodifiy o'lcham va joylashuv
+                const size = Math.random() * 40 + 20;
+                const left = Math.random() * 100;
+                const animationDuration = Math.random() * 20 + 10;
+                const animationDelay = Math.random() * 5;
+                
+                ball.style.width = `${size}px`;
+                ball.style.height = `${size}px`;
+                ball.style.left = `${left}%`;
+                ball.style.animationDuration = `${animationDuration}s`;
+                ball.style.animationDelay = `${animationDelay}s`;
+                
+                container.appendChild(ball);
+            }
+        }
+        
+        // Formani yuborish funksiyasi
+        document.getElementById('coupon-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const userId = document.getElementById('user-id').value;
+            const phone = document.getElementById('phone').value;
+            
+            if (userId && phone) {
+                // Telegram botga ma'lumot yuborish
+                sendToTelegram(userId, phone);
+                
+                // Modal oynasini ko'rsatish
+                document.getElementById('success-modal').style.display = 'flex';
+                
+                // Formani tozalash
+                document.getElementById('coupon-form').reset();
+            } else {
+                alert('Iltimos, barcha maydonlarni to\'ldiring!');
+            }
+        });
+        
+        // Telegram botga ma'lumot yuborish funksiyasi
+        function sendToTelegram(userId, phone) {
+            const message = `Men INSAYDER jamoasiga azo boldim. Mening ID: ${userId}, telefon raqamim: ${phone}. Men kupon olmoqchiman.`;
+            
+            // Telegram botga yuborish
+            window.open(`https://t.me/baxtga_olga?text=${encodeURIComponent(message)}`, '_blank');
+        }
+        
+        // Modal oynasini yopish funksiyasi
+        function closeModal() {
+            document.getElementById('success-modal').style.display = 'none';
+        }
+        
+        // Sahifa yuklanganda animatsiyalar
+        document.addEventListener('DOMContentLoaded', function() {
+            createFloatingBalls();
+            
+            const winCards = document.querySelectorAll('.win-card');
+            winCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.5s, transform 0.5s';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+</html>
