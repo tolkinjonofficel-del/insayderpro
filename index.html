@@ -46,9 +46,9 @@
                         url('https://images.unsplash.com/photo-1575361204480-aadea25e6e68?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2071&q=80');
             background-size: cover;
             background-position: center;
-            padding: 60px 0;
+            padding: 40px 0 20px;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 0;
             position: relative;
         }
         .banner h1 { font-size: 2.3rem; margin-bottom: 20px; color: #00cc66; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
@@ -59,12 +59,12 @@
         .cta-button.secondary { background: transparent; border: 2px solid #00cc66; color: #00cc66; }
         .cta-button.secondary:hover { background: #00cc66; color: #0a0a1a; }
         
-        /* Kupon olish bo'limi - yuqoriga ko'chirildi */
+        /* Kupon olish bo'limi - TEPADA */
         .coupon-section {
             background: linear-gradient(135deg, #1a3a5f 0%, #0d2338 100%);
             padding: 40px 0;
-            margin: 30px 0;
-            border-radius: 10px;
+            margin: 0;
+            border-radius: 0;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
         
@@ -212,7 +212,7 @@
         </div>
     </section>
 
-    <!-- Kupon olish bo'limi - yuqoriga ko'chirildi -->
+    <!-- Kupon olish bo'limi - TEPADA -->
     <section class="coupon-section">
         <div class="container">
             <div class="coupon-container">
@@ -496,7 +496,7 @@
         
         // Telegram botga ma'lumot yuborish funksiyasi
         function sendToTelegram(userId, phone) {
-            const message = `Men INSAYDER jamoasiga azo boldim. Mening ID: ${userId}, telefon raqamim: ${phone}. Men kupon olmoqchiman.`;
+            const message = `Salom men insayder jamoasiga qoshildim. Mening ma'lumotlarim: ID raqam - ${userId}, telefon raqam - ${phone}. Men kupon olmoqchiman.`;
             
             // Telegram botga yuborish
             window.open(`https://t.me/baxtga_olga?text=${encodeURIComponent(message)}`, '_blank');
