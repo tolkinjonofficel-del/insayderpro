@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INSAYDER - 1xBet & WinWin Futbol Prognozlari</title>
+    <title>INSAYDER - 1xBet, WinWin & DBbet Futbol Prognozlari</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #0a0a1a; color: #fff; line-height: 1.6; overflow-x: hidden; }
@@ -32,6 +32,21 @@
             100% { transform: translateY(-100px) translateX(100px) rotate(360deg); }
         }
         
+        /* Yangi animatsiyalar */
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px rgba(0, 204, 102, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(0, 204, 102, 0.8); }
+            100% { box-shadow: 0 0 5px rgba(0, 204, 102, 0.5); }
+        }
+        
+        .fade-in-up { animation: fadeInUp 0.8s ease-out; }
+        .glow { animation: glow 2s infinite; }
+        
         header { background: linear-gradient(135deg, #0d2338 0%, #1a3a5f 100%); padding: 1rem 0; box-shadow: 0 2px 15px rgba(0,0,0,0.5); position: sticky; top: 0; z-index: 100; }
         .header-content { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 1.8rem; font-weight: bold; display: flex; align-items: center; color: #00cc66; }
@@ -42,29 +57,66 @@
         nav ul li a:hover, nav ul li a.active { background: #00cc66; color: #0a0a1a; }
         
         .banner { 
-            background: linear-gradient(rgba(10, 10, 26, 0.85), rgba(10, 10, 26, 0.9)), 
+            background: linear-gradient(rgba(10, 10, 26, 0.5), rgba(10, 10, 26, 0.7)), 
                         url('https://images.unsplash.com/photo-1575361204480-aadea25e6e68?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2071&q=80');
             background-size: cover;
             background-position: center;
-            padding: 40px 0 20px;
+            padding: 60px 0;
             text-align: center;
-            margin-bottom: 0;
+            margin-bottom: 30px;
             position: relative;
         }
         .banner h1 { font-size: 2.3rem; margin-bottom: 20px; color: #00cc66; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
         .banner p { font-size: 1.1rem; max-width: 800px; margin: 0 auto 30px; }
         .promo-code { background: rgba(0, 204, 102, 0.2); border: 2px dashed #00cc66; display: inline-block; padding: 15px 30px; border-radius: 8px; font-size: 1.5rem; font-weight: bold; margin-bottom: 30px; }
-        .cta-button { display: inline-block; background: #00cc66; color: #0a0a1a; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 1.2rem; transition: all 0.3s; margin: 0 10px; }
-        .cta-button:hover { background: #00b359; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0, 204, 102, 0.4); }
-        .cta-button.secondary { background: transparent; border: 2px solid #00cc66; color: #00cc66; }
-        .cta-button.secondary:hover { background: #00cc66; color: #0a0a1a; }
         
-        /* Kupon olish bo'limi - TEPADA */
+        /* Yangilangan tugmalar dizayni */
+        .cta-button { 
+            display: inline-block; 
+            background: linear-gradient(135deg, #00cc66 0%, #00a352 100%); 
+            color: #0a0a1a; 
+            padding: 15px 30px; 
+            border-radius: 8px; 
+            text-decoration: none; 
+            font-weight: bold; 
+            font-size: 1.2rem; 
+            transition: all 0.3s; 
+            margin: 10px; 
+            box-shadow: 0 4px 15px rgba(0, 204, 102, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+        .cta-button:hover { 
+            background: linear-gradient(135deg, #00b359 0%, #008f45 100%); 
+            transform: translateY(-3px); 
+            box-shadow: 0 8px 20px rgba(0, 204, 102, 0.5); 
+        }
+        .cta-button.secondary { 
+            background: transparent; 
+            border: 2px solid #00cc66; 
+            color: #00cc66; 
+            box-shadow: 0 4px 15px rgba(0, 204, 102, 0.2);
+        }
+        .cta-button.secondary:hover { 
+            background: #00cc66; 
+            color: #0a0a1a; 
+        }
+        
+        .cta-button.tertiary { 
+            background: linear-gradient(135deg, #ff9900 0%, #cc7a00 100%); 
+            box-shadow: 0 4px 15px rgba(255, 153, 0, 0.3);
+        }
+        .cta-button.tertiary:hover { 
+            background: linear-gradient(135deg, #e68a00 0%, #b36b00 100%); 
+            box-shadow: 0 8px 20px rgba(255, 153, 0, 0.5); 
+        }
+        
+        /* Kupon olish bo'limi - yuqoriga ko'chirildi */
         .coupon-section {
             background: linear-gradient(135deg, #1a3a5f 0%, #0d2338 100%);
             padding: 40px 0;
-            margin: 0;
-            border-radius: 0;
+            margin: 30px 0;
+            border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
         
@@ -99,6 +151,74 @@
             color: #00cc66;
             font-weight: bold;
             font-size: 1.2rem;
+        }
+        
+        /* Bonuslar bo'limi */
+        .bonuses-section {
+            margin: 50px 0;
+        }
+        
+        .bonuses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .bonus-card {
+            background: #1a1a2e;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: transform 0.3s;
+            border: 1px solid #333;
+        }
+        
+        .bonus-card:hover {
+            transform: translateY(-5px);
+            border-color: #00cc66;
+        }
+        
+        .bonus-header {
+            background: linear-gradient(135deg, #1a3a5f 0%, #0d2338 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .bonus-platform {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #00cc66;
+        }
+        
+        .bonus-amount {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .bonus-body {
+            padding: 20px;
+        }
+        
+        .bonus-features {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+        
+        .bonus-features li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .bonus-features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #00cc66;
+            font-weight: bold;
         }
         
         .wins-section { margin: 50px 0; }
@@ -165,9 +285,11 @@
             nav ul { margin-top: 15px; flex-wrap: wrap; justify-content: center; }
             nav ul li { margin: 5px 10px; }
             .banner h1 { font-size: 1.8rem; }
-            .wins-grid { grid-template-columns: 1fr; }
+            .wins-grid, .bonuses-grid { grid-template-columns: 1fr; }
             .platforms { flex-direction: column; align-items: center; }
             .coupon-container { grid-template-columns: 1fr; }
+            .banner-buttons { display: flex; flex-direction: column; align-items: center; }
+            .banner-buttons .cta-button { margin: 5px 0; width: 80%; }
         }
         
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
@@ -195,24 +317,7 @@
         </div>
     </header>
 
-    <section class="banner">
-        <div class="container">
-            <h1>INSAYDER - Futbol oyinlariga Ishonchli Prognozlariga A'zo Bo'ling!</h1>
-            <p>1xbet va winwin kontoralari uchun xar kuni top oyinlardan kun ekspreslari INSAYDER jamoasi tomonidan berib boriladi. INSAYDER promokodi bilan ro'yhatdan oting va g'alaba qilishni boshlang!</p>
-            
-            <div class="promo-code pulse">
-                INSAYDER - Bepul kuponlar uchun maxsus promokod
-            </div>
-            
-            <div>
-                <a href="https://reffpa.com/L?tag=d_4147173m_1599c_&site=4147173&ad=1599&r=registration" class="cta-button">1xBet'da Ro'yxatdan O'tish</a>
-                <a href="https://refpa168704.pro/L?tag=d_4543807m_64485c_&site=4543807&ad=64485" class="cta-button">WinWin'da Ro'yxatdan O'tish</a>
-                <a href="https://t.me/Ttolazitorbot" class="cta-button secondary">Telegram Botga Azo bo'lish</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Kupon olish bo'limi - TEPADA -->
+    <!-- Kupon olish bo'limi - yuqoriga ko'chirildi -->
     <section class="coupon-section">
         <div class="container">
             <div class="coupon-container">
@@ -221,7 +326,7 @@
                     <p>INSAYDER jamoasi tomonidan bonuslar va bepul kuponlar oling. Bugungi top o'yinlarga kupon olish uchun ID raqamingizni tasdiqlang!</p>
                     
                     <ul class="coupon-steps">
-                        <li>"INSAYDER" promokodi bilan 1xBet yoki WinWin'dan ro'yxatdan o'ting</li>
+                        <li>"INSAYDER" promokodi bilan 1xBet WinWin yoki DBbetdan ro'yxatdan o'ting</li>
                         <li>Ro'yxatdan o'tib ID raqamingizni oling</li>
                         <li>ID raqamingiz va telefon raqamingizni yuboring</li>
                         <li>Bepul kuponlarni oling va g'alaba qozoning!</li>
@@ -234,7 +339,7 @@
                     
                     <form class="registration-form" id="coupon-form">
                         <div class="form-group">
-                            <label for="user-id">1xBet yoki WinWin ID Raqamingiz</label>
+                            <label for="user-id">INSAYDER promokodi bilan royhatga olingan ID Raqamingiz</label>
                             <input type="text" id="user-id" name="user-id" placeholder="Masalan: 45879213" required>
                         </div>
                         
@@ -243,8 +348,86 @@
                             <input type="tel" id="phone" name="phone" placeholder="+998 XX XXX-XX-XX" required>
                         </div>
                         
-                        <button type="submit" class="submit-btn">ID va Telefon Raqamni Yuborish</button>
+                        <button type="submit" class="submit-btn">Kupon olish</button>
                     </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="banner">
+        <div class="container">
+            <h1 class="fade-in-up">INSAYDER - Futbol oyinlariga Ishonchli Prognozlariga A'zo Bo'ling!</h1>
+            <p class="fade-in-up">1xbet, winwin va DBbet kontoralari uchun xar kuni top oyinlardan kun ekspreslari INSAYDER jamoasi tomonidan berib boriladi. INSAYDER promokodi bilan ro'yhatdan oting va g'alaba qilishni boshlang!</p>
+            
+            <div class="promo-code pulse">
+                INSAYDER - Bepul kuponlar uchun maxsus promokod
+            </div>
+            
+            <div class="banner-buttons">
+                <a href="https://reffpa.com/L?tag=d_4147173m_1599c_&site=4147173&ad=1599&r=registration" class="cta-button">1xBet'da Ro'yxatdan O'tish</a>
+                <a href="https://refpa168704.pro/L?tag=d_4543807m_64485c_&site=4543807&ad=64485" class="cta-button secondary">WinWin'da Ro'yxatdan O'tish</a>
+                <a href="https://refpa96317.com/L?tag=d_4585917m_11213c_&site=4585917&ad=11213" class="cta-button tertiary">DBbet'da Ro'yxatdan O'tish</a>
+                <a href="https://t.me/insayderai" class="cta-button secondary">Telegram kanalga Azo bo'lish</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bonuslar bo'limi -->
+    <section class="bonuses-section">
+        <div class="container">
+            <h2 class="section-title"><i>🎁</i> Platformalardagi Bonuslar</h2>
+            
+            <div class="bonuses-grid">
+                <div class="bonus-card">
+                    <div class="bonus-header">
+                        <div class="bonus-platform">1xBet</div>
+                        <div class="bonus-amount">100% gacha bonus</div>
+                        <div>Birinchi depozit uchun</div>
+                    </div>
+                    <div class="bonus-body">
+                        <ul class="bonus-features">
+                            <li>Birinchi depozit uchun 100% bonus</li>
+                            <li>INSAYDER promokodi bilan qo'shimcha bonus</li>
+                            <li>Har kuni yangi kuponlar va prognozlar</li>
+                            <li>Yuqori koeffitsientlar</li>
+                        </ul>
+                        <a href="https://reffpa.com/L?tag=d_4147173m_1599c_&site=4147173&ad=1599&r=registration" class="cta-button" style="width: 100%; text-align: center;">Bonusni Olish</a>
+                    </div>
+                </div>
+                
+                <div class="bonus-card">
+                    <div class="bonus-header">
+                        <div class="bonus-platform">WinWin</div>
+                        <div class="bonus-amount">2 000,000 UZS gacha</div>
+                        <div>Birinchi depozit uchun</div>
+                    </div>
+                    <div class="bonus-body">
+                        <ul class="bonus-features">
+                            <li>Birinchi depozit uchun 200,000 UZS gacha bonus</li>
+                            <li>INSAYDER promokodi bilan qo'shimcha imkoniyatlar</li>
+                            <li>O'zbekiston uchun maxsus shartlar</li>
+                            <li>Tez va ishonchli to'lovlar</li>
+                        </ul>
+                        <a href="https://refpa168704.pro/L?tag=d_4543807m_64485c_&site=4543807&ad=64485" class="cta-button secondary" style="width: 100%; text-align: center;">Bonusni Olish</a>
+                    </div>
+                </div>
+                
+                <div class="bonus-card">
+                    <div class="bonus-header">
+                        <div class="bonus-platform">DBbet</div>
+                        <div class="bonus-amount">150% gacha bonus</div>
+                        <div>Birinchi depozit uchun</div>
+                    </div>
+                    <div class="bonus-body">
+                        <ul class="bonus-features">
+                            <li>Birinchi depozit uchun 150% gacha bonus</li>
+                            <li>INSAYDER promokodi bilan maxsus taklif</li>
+                            <li>Ko'p turlidagi sport o'yinlari</li>
+                            <li>24/7 mijozlar qo'llab-quvvatlash</li>
+                        </ul>
+                        <a href="https://refpa96317.com/L?tag=d_4585917m_11213c_&site=4585917&ad=11213" class="cta-button tertiary" style="width: 100%; text-align: center;">Bonusni Olish</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -263,7 +446,14 @@
                 <div class="platform-logo">💰</div>
                 <h3>WinWin</h3>
                 <p>O'zbekistonning eng ishonchli bukmeker kontorasi. INSAYDER promokodi bilan ro'yxatdan o'ting.</p>
-                <a href="https://refpa168704.pro/L?tag=d_4543807m_64485c_&site=4543807&ad=64485" class="cta-button" style="margin-top: 15px;">Ro'yxatdan O'tish</a>
+                <a href="https://refpa168704.pro/L?tag=d_4543807m_64485c_&site=4543807&ad=64485" class="cta-button secondary" style="margin-top: 15px;">Ro'yxatdan O'tish</a>
+            </div>
+            
+            <div class="platform-card">
+                <div class="platform-logo">🏆</div>
+                <h3>DBbet</h3>
+                <p>Yangi platforma, katta bonuslar. INSAYDER promokodi bilan ro'yxatdan o'ting va imkoniyatlardan foydalaning.</p>
+                <a href="https://refpa96317.com/L?tag=d_4585917m_11213c_&site=4585917&ad=11213" class="cta-button tertiary" style="margin-top: 15px;">Ro'yxatdan O'tish</a>
             </div>
         </div>
     </div>
@@ -388,7 +578,7 @@
                     <div class="telegram-icon">📱</div>
                     <h3>Telegram Botimizga A'zo Bo'ling</h3>
                     <p>Kunlik bepul prognozlar va kuponlar olish uchun</p>
-                    <a href="https://t.me/insayderaibt" class="cta-button" style="margin-top: 15px;">Botga O'tish</a>
+                    <a href="https://t.me/Ttolazitorbot" class="cta-button" style="margin-top: 15px;">Botga O'tish</a>
                 </div>
                 
                 <div class="sidebar-widget">
@@ -396,7 +586,8 @@
                     <p>INSAYDER promokodidan foydalaning va bonus oling</p>
                     <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
                         <a href="https://reffpa.com/L?tag=d_4147173m_1599c_&site=4147173&ad=1599&r=registration" class="cta-button" style="text-align: center;">1xBet Ro'yxatdan O'tish</a>
-                        <a href="https://refpa168704.pro/L?tag=d_4543807m_64485c_&site=4543807&ad=64485" class="cta-button" style="text-align: center;">WinWin Ro'yxatdan O'tish</a>
+                        <a href="https://refpa168704.pro/L?tag=d_4543807m_64485c_&site=4543807&ad=64485" class="cta-button secondary" style="text-align: center;">WinWin Ro'yxatdan O'tish</a>
+                        <a href="https://refpa96317.com/L?tag=d_4585917m_11213c_&site=4585917&ad=11213" class="cta-button tertiary" style="text-align: center;">DBbet Ro'yxatdan O'tish</a>
                     </div>
                 </div>
             </aside>
@@ -436,6 +627,7 @@
                         <li><a href="https://t.me/insayderaibt">Telegram Bot</a></li>
                         <li><a href="https://1xbet.com">1xBet Vebsayt</a></li>
                         <li><a href="https://winwin.uz">WinWin Vebsayt</a></li>
+                        <li><a href="https://dbbet.com">DBbet Vebsayt</a></li>
                         <li><a href="#">Yordam</a></li>
                     </ul>
                 </div>
@@ -496,7 +688,7 @@
         
         // Telegram botga ma'lumot yuborish funksiyasi
         function sendToTelegram(userId, phone) {
-            const message = `Salom men insayder jamoasiga qoshildim. Mening ma'lumotlarim: ID raqam - ${userId}, telefon raqam - ${phone}. Men kupon olmoqchiman.`;
+            const message = `Men INSAYDER jamoasiga azo boldim. Mening ID: ${userId}, telefon raqamim: ${phone}. Men kupon olmoqchiman.`;
             
             // Telegram botga yuborish
             window.open(`https://t.me/baxtga_olga?text=${encodeURIComponent(message)}`, '_blank');
@@ -521,6 +713,19 @@
                     card.style.opacity = '1';
                     card.style.transform = 'translateY(0)';
                 }, index * 200);
+            });
+            
+            // Bonus kartalari uchun animatsiya
+            const bonusCards = document.querySelectorAll('.bonus-card');
+            bonusCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.5s, transform 0.5s';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 200 + 300);
             });
         });
     </script>
