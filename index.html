@@ -3,730 +3,1543 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INSAYDERpro - 1xBet, WinWin, DBbet, 888starz, Megapari, GoldPari, kontoralari uchun Futbol Prognozlari va Bepul kuponlar</title>
+    <title>AIFUT - Futbol Prognozlari</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #0a0a1a; color: #fff; line-height: 1.6; overflow-x: hidden; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        /* Asosiy CSS */
+        :root {
+            --primary-color: #1e3a8a;
+            --secondary-color: #3b82f6;
+            --accent-color: #f59e0b;
+            --light-color: #f8fafc;
+            --dark-color: #1e293b;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --card-bg: #ffffff;
+            --shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --ai-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
         
-        /* Suzib yuruvchi toplar */
-        .floating-balls {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f1f5f9;
+            color: var(--dark-color);
+            line-height: 1.6;
+            font-size: 14px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header */
+        header {
+            background: var(--ai-gradient);
+            color: white;
+            padding: 0.8rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 8px;
+            font-size: 1.8rem;
+        }
+        
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .logo-subtitle {
+            font-size: 0.7rem;
+            opacity: 0.9;
+            margin-top: -3px;
+        }
+        
+        .date-display {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-weight: 500;
+            font-size: 0.8rem;
+        }
+        
+        /* Navigation */
+        nav {
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 56px;
+            z-index: 99;
+            overflow-x: auto;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            min-width: max-content;
+        }
+        
+        .nav-links li {
+            padding: 0.8rem 1rem;
+            white-space: nowrap;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark-color);
+            font-weight: 500;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+        
+        .nav-links a i {
+            margin-right: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--primary-color);
+        }
+        
+        /* Filter Section */
+        .filters {
+            background-color: white;
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            overflow-x: auto;
+        }
+        
+        .filter-btn {
+            padding: 6px 12px;
+            border: none;
+            background-color: #e2e8f0;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+        
+        .filter-btn.active, .filter-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        /* Main Content */
+        main {
+            padding: 1.5rem 0;
+        }
+        
+        .page-title {
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            font-size: 1.3rem;
+        }
+        
+        .page-title i {
+            margin-right: 8px;
+        }
+        
+        /* Kichik kartochkalar - 2 ta bir qatorda */
+        .predictions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .prediction-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .prediction-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .match-header {
+            background: var(--ai-gradient);
+            color: white;
+            padding: 0.6rem 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .league {
+            font-weight: 500;
+            font-size: 0.75rem;
+        }
+        
+        .match-time {
+            font-size: 0.75rem;
+            opacity: 0.9;
+        }
+        
+        .teams {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0.6rem;
+        }
+        
+        .team {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 40%;
+        }
+        
+        .team-logo {
+            width: 35px;
+            height: 35px;
+            background-color: #f1f5f9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 0.7rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .flag {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            border-radius: 50%;
+        }
+        
+        .germany-flag {
+            background: linear-gradient(to bottom, #000000 33%, #dd0000 33%, #dd0000 66%, #ffce00 66%);
+        }
+        
+        .france-flag {
+            background: linear-gradient(to right, #0055a4 33%, #ffffff 33%, #ffffff 66%, #ef4135 66%);
+        }
+        
+        .finland-flag {
+            background: linear-gradient(to bottom, #ffffff 33%, #003580 33%, #003580 66%, #ffffff 66%);
+        }
+        
+        .denmark-flag {
+            background: #c60c30;
+            position: relative;
+        }
+        
+        .denmark-flag::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 20%;
+            background: white;
+            top: 40%;
+        }
+        
+        .denmark-flag::after {
+            content: "";
+            position: absolute;
+            width: 20%;
+            height: 100%;
+            background: white;
+            left: 30%;
+        }
+        
+        .poland-flag {
+            background: linear-gradient(to bottom, #ffffff 50%, #dc143c 50%);
+        }
+        
+        .netherlands-flag {
+            background: linear-gradient(to bottom, #ae1c28 33%, #ffffff 33%, #ffffff 66%, #21468b 66%);
+        }
+        
+        .hungary-flag {
+            background: linear-gradient(to bottom, #cd2a3e 33%, #ffffff 33%, #ffffff 66%, #477050 66%);
+        }
+        
+        .luxembourg-flag {
+            background: linear-gradient(to bottom, #ed2939 33%, #ffffff 33%, #ffffff 66%, #00a1de 66%);
+        }
+        
+        .team-name {
+            font-weight: 600;
+            text-align: center;
+            font-size: 0.75rem;
+            line-height: 1.2;
+        }
+        
+        .vs {
+            font-weight: bold;
+            color: var(--accent-color);
+            font-size: 0.8rem;
+        }
+        
+        .prediction-preview {
+            background-color: #f8fafc;
+            padding: 0.6rem 0.8rem;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .prediction-badge {
+            background: var(--ai-gradient);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+        
+        .view-details {
+            color: var(--primary-color);
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        /* Ovoz berish bo'limi */
+        .voting-section {
+            padding: 0.8rem;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .voting-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+            color: var(--primary-color);
+            text-align: center;
+        }
+        
+        .voting-options {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.6rem;
+            gap: 4px;
+        }
+        
+        .vote-btn {
+            flex: 1;
+            margin: 0 1px;
+            padding: 8px 4px;
+            border: none;
+            border-radius: 5px;
+            background-color: #e2e8f0;
+            color: var(--dark-color);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.7rem;
+            min-height: 45px;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .vote-btn:hover {
+            transform: translateY(-1px);
+        }
+        
+        .vote-btn.home {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+        }
+        
+        .vote-btn.home:hover, .vote-btn.home.active {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .vote-btn.draw {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--warning-color);
+        }
+        
+        .vote-btn.draw:hover, .vote-btn.draw.active {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .vote-btn.away {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+        }
+        
+        .vote-btn.away:hover, .vote-btn.away.active {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .vote-text {
+            font-weight: bold;
+            margin-bottom: 2px;
+            font-size: 0.7rem;
+            line-height: 1.1;
+        }
+        
+        .vote-label {
+            font-size: 0.6rem;
+            opacity: 0.8;
+        }
+        
+        .voting-results {
+            display: flex;
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+        
+        .vote-bar {
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+        
+        .vote-bar.home {
+            background-color: var(--success-color);
+        }
+        
+        .vote-bar.draw {
+            background-color: var(--warning-color);
+        }
+        
+        .vote-bar.away {
+            background-color: var(--danger-color);
+        }
+        
+        .vote-percentages {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.65rem;
+            color: #64748b;
+        }
+        
+        .vote-percentage {
+            text-align: center;
+            flex: 1;
+        }
+        
+        /* Modal (O'yin tahlili) */
+        .modal {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
-            z-index: -1;
-            opacity: 0.4;
-        }
-        .ball {
-            position: absolute;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #00cc66, #006633);
-            box-shadow: 0 0 20px rgba(0, 204, 102, 0.5);
-            animation: float 15s infinite linear;
-        }
-        @keyframes float {
-            0% { transform: translateY(100vh) translateX(0) rotate(0deg); }
-            100% { transform: translateY(-100px) translateX(100px) rotate(360deg); }
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 10px;
         }
         
-        /* Yangi animatsiyalar */
-        @keyframes fadeInUp {
-            0% { opacity: 0; transform: translateY(30px); }
-            100% { opacity: 1; transform: translateY(0); }
+        .modal-content {
+            background-color: white;
+            margin: 1rem auto;
+            border-radius: 8px;
+            width: 95%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            animation: modalFade 0.3s;
         }
         
-        @keyframes glow {
-            0% { box-shadow: 0 0 5px rgba(0, 204, 102, 0.5); }
-            50% { box-shadow: 0 0 20px rgba(0, 204, 102, 0.8); }
-            100% { box-shadow: 0 0 5px rgba(0, 204, 102, 0.5); }
+        @keyframes modalFade {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
-        .fade-in-up { animation: fadeInUp 0.8s ease-out; }
-        .glow { animation: glow 2s infinite; }
-        
-        header { background: linear-gradient(135deg, #0d2338 0%, #1a3a5f 100%); padding: 1rem 0; box-shadow: 0 2px 15px rgba(0,0,0,0.5); position: sticky; top: 0; z-index: 100; }
-        .header-content { display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 1.8rem; font-weight: bold; display: flex; align-items: center; color: #00cc66; }
-        .logo span { color: #fff; }
-        nav ul { display: flex; list-style: none; }
-        nav ul li { margin-left: 20px; }
-        nav ul li a { color: white; text-decoration: none; font-weight: 500; transition: color 0.3s; padding: 8px 12px; border-radius: 4px; }
-        nav ul li a:hover, nav ul li a.active { background: #00cc66; color: #0a0a1a; }
-        
-        .banner { 
-            background: linear-gradient(rgba(10, 10, 26, 0.5), rgba(10, 10, 26, 0.7)), 
-                        url('https://images.unsplash.com/photo-1575361204480-aadea25e6e68?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2071&q=80');
-            background-size: cover;
-            background-position: center;
-            padding: 60px 0;
-            text-align: center;
-            margin-bottom: 30px;
-            position: relative;
-        }
-        .banner h1 { font-size: 2.3rem; margin-bottom: 20px; color: #00cc66; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
-        .banner p { font-size: 1.1rem; max-width: 800px; margin: 0 auto 30px; }
-        .promo-code { background: rgba(0, 204, 102, 0.2); border: 2px dashed #00cc66; display: inline-block; padding: 15px 30px; border-radius: 8px; font-size: 1.5rem; font-weight: bold; margin-bottom: 30px; }
-        
-        /* Yangilangan tugmalar dizayni */
-        .cta-button { 
-            display: inline-block; 
-            background: linear-gradient(135deg, #00cc66 0%, #00a352 100%); 
-            color: #0a0a1a; 
-            padding: 15px 30px; 
-            border-radius: 8px; 
-            text-decoration: none; 
-            font-weight: bold; 
-            font-size: 1.2rem; 
-            transition: all 0.3s; 
-            margin: 10px; 
-            box-shadow: 0 4px 15px rgba(0, 204, 102, 0.3);
-            border: none;
-            cursor: pointer;
-        }
-        .cta-button:hover { 
-            background: linear-gradient(135deg, #00b359 0%, #008f45 100%); 
-            transform: translateY(-3px); 
-            box-shadow: 0 8px 20px rgba(0, 204, 102, 0.5); 
-        }
-        .cta-button.secondary { 
-            background: transparent; 
-            border: 2px solid #00cc66; 
-            color: #00cc66; 
-            box-shadow: 0 4px 15px rgba(0, 204, 102, 0.2);
-        }
-        .cta-button.secondary:hover { 
-            background: #00cc66; 
-            color: #0a0a1a; 
-        }
-        
-        .cta-button.tertiary { 
-            background: linear-gradient(135deg, #ff9900 0%, #cc7a00 100%); 
-            box-shadow: 0 4px 15px rgba(255, 153, 0, 0.3);
-        }
-        .cta-button.tertiary:hover { 
-            background: linear-gradient(135deg, #e68a00 0%, #b36b00 100%); 
-            box-shadow: 0 8px 20px rgba(255, 153, 0, 0.5); 
-        }
-        
-        /* Kupon olish bo'limi - yuqoriga ko'chirildi */
-        .coupon-section {
-            background: linear-gradient(135deg, #1a3a5f 0%, #0d2338 100%);
-            padding: 40px 0;
-            margin: 30px 0;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-        
-        .coupon-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
+        .modal-header {
+            background: var(--ai-gradient);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
         }
         
-        .coupon-info h2 {
-            font-size: 2rem;
-            margin-bottom: 20px;
-            color: #00cc66;
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
         }
         
-        .coupon-steps {
-            list-style: none;
-            margin-bottom: 20px;
+        .close-modal {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.3rem;
+            cursor: pointer;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.3s;
         }
         
-        .coupon-steps li {
-            margin-bottom: 15px;
-            padding-left: 30px;
+        .close-modal:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .modal-body {
+            padding: 1rem;
+        }
+        
+        .match-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .modal-teams {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 70%;
+        }
+        
+        .modal-team {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 40%;
+        }
+        
+        .modal-team-logo {
+            width: 50px;
+            height: 50px;
+            background-color: #f1f5f9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .modal-flag {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            border-radius: 50%;
+        }
+        
+        .modal-germany-flag {
+            background: linear-gradient(to bottom, #000000 33%, #dd0000 33%, #dd0000 66%, #ffce00 66%);
+        }
+        
+        .modal-france-flag {
+            background: linear-gradient(to right, #0055a4 33%, #ffffff 33%, #ffffff 66%, #ef4135 66%);
+        }
+        
+        .modal-finland-flag {
+            background: linear-gradient(to bottom, #ffffff 33%, #003580 33%, #003580 66%, #ffffff 66%);
+        }
+        
+        .modal-denmark-flag {
+            background: #c60c30;
             position: relative;
         }
         
-        .coupon-steps li:before {
-            content: "✓";
+        .modal-denmark-flag::before {
+            content: "";
             position: absolute;
-            left: 0;
-            color: #00cc66;
+            width: 100%;
+            height: 20%;
+            background: white;
+            top: 40%;
+        }
+        
+        .modal-denmark-flag::after {
+            content: "";
+            position: absolute;
+            width: 20%;
+            height: 100%;
+            background: white;
+            left: 30%;
+        }
+        
+        .modal-poland-flag {
+            background: linear-gradient(to bottom, #ffffff 50%, #dc143c 50%);
+        }
+        
+        .modal-netherlands-flag {
+            background: linear-gradient(to bottom, #ae1c28 33%, #ffffff 33%, #ffffff 66%, #21468b 66%);
+        }
+        
+        .modal-hungary-flag {
+            background: linear-gradient(to bottom, #cd2a3e 33%, #ffffff 33%, #ffffff 66%, #477050 66%);
+        }
+        
+        .modal-luxembourg-flag {
+            background: linear-gradient(to bottom, #ed2939 33%, #ffffff 33%, #ffffff 66%, #00a1de 66%);
+        }
+        
+        .modal-team-name {
+            font-weight: 600;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        .modal-vs {
             font-weight: bold;
+            color: var(--accent-color);
             font-size: 1.2rem;
         }
         
-        /* Bonuslar bo'limi */
-        .bonuses-section {
-            margin: 50px 0;
-        }
-        
-        .bonuses-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-        
-        .bonus-card {
-            background: #1a1a2e;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            transition: transform 0.3s;
-            border: 1px solid #333;
-        }
-        
-        .bonus-card:hover {
-            transform: translateY(-5px);
-            border-color: #00cc66;
-        }
-        
-        .bonus-header {
-            background: linear-gradient(135deg, #1a3a5f 0%, #0d2338 100%);
-            color: white;
-            padding: 20px;
+        .match-details {
+            width: 25%;
             text-align: center;
         }
         
-        .bonus-platform {
+        .match-league {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            font-size: 0.85rem;
+        }
+        
+        .match-date {
+            color: #64748b;
+            font-size: 0.8rem;
+        }
+        
+        .analysis-section {
+            margin-bottom: 1rem;
+        }
+        
+        .section-title {
+            font-size: 1rem;
+            color: var(--primary-color);
+            margin-bottom: 0.6rem;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .analysis-text {
+            line-height: 1.6;
+            margin-bottom: 0.8rem;
+            font-size: 0.85rem;
+        }
+        
+        .predicted-score {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 1rem 0;
+        }
+        
+        .score-box {
+            background: var(--ai-gradient);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 6px;
             font-size: 1.2rem;
             font-weight: bold;
-            margin-bottom: 10px;
-            color: #00cc66;
         }
         
-        .bonus-amount {
-            font-size: 1.8rem;
+        .odds-section {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .odds-item {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .odds-value {
+            display: block;
             font-weight: bold;
-            margin-bottom: 10px;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
         }
         
-        .bonus-body {
-            padding: 20px;
+        .odds-label {
+            font-size: 0.8rem;
+            color: #64748b;
         }
         
-        .bonus-features {
+        .home-win {
+            color: var(--success-color);
+        }
+        
+        .draw {
+            color: var(--warning-color);
+        }
+        
+        .away-win {
+            color: var(--danger-color);
+        }
+        
+        /* Modal ovoz berish */
+        .modal-voting {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .modal-voting-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: var(--primary-color);
+            text-align: center;
+        }
+        
+        .modal-voting-options {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            gap: 8px;
+        }
+        
+        .modal-vote-btn {
+            flex: 1;
+            margin: 0 4px;
+            padding: 12px 8px;
+            border: none;
+            border-radius: 6px;
+            background-color: #e2e8f0;
+            color: var(--dark-color);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.8rem;
+            min-height: 60px;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .modal-vote-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .modal-vote-btn.home {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+        }
+        
+        .modal-vote-btn.home:hover, .modal-vote-btn.home.active {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .modal-vote-btn.draw {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--warning-color);
+        }
+        
+        .modal-vote-btn.draw:hover, .modal-vote-btn.draw.active {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .modal-vote-btn.away {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+        }
+        
+        .modal-vote-btn.away:hover, .modal-vote-btn.away.active {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .modal-vote-text {
+            font-weight: bold;
+            margin-bottom: 3px;
+            font-size: 0.85rem;
+        }
+        
+        .modal-vote-label {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+        
+        .modal-voting-results {
+            display: flex;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+        
+        .modal-vote-percentages {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+        
+        .modal-vote-percentage {
+            text-align: center;
+            flex: 1;
+            font-weight: 600;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 1.5rem 0;
+            margin-top: 1.5rem;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 200px;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 0.8rem;
+            color: var(--accent-color);
+            font-size: 1rem;
+        }
+        
+        .footer-links {
             list-style: none;
-            margin-bottom: 20px;
         }
         
-        .bonus-features li {
-            margin-bottom: 10px;
-            padding-left: 25px;
-            position: relative;
+        .footer-links li {
+            margin-bottom: 0.4rem;
         }
         
-        .bonus-features li:before {
-            content: "✓";
+        .footer-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.3s;
+            font-size: 0.85rem;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 1rem;
+            border-top: 1px solid #334155;
+            margin-top: 1rem;
+            color: #94a3b8;
+            font-size: 0.8rem;
+        }
+        
+        /* AI Badge */
+        .ai-badge {
             position: absolute;
-            left: 0;
-            color: #00cc66;
-            font-weight: bold;
+            top: 8px;
+            right: 8px;
+            background: var(--ai-gradient);
+            color: white;
+            padding: 3px 6px;
+            border-radius: 3px;
+            font-size: 0.6rem;
+            font-weight: 600;
         }
         
-        .wins-section { margin: 50px 0; }
-        .section-title { font-size: 1.8rem; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #00cc66; color: #00cc66; display: flex; align-items: center; }
-        .section-title i { margin-right: 10px; }
-        .wins-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-        .win-card { background: #1a1a2e; border-radius: 8px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: transform 0.3s; }
-        .win-card:hover { transform: translateY(-5px); }
-        .win-header { background: #00cc66; color: #0a0a1a; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .win-amount { font-size: 1.5rem; font-weight: bold; }
-        .win-body { padding: 20px; }
-        .match-info { margin-bottom: 15px; }
-        .teams { font-size: 1.2rem; margin-bottom: 5px; }
-        .match-date { color: #aaa; font-size: 0.9rem; }
-        .bet-details { display: flex; justify-content: space-between; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #333; }
-        .bet-type { font-weight: bold; }
-        .bet-odds { color: #00cc66; font-weight: bold; }
-        .user-info { display: flex; align-items: center; }
-        .user-avatar { width: 40px; height: 40px; border-radius: 50%; background: #333; margin-right: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-        
-        .main-content { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; margin: 30px 0; }
-        
-        .news-card { background: #1a1a2e; border-radius: 8px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.3); margin-bottom: 20px; }
-        .news-content { padding: 20px; }
-        .news-title { font-size: 1.3rem; margin-bottom: 10px; color: #00cc66; }
-        .news-excerpt { color: #ccc; margin-bottom: 15px; }
-        .news-meta { display: flex; justify-content: space-between; color: #888; font-size: 0.9rem; }
-        
-        .sidebar-widget { background: #1a1a2e; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-        .widget-title { font-size: 1.2rem; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #333; color: #00cc66; }
-        .registration-form { margin-top: 20px; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; color: #ccc; }
-        .form-group input { width: 100%; padding: 12px; background: #0a0a1a; border: 1px solid #333; border-radius: 4px; color: #fff; }
-        .form-group input:focus { outline: none; border-color: #00cc66; }
-        .submit-btn { width: 100%; padding: 12px; background: #00cc66; color: #0a0a1a; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: background 0.3s; }
-        .submit-btn:hover { background: #00b359; }
-        .telegram-widget { text-align: center; padding: 20px; background: linear-gradient(135deg, #1a3a5f 0%, #0d2338 100%); border-radius: 8px; }
-        .telegram-icon { font-size: 3rem; margin-bottom: 15px; color: #0088cc; }
-        
-        .platforms { display: flex; justify-content: center; gap: 20px; margin: 30px 0; }
-        .platform-card { background: #1a1a2e; border-radius: 8px; padding: 20px; text-align: center; flex: 1; max-width: 300px; }
-        .platform-logo { font-size: 2rem; margin-bottom: 15px; }
-        
-        footer { background: #0d0d1a; padding: 40px 0 20px; margin-top: 50px; }
-        .footer-content { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-bottom: 30px; }
-        .footer-column h3 { font-size: 1.2rem; margin-bottom: 20px; color: #00cc66; }
-        .footer-links { list-style: none; }
-        .footer-links li { margin-bottom: 10px; }
-        .footer-links a { color: #ccc; text-decoration: none; transition: color 0.3s; }
-        .footer-links a:hover { color: #00cc66; }
-        .copyright { text-align: center; padding-top: 20px; border-top: 1px solid #333; color: #888; }
-        
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: #1a1a2e; padding: 30px; border-radius: 8px; max-width: 500px; width: 90%; text-align: center; box-shadow: 0 5px 25px rgba(0,0,0,0.5); }
-        .modal h3 { color: #00cc66; margin-bottom: 15px; font-size: 1.5rem; }
-        .modal p { margin-bottom: 20px; color: #ccc; }
-        .modal-close { background: #00cc66; color: #0a0a1a; border: none; padding: 10px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; transition: background 0.3s; }
-        .modal-close:hover { background: #00b359; }
-        
+        /* Responsive Design */
         @media (max-width: 768px) {
-            .main-content, .footer-content { grid-template-columns: 1fr; }
-            .header-content { flex-direction: column; text-align: center; }
-            nav ul { margin-top: 15px; flex-wrap: wrap; justify-content: center; }
-            nav ul li { margin: 5px 10px; }
-            .banner h1 { font-size: 1.8rem; }
-            .wins-grid, .bonuses-grid { grid-template-columns: 1fr; }
-            .platforms { flex-direction: column; align-items: center; }
-            .coupon-container { grid-template-columns: 1fr; }
-            .banner-buttons { display: flex; flex-direction: column; align-items: center; }
-            .banner-buttons .cta-button { margin: 5px 0; width: 80%; }
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .date-display {
+                margin-top: 8px;
+            }
+            
+            .nav-links {
+                flex-wrap: nowrap;
+                justify-content: flex-start;
+            }
+            
+            .predictions-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.8rem;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+            }
+            
+            .modal-teams {
+                width: 100%;
+                margin-bottom: 0.8rem;
+            }
+            
+            .match-info {
+                flex-direction: column;
+            }
+            
+            .match-details {
+                width: 100%;
+                margin-top: 0.8rem;
+            }
+            
+            .modal-voting-options {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .modal-vote-btn {
+                margin: 0;
+            }
+            
+            .voting-options {
+                flex-direction: row;
+                gap: 3px;
+            }
+            
+            .vote-btn {
+                margin: 0;
+                min-height: 40px;
+            }
         }
         
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-        .pulse { animation: pulse 2s infinite; }
+        @media (max-width: 480px) {
+            .predictions-grid {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+            }
+            
+            .container {
+                padding: 0 10px;
+            }
+            
+            .team-name {
+                font-size: 0.7rem;
+            }
+            
+            .vote-text {
+                font-size: 0.65rem;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .predictions-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .team-name {
+                font-size: 0.65rem;
+            }
+            
+            .vote-btn {
+                padding: 6px 2px;
+                font-size: 0.65rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Suzib yuruvchi toplar -->
-    <div class="floating-balls" id="floating-balls"></div>
-
+    <!-- Header -->
     <header>
         <div class="container">
             <div class="header-content">
-                <div class="logo">INSAYDER<span>pro</span></div>
-                <nav>
-                    <ul>
-                        <li><a href="#" class="active">Bosh Sahifa</a></li>
-                        <li><a href="#">Stavkalar</a></li>
-                        <li><a href="#">G'alabalar</a></li>
-                        <li><a href="#">Prognozlar</a></li>
-                        <li><a href="#">Kuponlar</a></li>
-                    </ul>
-                </nav>
+                <div class="logo">
+                    <i class="fas fa-robot"></i>
+                    <div class="logo-text">
+                        <span>AIFUT</span>
+                        <span class="logo-subtitle">AI Football Predictions</span>
+                    </div>
+                </div>
+                <div class="date-display" id="current-date">
+                    <!-- JavaScript bilan to'ldiriladi -->
+                </div>
             </div>
         </div>
     </header>
-
-    <!-- Kupon olish bo'limi - yuqoriga ko'chirildi -->
-    <section class="coupon-section">
+    
+    <!-- Navigation -->
+    <nav>
         <div class="container">
-            <div class="coupon-container">
-                <div class="coupon-info">
-                    <h2>Bepul Kupon Olish</h2>
-                    <p>INSAYDER jamoasi tomonidan bonuslar va bepul kuponlar oling. Bugungi top o'yinlarga kupon olish uchun AIFUT promokodi orqali royhatdan o'tgan ID raqamingizni tasdiqlang!</p>
-                    
-                    <ul class="coupon-steps">
-                        <li>"AIFUT" promokodi bilan 1xBet WinWin 888staz Megapari yoki DBbetdan ro'yxatdan o'ting</li>
-                        <li>Ro'yxatdan o'tib ID raqamingizni kiritgan xolda INSAYDERproga obuna bo'ling</li>
-                        <li>ID raqamingiz va telefon raqamingizni yuboring</li>
-                        <li>Bepul kuponlarni oling va g'alaba qozoning!</li>
-                    </ul>
-                </div>
-                
-                <div class="sidebar-widget">
-                    <h3 class="widget-title">Kupon Olish Formasi</h3>
-                    <p>ID raqamingiz va telefon raqamingizni yuboring va bepul kupon oling</p>
-                    
-                    <form class="registration-form" id="coupon-form">
-                        <div class="form-group">
-                            <label for="user-id">AIFUT promokodi bilan royhatga olingan ID Raqamingizmi kiriting</label>
-                            <input type="text" id="user-id" name="user-id" placeholder="Masalan: 245879213" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="phone">Telefon Raqamingiz</label>
-                            <input type="tel" id="phone" name="phone" placeholder="+998 XX XXX-XX-XX" required>
-                        </div>
-                        
-                        <button type="submit" class="submit-btn">Kupon olish</button>
-                    </form>
-                </div>
-            </div>
+            <ul class="nav-links">
+                <li><a href="#" class="active"><i class="fas fa-home"></i> Bosh Sahifa</a></li>
+                <li><a href="#"><i class="fas fa-trophy"></i> Liga Prognozlari</a></li>
+                <li><a href="#"><i class="fas fa-star"></i> Mashhur O'yinlar</a></li>
+                <li><a href="#"><i class="fas fa-chart-line"></i> Statistika</a></li>
+                <li><a href="#"><i class="fas fa-info-circle"></i> Biz Haqimizda</a></li>
+            </ul>
         </div>
-    </section>
-
-    <section class="banner">
+    </nav>
+    
+    <!-- Main Content -->
+    <main>
         <div class="container">
-            <h1 class="fade-in-up">INSAYDERpro - Futbol oyinlariga Ishonchli Prognozlariga A'zo Bo'ling!</h1>
-            <p class="fade-in-up">1xbet, winwin, 888starz Megapari Goldpari va DBbet kontoralari uchun xar kuni top oyinlardan kun ekspreslari INSAYDER jamoasi tomonidan berib boriladi. AIFUT promokodi bilan ro'yhatdan oting va g'alaba qilishni boshlang!</p>
+            <h1 class="page-title">
+                <i class="fas fa-bolt"></i> Bugungi O'yinlar
+            </h1>
             
-            <div class="promo-code pulse">
-                AIFUT - Bepul kuponlar uchun maxsus promokod
+            <!-- Filterlar -->
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">Barchasi</button>
+                <button class="filter-btn" data-filter="premier">Premier Liga</button>
+                <button class="filter-btn" data-filter="laliga">La Liga</button>
+                <button class="filter-btn" data-filter="seriea">Serie A</button>
+                <button class="filter-btn" data-filter="bundesliga">Bundesliga</button>
+                <button class="filter-btn" data-filter="ucl">UEFA Chempionlar Ligasi</button>
+                <button class="filter-btn" data-filter="women">Ayollar Futboli</button>
             </div>
             
-            <div class="banner-buttons">
-                <a href="https://reffpa.com/L?tag=d_4147173m_1599c_&site=4147173&ad=1599&r=registration" class="cta-button">1xBet'da Ro'yxatdan O'tish</a>
-                <a href="https://refpa168704.pro/L?tag=d_4543807m_64485c_&site=4543807&ad=64485" class="cta-button secondary">WinWin'da Ro'yxatdan O'tish</a>
-                <a href="https://refpa96317.com/L?tag=d_4585917m_11213c_&site=4585917&ad=11213" class="cta-button tertiary">DBbet'da Ro'yxatdan O'tish</a>
-                <a href="https://t.me/insayderai" class="cta-button secondary">Telegram kanalga Azo bo'lish</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Bonuslar bo'limi -->
-    <section class="bonuses-section">
-        <div class="container">
-            <h2 class="section-title"><i>🎁</i> Platformalardagi Bonuslar</h2>
-            
-            <div class="bonuses-grid">
-                <div class="bonus-card">
-                    <div class="bonus-header">
-                        <div class="bonus-platform">1xBet</div>
-                        <div class="bonus-amount">100% gacha bonus</div>
-                        <div>Birinchi depozit uchun</div>
-                    </div>
-                    <div class="bonus-body">
-                        <ul class="bonus-features">
-                            <li>Birinchi depozit uchun 100% bonus</li>
-                            <li>AIFUT promokodi bilan qo'shimcha bonus</li>
-                            <li>Har kuni yangi kuponlar va prognozlar</li>
-                            <li>Yuqori koeffitsientlar</li>
-                        </ul>
-                        <a href="https://reffpa.com/L?tag=d_4147173m_1599c_&site=4147173&ad=1599&r=registration" class="cta-button" style="width: 100%; text-align: center;">Bonusni Olish</a>
-                    </div>
-                </div>
-                
-                <div class="bonus-card">
-                    <div class="bonus-header">
-                        <div class="bonus-platform">WinWin</div>
-                        <div class="bonus-amount">2 000,000 UZS gacha</div>
-                        <div>Birinchi depozit uchun</div>
-                    </div>
-                    <div class="bonus-body">
-                        <ul class="bonus-features">
-                            <li>Birinchi depozit uchun 200,000 UZS gacha bonus</li>
-                            <li>AIFUT promokodi bilan qo'shimcha imkoniyatlar</li>
-                            <li>O'zbekiston uchun maxsus shartlar</li>
-                            <li>Tez va ishonchli to'lovlar</li>
-                        </ul>
-                        <a href="https://refpa168704.pro/L?tag=d_4543807m_64485c_&site=4543807&ad=64485" class="cta-button secondary" style="width: 100%; text-align: center;">Bonusni Olish</a>
-                    </div>
-                </div>
-                
-                <div class="bonus-card">
-                    <div class="bonus-header">
-                        <div class="bonus-platform">DBbet</div>
-                        <div class="bonus-amount">150% gacha bonus</div>
-                        <div>Birinchi depozit uchun</div>
-                    </div>
-                    <div class="bonus-body">
-                        <ul class="bonus-features">
-                            <li>Birinchi depozit uchun 150% gacha bonus</li>
-                            <li>AIFUT promokodi bilan maxsus taklif</li>
-                            <li>Ko'p turlidagi sport o'yinlari</li>
-                            <li>24/7 mijozlar qo'llab-quvvatlash</li>
-                        </ul>
-                        <a href="https://refpa96317.com/L?tag=d_4585917m_11213c_&site=4585917&ad=11213" class="cta-button tertiary" style="width: 100%; text-align: center;">Bonusni Olish</a>
-                    </div>
-                </div>
+            <!-- O'yin kartochkalari -->
+            <div class="predictions-grid" id="predictions-container">
+                <!-- JavaScript bilan to'ldiriladi -->
             </div>
         </div>
-    </section>
-
-    <div class="container">
-        <div class="platforms">
-            <div class="platform-card">
-                <div class="platform-logo">🎰</div>
-                <h3>1xBet</h3>
-                <p>Dunyoning eng yirik bukmeker kontorasi. AIFUT promokodi bilan ro'yxatdan o'ting va bonus oling.</p>
-                <a href="https://reffpa.com/L?tag=d_4147173m_1599c_&site=4147173&ad=1599&r=registration" class="cta-button" style="margin-top: 15px;">Ro'yxatdan O'tish</a>
-            </div>
-            
-            <div class="platform-card">
-                <div class="platform-logo">💰</div>
-                <h3>WinWin</h3>
-                <p>O'zbekistonning eng ishonchli bukmeker kontorasi. AIFUT promokodi bilan ro'yxatdan o'ting.</p>
-                <a href="https://refpa168704.pro/L?tag=d_4543807m_64485c_&site=4543807&ad=64485" class="cta-button secondary" style="margin-top: 15px;">Ro'yxatdan O'tish</a>
-            </div>
-            
-            <div class="platform-card">
-                <div class="platform-logo">🏆</div>
-                <h3>DBbet</h3>
-                <p>Yangi platforma, katta bonuslar. AIFUT promokodi bilan ro'yxatdan o'ting va imkoniyatlardan foydalaning.</p>
-                <a href="https://refpa96317.com/L?tag=d_4585917m_11213c_&site=4585917&ad=11213" class="cta-button tertiary" style="margin-top: 15px;">Ro'yxatdan O'tish</a>
-            </div>
-        </div>
-    </div>
-
-    <section class="wins-section">
-        <div class="container">
-            <h2 class="section-title"><i>🏆</i> So'nggi Futbol O'yinlarida Qozonilgan G'alabalar</h2>
-            
-            <div class="wins-grid">
-                <div class="win-card">
-                    <div class="win-header">
-                        <div class="win-amount">$1.055</div>
-                        <div class="win-badge">G'alaba</div>
-                    </div>
-                    <div class="win-body">
-                        <div class="match-info">
-                            <div class="teams">Germaniya vs Lyuksenburg</div>
-                            <div class="match-date">10.10.2025</div>
-                        </div>
-                        <div class="bet-details">
-                            <div class="bet-type">Total 3.5 kop</div>
-                            <div class="bet-odds">2.45</div>
-                        </div>
-                        <div class="user-info">
-                            <div class="user-avatar">A</div>
-                            <div>
-                                <div>Jaloliddin S.</div>
-                                <div class="match-date">ID: 245879213</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="win-card">
-                    <div class="win-header">
-                        <div class="win-amount">$380</div>
-                        <div class="win-badge">G'alaba</div>
-                    </div>
-                    <div class="win-body">
-                        <div class="match-info">
-                            <div class="teams">Fransiya vs Azarbayjan</div>
-                            <div class="match-date">10.10.2025</div>
-                        </div>
-                        <div class="bet-details">
-                            <div class="bet-type">Fransiya Fora -2 </div>
-                            <div class="bet-odds">1.94</div>
-                        </div>
-                        <div class="user-info">
-                            <div class="user-avatar">S</div>
-                            <div>
-                                <div>Alisher R.</div>
-                                <div class="match-date">ID: 163254178</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="win-card">
-                    <div class="win-header">
-                        <div class="win-amount">$420</div>
-                        <div class="win-badge">G'alaba</div>
-                    </div>
-                    <div class="win-body">
-                        <div class="match-info">
-                            <div class="teams">Belgiya vs S.Makadoniya</div>
-                            <div class="match-date">10.10.2025</div>
-                        </div>
-                        <div class="bet-details">
-                            <div class="bet-type">Total burckak toplari 8.5 Kop</div>
-                            <div class="bet-odds">1.79</div>
-                        </div>
-                        <div class="user-info">
-                            <div class="user-avatar">N</div>
-                            <div>
-                                <div>Xusniddin A.</div>
-                                <div class="match-date">ID: 78541236</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <div class="container">
-        <div class="main-content">
-            <main>
-                <div class="news-card">
-                    <div class="news-content">
-                        <h3 class="news-title">Futbol Ishonchli Prognozlari</h3>
-                        <p class="news-excerpt">
-                            Har kuni professional tahlilchilar tomonidan tayyorlangan ishonchli futbol prognozlari. 
-                            Premier League, La Liga, Serie A va boshqa yirik chempionatlardagi eng muhim o'yinlar 
-                            uchun aniq bashoratlar.
-                        </p>
-                        <div class="news-meta">
-                            <span>Prognozlar</span>
-                            <span>Yangilandi: 2 soat oldin</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="news-card">
-                    <div class="news-content">
-                        <h3 class="news-title">INSAYDER Jamoasi</h3>
-                        <p class="news-excerpt">
-                            INSAYDER jamoasi - futbol bo'yicha professional tahlilchilar guruhi. 
-                            Bizning maqsadimiz - sizga eng ishonchli prognozlarni taqdim etish va 
-                            g'alaba qozonishingizga yordam berish. Har kuni yangi kuponlar va 
-                            ekspresslar bilan!
-                        </p>
-                        <div class="news-meta">
-                            <span>Jamoamiz</span>
-                            <span>Yangilandi: Bugun</span>
-                        </div>
-                    </div>
-                </div>
-            </main>
-            
-            <aside>
-                <div class="sidebar-widget telegram-widget">
-                    <div class="telegram-icon">📱</div>
-                    <h3>Telegram Botimizga A'zo Bo'ling</h3>
-                    <p>Kunlik bepul prognozlar va kuponlar olish uchun</p>
-                    <a href="https://t.me/Ttolazitorbot" class="cta-button" style="margin-top: 15px;">Botga O'tish</a>
-                </div>
-                
-                <div class="sidebar-widget">
-                    <h3 class="widget-title">Platformalarda Ro'yxatdan O'tish</h3>
-                    <p>AIFUT  promokodidan foydalaning va bonus oling</p>
-                    <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                        <a href="https://reffpa.com/L?tag=d_4147173m_1599c_&site=4147173&ad=1599&r=registration" class="cta-button" style="text-align: center;">1xBet Ro'yxatdan O'tish</a>
-                        <a href="https://refpa168704.pro/L?tag=d_4543807m_64485c_&site=4543807&ad=64485" class="cta-button secondary" style="text-align: center;">WinWin Ro'yxatdan O'tish</a>
-                        <a href="https://refpa96317.com/L?tag=d_4585917m_11213c_&site=4585917&ad=11213" class="cta-button tertiary" style="text-align: center;">DBbet Ro'yxatdan O'tish</a>
-                    </div>
-                </div>
-            </aside>
-        </div>
-    </div>
-
-    <div class="modal" id="success-modal">
+    </main>
+    
+    <!-- Modal (O'yin tahlili) -->
+    <div class="modal" id="matchModal">
         <div class="modal-content">
-            <h3>Muvaffaqiyatli Yuborildi!</h3>
-            <p>ID raqamingiz va telefon raqamingiz qabul qilindi. Tez orada bepul kupon olasiz!</p>
-            <button class="modal-close" onclick="closeModal()">Yopish</button>
+            <div class="modal-header">
+                <h2 class="modal-title">AI O'yin Tahlili</h2>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- JavaScript bilan to'ldiriladi -->
+            </div>
         </div>
     </div>
-
+    
+    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-content">
-                <div class="footer-column">
-                    <h3>INSAYDERpro</h3>
-                    <p>Eng yaxshi futbol stavkalari va ishonchli prognozlar. AIFUT  promokodi bilan ro'yxatdan o'ting va g'alaba qozoning!</p>
+                <div class="footer-section">
+                    <h3>AIFUT</h3>
+                    <p>Sun'iy intellekt asosida ishlaydigan futbol prognozlari platformasi. Har kuni yangilanadigan eng aniq AI prognozlari.</p>
                 </div>
                 
-                <div class="footer-column">
+                <div class="footer-section">
                     <h3>Tez Havolalar</h3>
                     <ul class="footer-links">
                         <li><a href="#">Bosh Sahifa</a></li>
-                        <li><a href="#">Stavkalar</a></li>
-                        <li><a href="#">G'alabalar</a></li>
-                        <li><a href="#">Prognozlar</a></li>
-                        <li><a href="#">Kuponlar</a></li>
+                        <li><a href="#">Premier Liga</a></li>
+                        <li><a href="#">La Liga</a></li>
+                        <li><a href="#">Serie A</a></li>
+                        <li><a href="#">Bundesliga</a></li>
                     </ul>
                 </div>
                 
-                <div class="footer-column">
-                    <h3>Bog'lanish</h3>
+                <div class="footer-section">
+                    <h3>Aloqa</h3>
                     <ul class="footer-links">
-                        <li><a href="https://t.me/insayderai">Telegram Bot</a></li>
-                        <li><a href="https://1xbet.com">1xBet Vebsayt</a></li>
-                        <li><a href="https://winwin.uz">WinWin Vebsayt</a></li>
-                        <li><a href="https://dbbet.com">DBbet Vebsayt</a></li>
-                        <li><a href="#">Yordam</a></li>
+                        <li><a href="#"><i class="fas fa-envelope"></i> info@aifut.uz</a></li>
+                        <li><a href="#"><i class="fas fa-phone"></i> +998 90 123 45 67</a></li>
+                        <li><a href="#"><i class="fab fa-telegram"></i> Telegram</a></li>
+                        <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
                     </ul>
                 </div>
             </div>
             
             <div class="copyright">
-                &copy; 2023 INSAYDER PRO. Barcha huquqlar himoyalangan. 18+ 
+                &copy; 2023 AIFUT. Barcha huquqlar himoyalangan. AI Powered Football Predictions.
             </div>
         </div>
     </footer>
 
     <script>
-        // Suzib yuruvchi toplarni yaratish
-        function createFloatingBalls() {
-            const container = document.getElementById('floating-balls');
-            const ballCount = 15;
+        // Joriy sanani ko'rsatish
+        function updateDate() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = now.toLocaleDateString('uz-UZ', options);
+            document.getElementById('current-date').textContent = formattedDate;
+        }
+        
+        // O'yin prognozlari ma'lumotlari
+        let predictionsData = [
+            {
+                id: 1,
+                league: "Ayollar O'rtasidagi O'yin",
+                time: "20:45",
+                homeTeam: "Germaniya Ayollar",
+                awayTeam: "Fransiya Ayollar",
+                prediction: "Germaniya ayollar jamoasi France ayollar jamoasiga qarshi. Ushbu o'yinda faworit jamoani ko'rsatish qiyin. Germaniya ayollari himoyada yaxshi o'yin ko'rsatishmoqda, buni Ispaniya ayollariga qarshi ko'rsatishdi. Lekin Fransiya Germaniya bilan bo'lgan o'yindan so'ng yaxshigina dam olishdi va katta kuch bilan maydonga tushishadi.",
+                analysis: "AI tahliliga ko'ra, Germaniya ayollar jamoasi so'nggi o'yinlarda mustahkam himoya tizimini ko'rsatdi. Fransiya ayollar jamoasi esa dam olgandan keyin yangi kuch bilan maydonga tushadi. O'yin ochiq va hujumkor bo'lishi kutilmoqda. O'yin qizg'in bo'lishi va ikkala jamoa ham gol urishi mumkin. Fransiya jamoasi tanaffusdan keyin kuchliroq qaytishi mumkin.",
+                predictedScore: "1-2",
+                odds: {
+                    home: 2.40,
+                    draw: 3.10,
+                    away: 2.80
+                },
+                filter: "women",
+                votes: {
+                    home: 12,
+                    draw: 15,
+                    away: 8
+                },
+                userVote: null,
+                flags: {
+                    home: "germany",
+                    away: "france"
+                },
+                aiPrognoz: "TOTAL 2.5 KO'P"
+            },
+            {
+                id: 2,
+                league: "Ayollar Futboli",
+                time: "20:45",
+                homeTeam: "Finlandiya Ayollar",
+                awayTeam: "Daniya Ayollar",
+                prediction: "Finlandiya ayollar jamoasi Daniya ayollar jamoasiga qarshi o'yin qiziqarli o'tadi. Daniya jamoasi biroz faworit hisoblanadi. Finlandiya jamoasi uy maydonida kuchli, ammo Daniya jamoasi tashqi maydonda ham yaxshi natijalar ko'rsatmoqda.",
+                analysis: "AI tahliliga ko'ra, Finlandiya ayollar jamoasi uy maydonida juda yaxshi o'ynaydi va ularning hujumchilari tez-tez gol urish imkoniyatlarini yaratadi. Daniya jamoasi esa tashqi maydonda barqaror natijalar ko'rsatmoqda va ularning himoyasi mustahkam. O'yin ochiq bo'lishi kutilmoqda va ikkala jamoa ham gol urish imkoniyatiga ega. Daniya jamoasi biroz faworit hisoblansa ham, Finlandiya uy maydonida kutilmagan natija ko'rsatishi mumkin.",
+                predictedScore: "1-1",
+                odds: {
+                    home: 3.20,
+                    draw: 2.90,
+                    away: 2.25
+                },
+                filter: "women",
+                votes: {
+                    home: 8,
+                    draw: 18,
+                    away: 12
+                },
+                userVote: null,
+                flags: {
+                    home: "finland",
+                    away: "denmark"
+                },
+                aiPrognoz: "IKKALASI HAM GOL URADI"
+            },
+            {
+                id: 3,
+                league: "Ayollar Futboli",
+                time: "20:45",
+                homeTeam: "Polsha Ayollar",
+                awayTeam: "Niderlandiya Ayollar",
+                prediction: "Niderlandiya ayollar jamoasi yaqqol faworit hisoblanadi. Ular hujumda juda kuchli va so'nggi o'yinlarda ko'p gollar urishdi. Polsha jamoasi esa himoyada muammolarga duch kelmoqda.",
+                analysis: "AI tahliliga ko'ra, Niderlandiya ayollar jamoasi Yevropaning eng kuchli jamoalaridan biri bo'lib, ularning hujumkor futboli barchani hayratda qoldiradi. Polsha jamoasi esa so'nggi o'yinlarda himoyada zaif tomonlarni ko'rsatdi va kuchli raqiblarga qarshi o'yinda muammolarga duch kelishi mumkin. Niderlandiya jamoasi tashqi maydonda ham juda kuchli va ularning asosiy hujumchilari yuqori darajada o'ynaydi. Polsha jamoasi uy maydonida qiyin kurash olib borishi mumkin, ammo Niderlandiyaning hujum kuchiga qarshi turish ular uchun qiyin bo'ladi.",
+                predictedScore: "0-3",
+                odds: {
+                    home: 5.50,
+                    draw: 3.80,
+                    away: 1.45
+                },
+                filter: "women",
+                votes: {
+                    home: 5,
+                    draw: 10,
+                    away: 22
+                },
+                userVote: null,
+                flags: {
+                    home: "poland",
+                    away: "netherlands"
+                },
+                aiPrognoz: "-2 FORA NIDERLANDIYA"
+            },
+            {
+                id: 4,
+                league: "Ayollar Futboli",
+                time: "20:45",
+                homeTeam: "Vengriya Ayollar",
+                awayTeam: "Lyuksenburg Ayollar",
+                prediction: "Vengriya ayollar jamoasi yaqqol faworit hisoblanadi. Ular Lyuksenburgga qarshi o'yinda ko'p gollar urishi mumkin. Lyuksenburg jamoasi esa so'nggi o'yinlarda himoyada katta muammolarga duch kelmoqda.",
+                analysis: "AI tahliliga ko'ra, Vengriya ayollar jamoasi uy maydonida juda kuchli va ularning hujumchilari tez-tez gol urish imkoniyatlarini yaratadi. Lyuksenburg jamoasi esa so'nggi o'yinlarda himoyada juda zaif o'ynadi va kuchli raqiblarga qarshi o'yinda katta muammolarga duch keldi. Vengriya jamoasi bu o'yinda o'zining hujumkor kuchini namoyish etishi va bir nechta gol urishi kutilmoqda. Lyuksenburg jamoasi qiyin vaziyatda qolgan holda, asosan himoyaviy pozitsiyada o'ynashi kutiladi.",
+                predictedScore: "4-0",
+                odds: {
+                    home: 1.25,
+                    draw: 5.50,
+                    away: 12.00
+                },
+                filter: "women",
+                votes: {
+                    home: 25,
+                    draw: 8,
+                    away: 3
+                },
+                userVote: null,
+                flags: {
+                    home: "hungary",
+                    away: "luxembourg"
+                },
+                aiPrognoz: "-2 FORA VENGRIYA"
+            }
+        ];
+        
+        // Ovoz berish funksiyasi - har bir ovoz 3 foiz
+        function vote(matchId, voteType) {
+            const match = predictionsData.find(m => m.id === matchId);
+            if (!match) return;
             
-            for (let i = 0; i < ballCount; i++) {
-                const ball = document.createElement('div');
-                ball.classList.add('ball');
-                
-                // Tasodifiy o'lcham va joylashuv
-                const size = Math.random() * 40 + 20;
-                const left = Math.random() * 100;
-                const animationDuration = Math.random() * 20 + 10;
-                const animationDelay = Math.random() * 5;
-                
-                ball.style.width = `${size}px`;
-                ball.style.height = `${size}px`;
-                ball.style.left = `${left}%`;
-                ball.style.animationDuration = `${animationDuration}s`;
-                ball.style.animationDelay = `${animationDelay}s`;
-                
-                container.appendChild(ball);
+            // Agar foydalanuvchi oldin ovoz bergan bo'lsa, avvalgi ovozini olib tashlash
+            if (match.userVote && match.userVote !== voteType) {
+                match.votes[match.userVote]--;
+            }
+            
+            // Yangi ovoz qo'shish (har bir ovoz 3 foiz)
+            match.votes[voteType]++;
+            match.userVote = voteType;
+            
+            // Sahifani yangilash
+            const currentFilter = document.querySelector('.filter-btn.active').getAttribute('data-filter');
+            loadPredictions(currentFilter);
+            
+            // Agar modal ochiq bo'lsa, uni ham yangilash
+            if (document.getElementById('matchModal').style.display === 'block') {
+                openMatchModal(matchId);
             }
         }
         
-        // Formani yuborish funksiyasi
-        document.getElementById('coupon-form').addEventListener('submit', function(e) {
-            e.preventDefault();
+        // Ovoz natijalarini hisoblash - har bir ovoz 3 foiz
+        function calculateVotePercentages(votes) {
+            const total = votes.home + votes.draw + votes.away;
+            if (total === 0) return { home: 0, draw: 0, away: 0 };
             
-            const userId = document.getElementById('user-id').value;
-            const phone = document.getElementById('phone').value;
-            
-            if (userId && phone) {
-                // Telegram botga ma'lumot yuborish
-                sendToTelegram(userId, phone);
-                
-                // Modal oynasini ko'rsatish
-                document.getElementById('success-modal').style.display = 'flex';
-                
-                // Formani tozalash
-                document.getElementById('coupon-form').reset();
-            } else {
-                alert('Iltimos, barcha maydonlarni to\'ldiring!');
-            }
-        });
-        
-        // Telegram botga ma'lumot yuborish funksiyasi
-        function sendToTelegram(userId, phone) {
-            const message = `Men INSAYDER jamoasiga azo boldim. Mening ID: ${userId}, telefon raqamim: ${phone}. Men kupon olmoqchiman.`;
-            
-            // Telegram botga yuborish
-            window.open(`https://t.me/baxtga_olga?text=${encodeURIComponent(message)}`, '_blank');
+            // Har bir ovoz 3 foiz
+            return {
+                home: votes.home * 3,
+                draw: votes.draw * 3,
+                away: votes.away * 3
+            };
         }
         
-        // Modal oynasini yopish funksiyasi
+        // Prognozlarni sahifaga yuklash
+        function loadPredictions(filter = "all") {
+            const container = document.getElementById('predictions-container');
+            container.innerHTML = '';
+            
+            const filteredData = filter === "all" 
+                ? predictionsData 
+                : predictionsData.filter(match => match.filter === filter);
+            
+            filteredData.forEach(match => {
+                const card = document.createElement('div');
+                card.className = 'prediction-card';
+                card.setAttribute('data-match-id', match.id);
+                
+                const percentages = calculateVotePercentages(match.votes);
+                
+                // Bayroqlar uchun maxsus HTML
+                const homeFlag = match.flags && match.flags.home ? 
+                    `<div class="flag ${match.flags.home}-flag"></div>` : 
+                    `<div class="team-logo-default">${getShortTeamName(match.homeTeam)}</div>`;
+                
+                const awayFlag = match.flags && match.flags.away ? 
+                    `<div class="flag ${match.flags.away}-flag"></div>` : 
+                    `<div class="team-logo-default">${getShortTeamName(match.awayTeam)}</div>`;
+                
+                card.innerHTML = `
+                    <div class="ai-badge">AI PROGNOZ</div>
+                    <div class="match-header">
+                        <div class="league">${match.league}</div>
+                        <div class="match-time">${match.time}</div>
+                    </div>
+                    <div class="teams">
+                        <div class="team">
+                            <div class="team-logo">
+                                ${homeFlag}
+                            </div>
+                            <div class="team-name">${match.homeTeam}</div>
+                        </div>
+                        <div class="vs">VS</div>
+                        <div class="team">
+                            <div class="team-logo">
+                                ${awayFlag}
+                            </div>
+                            <div class="team-name">${match.awayTeam}</div>
+                        </div>
+                    </div>
+                    <div class="prediction-preview">
+                        <div class="prediction-badge">${match.aiPrognoz || 'AI Prognoz: ' + match.predictedScore}</div>
+                        <div class="view-details">Batafsil <i class="fas fa-arrow-right"></i></div>
+                    </div>
+                    <div class="voting-section">
+                        <div class="voting-title">Fikringiz nima? (1 ovoz = 3%)</div>
+                        <div class="voting-options">
+                            <button class="vote-btn home ${match.userVote === 'home' ? 'active' : ''}" data-vote="home">
+                                <div class="vote-text">${match.homeTeam}</div>
+                                <div class="vote-label">G'alaba</div>
+                            </button>
+                            <button class="vote-btn draw ${match.userVote === 'draw' ? 'active' : ''}" data-vote="draw">
+                                <div class="vote-text">Durang</div>
+                                <div class="vote-label">Tenglik</div>
+                            </button>
+                            <button class="vote-btn away ${match.userVote === 'away' ? 'active' : ''}" data-vote="away">
+                                <div class="vote-text">${match.awayTeam}</div>
+                                <div class="vote-label">G'alaba</div>
+                            </button>
+                        </div>
+                        <div class="voting-results">
+                            <div class="vote-bar home" style="width: ${percentages.home}%"></div>
+                            <div class="vote-bar draw" style="width: ${percentages.draw}%"></div>
+                            <div class="vote-bar away" style="width: ${percentages.away}%"></div>
+                        </div>
+                        <div class="vote-percentages">
+                            <div class="vote-percentage">${percentages.home}%</div>
+                            <div class="vote-percentage">${percentages.draw}%</div>
+                            <div class="vote-percentage">${percentages.away}%</div>
+                        </div>
+                    </div>
+                `;
+                
+                // Kartochkaga bosilganda modalni ochish
+                card.querySelector('.prediction-preview').addEventListener('click', () => {
+                    openMatchModal(match.id);
+                });
+                
+                // Ovoz berish tugmalariga hodisa qo'shish
+                card.querySelectorAll('.vote-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        e.stopPropagation(); // Modal ochilishining oldini olish
+                        const voteType = button.getAttribute('data-vote');
+                        vote(match.id, voteType);
+                    });
+                });
+                
+                container.appendChild(card);
+            });
+        }
+        
+        // Modalni ochish
+        function openMatchModal(matchId) {
+            const match = predictionsData.find(m => m.id === matchId);
+            if (!match) return;
+            
+            const percentages = calculateVotePercentages(match.votes);
+            
+            // Modal uchun bayroqlar
+            const homeModalFlag = match.flags && match.flags.home ? 
+                `<div class="modal-flag modal-${match.flags.home}-flag"></div>` : 
+                `<div class="modal-team-logo-default">${getShortTeamName(match.homeTeam)}</div>`;
+            
+            const awayModalFlag = match.flags && match.flags.away ? 
+                `<div class="modal-flag modal-${match.flags.away}-flag"></div>` : 
+                `<div class="modal-team-logo-default">${getShortTeamName(match.awayTeam)}</div>`;
+            
+            const modalBody = document.getElementById('modalBody');
+            modalBody.innerHTML = `
+                <div class="match-info">
+                    <div class="modal-teams">
+                        <div class="modal-team">
+                            <div class="modal-team-logo">
+                                ${homeModalFlag}
+                            </div>
+                            <div class="modal-team-name">${match.homeTeam}</div>
+                        </div>
+                        <div class="modal-vs">VS</div>
+                        <div class="modal-team">
+                            <div class="modal-team-logo">
+                                ${awayModalFlag}
+                            </div>
+                            <div class="modal-team-name">${match.awayTeam}</div>
+                        </div>
+                    </div>
+                    <div class="match-details">
+                        <div class="match-league">${match.league}</div>
+                        <div class="match-date">Bugun, ${match.time}</div>
+                    </div>
+                </div>
+                
+                <div class="predicted-score">
+                    <div class="score-box">AI Taxminiy hisob: ${match.predictedScore}</div>
+                </div>
+                
+                <div class="analysis-section">
+                    <h3 class="section-title">AI O'yin Tahlili</h3>
+                    <p class="analysis-text">${match.analysis}</p>
+                </div>
+                
+                <div class="analysis-section">
+                    <h3 class="section-title">Asosiy AI Prognoz</h3>
+                    <p class="analysis-text">${match.prediction}</p>
+                    ${match.aiPrognoz ? `<p class="analysis-text"><strong>AI PROGNOZ:</strong> ${match.aiPrognoz}</p>` : ''}
+                </div>
+                
+                <div class="odds-section">
+                    <div class="odds-item">
+                        <span class="odds-value home-win">${match.odds.home}</span>
+                        <span class="odds-label">${match.homeTeam} g'alaba</span>
+                    </div>
+                    <div class="odds-item">
+                        <span class="odds-value draw">${match.odds.draw}</span>
+                        <span class="odds-label">Durang</span>
+                    </div>
+                    <div class="odds-item">
+                        <span class="odds-value away-win">${match.odds.away}</span>
+                        <span class="odds-label">${match.awayTeam} g'alaba</span>
+                    </div>
+                </div>
+                
+                <div class="modal-voting">
+                    <div class="modal-voting-title">Fikringiz nima? (1 ovoz = 3%)</div>
+                    <div class="modal-voting-options">
+                        <button class="modal-vote-btn home ${match.userVote === 'home' ? 'active' : ''}" data-vote="home">
+                            <div class="modal-vote-text">${match.homeTeam}</div>
+                            <div class="modal-vote-label">G'alaba</div>
+                        </button>
+                        <button class="modal-vote-btn draw ${match.userVote === 'draw' ? 'active' : ''}" data-vote="draw">
+                            <div class="modal-vote-text">Durang</div>
+                            <div class="modal-vote-label">Tenglik</div>
+                        </button>
+                        <button class="modal-vote-btn away ${match.userVote === 'away' ? 'active' : ''}" data-vote="away">
+                            <div class="modal-vote-text">${match.awayTeam}</div>
+                            <div class="modal-vote-label">G'alaba</div>
+                        </button>
+                    </div>
+                    <div class="modal-voting-results">
+                        <div class="vote-bar home" style="width: ${percentages.home}%"></div>
+                        <div class="vote-bar draw" style="width: ${percentages.draw}%"></div>
+                        <div class="vote-bar away" style="width: ${percentages.away}%"></div>
+                    </div>
+                    <div class="modal-vote-percentages">
+                        <div class="modal-vote-percentage">${percentages.home}%</div>
+                        <div class="modal-vote-percentage">${percentages.draw}%</div>
+                        <div class="modal-vote-percentage">${percentages.away}%</div>
+                    </div>
+                </div>
+            `;
+            
+            // Modal ovoz berish tugmalariga hodisa qo'shish
+            modalBody.querySelectorAll('.modal-vote-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const voteType = button.getAttribute('data-vote');
+                    vote(match.id, voteType);
+                });
+            });
+            
+            document.getElementById('matchModal').style.display = 'block';
+        }
+        
+        // Modalni yopish
         function closeModal() {
-            document.getElementById('success-modal').style.display = 'none';
+            document.getElementById('matchModal').style.display = 'none';
         }
         
-        // Sahifa yuklanganda animatsiyalar
+        // Jamoalarning qisqa nomlari
+        function getShortTeamName(fullName) {
+            const shortNames = {
+                "Manchester United": "MU",
+                "Chelsea": "CHE",
+                "Barcelona": "BAR",
+                "Real Madrid": "RMA",
+                "Juventus": "JUV",
+                "Inter Milan": "INT",
+                "Bayern Munich": "BAY",
+                "Borussia Dortmund": "BVB",
+                "PSG": "PSG",
+                "Manchester City": "MCI",
+                "Arsenal": "ARS",
+                "Liverpool": "LIV",
+                "Germaniya Ayollar": "GER",
+                "Fransiya Ayollar": "FRA",
+                "Finlandiya Ayollar": "FIN",
+                "Daniya Ayollar": "DEN",
+                "Polsha Ayollar": "POL",
+                "Niderlandiya Ayollar": "NED",
+                "Vengriya Ayollar": "HUN",
+                "Lyuksenburg Ayollar": "LUX"
+            };
+            return shortNames[fullName] || fullName.substring(0, 3).toUpperCase();
+        }
+        
+        // Sahifa yuklanganda funktsiyalarni ishga tushirish
         document.addEventListener('DOMContentLoaded', function() {
-            createFloatingBalls();
+            updateDate();
+            loadPredictions();
             
-            const winCards = document.querySelectorAll('.win-card');
-            winCards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                
-                setTimeout(() => {
-                    card.style.transition = 'opacity 0.5s, transform 0.5s';
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, index * 200);
+            // Filter tugmalarini sozlash
+            document.querySelectorAll('.filter-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    // Faqat bitta filter aktiv bo'lishi
+                    document.querySelectorAll('.filter-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    // Tegishli o'yinlarni ko'rsatish
+                    const filter = this.getAttribute('data-filter');
+                    loadPredictions(filter);
+                });
             });
             
-            // Bonus kartalari uchun animatsiya
-            const bonusCards = document.querySelectorAll('.bonus-card');
-            bonusCards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                
-                setTimeout(() => {
-                    card.style.transition = 'opacity 0.5s, transform 0.5s';
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, index * 200 + 300);
+            // Modalni yopish
+            document.getElementById('closeModal').addEventListener('click', closeModal);
+            
+            // Modal tashqarisiga bosilganda yopish
+            window.addEventListener('click', function(event) {
+                const modal = document.getElementById('matchModal');
+                if (event.target === modal) {
+                    closeModal();
+                }
             });
+            
+            // Har 24 soatda yangilash (simulyatsiya)
+            setInterval(updateDate, 24 * 60 * 60 * 1000);
         });
     </script>
 </body>
