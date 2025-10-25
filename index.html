@@ -233,8 +233,8 @@
         }
         
         .team-logo {
-            width: 35px;
-            height: 35px;
+            width: 40px;
+            height: 40px;
             background-color: #f1f5f9;
             border-radius: 50%;
             display: flex;
@@ -246,65 +246,8 @@
             font-size: 0.7rem;
             position: relative;
             overflow: hidden;
-        }
-        
-        .flag {
-            width: 100%;
-            height: 100%;
             background-size: cover;
             background-position: center;
-            border-radius: 50%;
-        }
-        
-        .germany-flag {
-            background: linear-gradient(to bottom, #000000 33%, #dd0000 33%, #dd0000 66%, #ffce00 66%);
-        }
-        
-        .france-flag {
-            background: linear-gradient(to right, #0055a4 33%, #ffffff 33%, #ffffff 66%, #ef4135 66%);
-        }
-        
-        .finland-flag {
-            background: linear-gradient(to bottom, #ffffff 33%, #003580 33%, #003580 66%, #ffffff 66%);
-        }
-        
-        .denmark-flag {
-            background: #c60c30;
-            position: relative;
-        }
-        
-        .denmark-flag::before {
-            content: "";
-            position: absolute;
-            width: 100%;
-            height: 20%;
-            background: white;
-            top: 40%;
-        }
-        
-        .denmark-flag::after {
-            content: "";
-            position: absolute;
-            width: 20%;
-            height: 100%;
-            background: white;
-            left: 30%;
-        }
-        
-        .poland-flag {
-            background: linear-gradient(to bottom, #ffffff 50%, #dc143c 50%);
-        }
-        
-        .netherlands-flag {
-            background: linear-gradient(to bottom, #ae1c28 33%, #ffffff 33%, #ffffff 66%, #21468b 66%);
-        }
-        
-        .hungary-flag {
-            background: linear-gradient(to bottom, #cd2a3e 33%, #ffffff 33%, #ffffff 66%, #477050 66%);
-        }
-        
-        .luxembourg-flag {
-            background: linear-gradient(to bottom, #ed2939 33%, #ffffff 33%, #ffffff 66%, #00a1de 66%);
         }
         
         .team-name {
@@ -572,65 +515,8 @@
             font-size: 1rem;
             position: relative;
             overflow: hidden;
-        }
-        
-        .modal-flag {
-            width: 100%;
-            height: 100%;
             background-size: cover;
             background-position: center;
-            border-radius: 50%;
-        }
-        
-        .modal-germany-flag {
-            background: linear-gradient(to bottom, #000000 33%, #dd0000 33%, #dd0000 66%, #ffce00 66%);
-        }
-        
-        .modal-france-flag {
-            background: linear-gradient(to right, #0055a4 33%, #ffffff 33%, #ffffff 66%, #ef4135 66%);
-        }
-        
-        .modal-finland-flag {
-            background: linear-gradient(to bottom, #ffffff 33%, #003580 33%, #003580 66%, #ffffff 66%);
-        }
-        
-        .modal-denmark-flag {
-            background: #c60c30;
-            position: relative;
-        }
-        
-        .modal-denmark-flag::before {
-            content: "";
-            position: absolute;
-            width: 100%;
-            height: 20%;
-            background: white;
-            top: 40%;
-        }
-        
-        .modal-denmark-flag::after {
-            content: "";
-            position: absolute;
-            width: 20%;
-            height: 100%;
-            background: white;
-            left: 30%;
-        }
-        
-        .modal-poland-flag {
-            background: linear-gradient(to bottom, #ffffff 50%, #dc143c 50%);
-        }
-        
-        .modal-netherlands-flag {
-            background: linear-gradient(to bottom, #ae1c28 33%, #ffffff 33%, #ffffff 66%, #21468b 66%);
-        }
-        
-        .modal-hungary-flag {
-            background: linear-gradient(to bottom, #cd2a3e 33%, #ffffff 33%, #ffffff 66%, #477050 66%);
-        }
-        
-        .modal-luxembourg-flag {
-            background: linear-gradient(to bottom, #ed2939 33%, #ffffff 33%, #ffffff 66%, #00a1de 66%);
         }
         
         .modal-team-name {
@@ -678,22 +564,6 @@
             line-height: 1.6;
             margin-bottom: 0.8rem;
             font-size: 0.85rem;
-        }
-        
-        .predicted-score {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 1rem 0;
-        }
-        
-        .score-box {
-            background: var(--ai-gradient);
-            color: white;
-            padding: 8px 20px;
-            border-radius: 6px;
-            font-size: 1.2rem;
-            font-weight: bold;
         }
         
         .odds-section {
@@ -1046,11 +916,8 @@
             <div class="filters">
                 <button class="filter-btn active" data-filter="all">Barchasi</button>
                 <button class="filter-btn" data-filter="premier">Premier Liga</button>
-                <button class="filter-btn" data-filter="laliga">La Liga</button>
-                <button class="filter-btn" data-filter="seriea">Serie A</button>
                 <button class="filter-btn" data-filter="bundesliga">Bundesliga</button>
                 <button class="filter-btn" data-filter="ucl">UEFA Chempionlar Ligasi</button>
-                <button class="filter-btn" data-filter="women">Ayollar Futboli</button>
             </div>
             
             <!-- O'yin kartochkalari -->
@@ -1119,115 +986,123 @@
             document.getElementById('current-date').textContent = formattedDate;
         }
         
+        // Logolar uchun URL manzillar
+        const logoUrls = {
+            chelsea: "https://upload.wikimedia.org/wikipedia/en/thumb/c/cc/Chelsea_FC.svg/1200px-Chelsea_FC.svg.png",
+            sunderland: "https://upload.wikimedia.org/wikipedia/en/thumb/7/77/Sunderland_A.F.C._logo.svg/1200px-Sunderland_A.F.C._logo.svg.png",
+            manutd: "https://upload.wikimedia.org/wikipedia/en/thumb/7/7a/Manchester_United_FC_crest.svg/1200px-Manchester_United_FC_crest.svg.png",
+            brighton: "https://upload.wikimedia.org/wikipedia/en/thumb/f/fd/Brighton_%26_Hove_Albion_logo.svg/1200px-Brighton_%26_Hove_Albion_logo.svg.png",
+            hamburg: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/HSV-Logo.svg/1200px-HSV-Logo.svg.png",
+            wolfsburg: "https://upload.wikimedia.org/wikipedia/en/thumb/f/f3/VfL_Wolfsburg_logo.svg/1200px-VfL_Wolfsburg_logo.svg.png",
+            bayern: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/FC_Bayern_M%C3%BCnchen_logo_%282017%29.svg/1200px-FC_Bayern_M%C3%BCnchen_logo_%282017%29.svg.png",
+            borussia: "https://tse1.mm.bing.net/th/id/OIP.F8z3aTReZYVIZqFi8HBzxgHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"
+        };
+        
         // O'yin prognozlari ma'lumotlari
         let predictionsData = [
             {
                 id: 1,
-                league: "Ayollar O'rtasidagi O'yin",
-                time: "20:45",
-                homeTeam: "Germaniya Ayollar",
-                awayTeam: "Fransiya Ayollar",
-                prediction: "Germaniya ayollar jamoasi France ayollar jamoasiga qarshi. Ushbu o'yinda faworit jamoani ko'rsatish qiyin. Germaniya ayollari himoyada yaxshi o'yin ko'rsatishmoqda, buni Ispaniya ayollariga qarshi ko'rsatishdi. Lekin Fransiya Germaniya bilan bo'lgan o'yindan so'ng yaxshigina dam olishdi va katta kuch bilan maydonga tushishadi.",
-                analysis: "AI tahliliga ko'ra, Germaniya ayollar jamoasi so'nggi o'yinlarda mustahkam himoya tizimini ko'rsatdi. Fransiya ayollar jamoasi esa dam olgandan keyin yangi kuch bilan maydonga tushadi. O'yin ochiq va hujumkor bo'lishi kutilmoqda. O'yin qizg'in bo'lishi va ikkala jamoa ham gol urishi mumkin. Fransiya jamoasi tanaffusdan keyin kuchliroq qaytishi mumkin.",
-                predictedScore: "1-2",
+                league: "Premier Liga",
+                time: "19:00",
+                homeTeam: "Chelsea",
+                awayTeam: "Sanderlend",
+                prediction: "Chelsi faworit hisoblanadi. Koeffitsient: Chelsi yutishi 1.42, durrang 4.75, Sanderlend yutishi 7.01",
+                analysis: "AI tahliliga ko'ra, Chelsea uy maydonida kuchli jamoa bo'lib, Sanderlendga qarshi o'yinda aniq ustunlikka ega. Chelsea so'nggi o'yinlarda yaxshi natijalar ko'rsatmoqda va ularning hujumchilari tez-tez gol urish imkoniyatlarini yaratadi. Sanderlend esa safarda qiyin o'yin o'tkazadi va Chelsea himoyasiga qarshi gol urishda muammolarga duch kelishi mumkin.",
                 odds: {
-                    home: 2.40,
-                    draw: 3.10,
-                    away: 2.80
+                    home: 1.42,
+                    draw: 4.75,
+                    away: 7.01
                 },
-                filter: "women",
+                filter: "premier",
                 votes: {
-                    home: 12,
-                    draw: 15,
-                    away: 8
+                    home: 20,
+                    draw: 8,
+                    away: 5
                 },
                 userVote: null,
-                flags: {
-                    home: "germany",
-                    away: "france"
+                logos: {
+                    home: "chelsea",
+                    away: "sunderland"
                 },
-                aiPrognoz: "TOTAL 2.5 KO'P"
+                aiPrognoz: "TOTAL CHELSI 1.5 KO'P (1.53 KF)"
             },
             {
                 id: 2,
-                league: "Ayollar Futboli",
-                time: "20:45",
-                homeTeam: "Finlandiya Ayollar",
-                awayTeam: "Daniya Ayollar",
-                prediction: "Finlandiya ayollar jamoasi Daniya ayollar jamoasiga qarshi o'yin qiziqarli o'tadi. Daniya jamoasi biroz faworit hisoblanadi. Finlandiya jamoasi uy maydonida kuchli, ammo Daniya jamoasi tashqi maydonda ham yaxshi natijalar ko'rsatmoqda.",
-                analysis: "AI tahliliga ko'ra, Finlandiya ayollar jamoasi uy maydonida juda yaxshi o'ynaydi va ularning hujumchilari tez-tez gol urish imkoniyatlarini yaratadi. Daniya jamoasi esa tashqi maydonda barqaror natijalar ko'rsatmoqda va ularning himoyasi mustahkam. O'yin ochiq bo'lishi kutilmoqda va ikkala jamoa ham gol urish imkoniyatiga ega. Daniya jamoasi biroz faworit hisoblansa ham, Finlandiya uy maydonida kutilmagan natija ko'rsatishi mumkin.",
-                predictedScore: "1-1",
+                league: "Premier Liga",
+                time: "21:30",
+                homeTeam: "Manchester United",
+                awayTeam: "Brayton",
+                prediction: "Manchester Unitedga 2.00 KF, durrang 3.80, Braytonga 3.30 KF. Manchester Unitedda biroz ustunlik bor lekin Brayton hujumkor o'ynaydi",
+                analysis: "AI tahliliga ko'ra, Manchester United uy maydonida kuchli jamoa, ammo Brayton hujumkor futbol o'ynashi bilan ajralib turadi. United so'nggi o'yinlarda barqaror natijalar ko'rsatmoqda, Brayton esa tashqi maydonda ham yaxshi o'ynay oladi. O'yin ochiq bo'lishi kutilmoqda va ikkala jamoa ham gol urish imkoniyatiga ega. Braytonning tezkor hujumlari United himoyasiga muammo tug'dirishi mumkin.",
                 odds: {
-                    home: 3.20,
-                    draw: 2.90,
-                    away: 2.25
+                    home: 2.00,
+                    draw: 3.80,
+                    away: 3.30
                 },
-                filter: "women",
+                filter: "premier",
                 votes: {
-                    home: 8,
-                    draw: 18,
-                    away: 12
+                    home: 15,
+                    draw: 12,
+                    away: 10
                 },
                 userVote: null,
-                flags: {
-                    home: "finland",
-                    away: "denmark"
+                logos: {
+                    home: "manutd",
+                    away: "brighton"
                 },
-                aiPrognoz: "IKKALASI HAM GOL URADI"
+                aiPrognoz: "HAR IKKI TAYDDA GOL BOLADI (1.5 KF)"
             },
             {
                 id: 3,
-                league: "Ayollar Futboli",
-                time: "20:45",
-                homeTeam: "Polsha Ayollar",
-                awayTeam: "Niderlandiya Ayollar",
-                prediction: "Niderlandiya ayollar jamoasi yaqqol faworit hisoblanadi. Ular hujumda juda kuchli va so'nggi o'yinlarda ko'p gollar urishdi. Polsha jamoasi esa himoyada muammolarga duch kelmoqda.",
-                analysis: "AI tahliliga ko'ra, Niderlandiya ayollar jamoasi Yevropaning eng kuchli jamoalaridan biri bo'lib, ularning hujumkor futboli barchani hayratda qoldiradi. Polsha jamoasi esa so'nggi o'yinlarda himoyada zaif tomonlarni ko'rsatdi va kuchli raqiblarga qarshi o'yinda muammolarga duch kelishi mumkin. Niderlandiya jamoasi tashqi maydonda ham juda kuchli va ularning asosiy hujumchilari yuqori darajada o'ynaydi. Polsha jamoasi uy maydonida qiyin kurash olib borishi mumkin, ammo Niderlandiyaning hujum kuchiga qarshi turish ular uchun qiyin bo'ladi.",
-                predictedScore: "0-3",
+                league: "Bundesliga",
+                time: "18:30",
+                homeTeam: "Gamburg",
+                awayTeam: "Wolsburg",
+                prediction: "Gamburg yutishiga 2.20 KF, Wolsburg yutishiga 3.10, durrang 3.60. Wolsburg ochiq o'yin ko'rsatadi va ko'p gol bo'ladi",
+                analysis: "AI tahliliga ko'ra, Gamburg uy maydonida kuchli, ammo Wolsburg ochiq va hujumkor futbol o'ynaydi. Wolsburg so'nggi o'yinlarda ko'p gollar urdi va ularning hujumchilari yuqori darajada o'ynaydi. Gamburg himoyasi mustahkam, lekin Wolsburgning hujum kuchiga qarshi turish ular uchun qiyin bo'ladi. O'yin ochiq bo'lishi va ko'p gol kutilmoqda.",
                 odds: {
-                    home: 5.50,
-                    draw: 3.80,
-                    away: 1.45
+                    home: 2.20,
+                    draw: 3.60,
+                    away: 3.10
                 },
-                filter: "women",
+                filter: "bundesliga",
                 votes: {
-                    home: 5,
-                    draw: 10,
-                    away: 22
+                    home: 8,
+                    draw: 15,
+                    away: 12
                 },
                 userVote: null,
-                flags: {
-                    home: "poland",
-                    away: "netherlands"
+                logos: {
+                    home: "hamburg",
+                    away: "wolfsburg"
                 },
-                aiPrognoz: "-2 FORA NIDERLANDIYA"
+                aiPrognoz: "TOTAL 3 KO'P (2 KF)"
             },
             {
                 id: 4,
-                league: "Ayollar Futboli",
-                time: "20:45",
-                homeTeam: "Vengriya Ayollar",
-                awayTeam: "Lyuksenburg Ayollar",
-                prediction: "Vengriya ayollar jamoasi yaqqol faworit hisoblanadi. Ular Lyuksenburgga qarshi o'yinda ko'p gollar urishi mumkin. Lyuksenburg jamoasi esa so'nggi o'yinlarda himoyada katta muammolarga duch kelmoqda.",
-                analysis: "AI tahliliga ko'ra, Vengriya ayollar jamoasi uy maydonida juda kuchli va ularning hujumchilari tez-tez gol urish imkoniyatlarini yaratadi. Lyuksenburg jamoasi esa so'nggi o'yinlarda himoyada juda zaif o'ynadi va kuchli raqiblarga qarshi o'yinda katta muammolarga duch keldi. Vengriya jamoasi bu o'yinda o'zining hujumkor kuchini namoyish etishi va bir nechta gol urishi kutilmoqda. Lyuksenburg jamoasi qiyin vaziyatda qolgan holda, asosan himoyaviy pozitsiyada o'ynashi kutiladi.",
-                predictedScore: "4-0",
+                league: "Bundesliga",
+                time: "18:30",
+                homeTeam: "Bavariya",
+                awayTeam: "Borussiya M",
+                prediction: "Bavariya Borussiyaga 11.00 KF, Bavariyaga 1.22 KF, durrang 7.00 KF. Bavariya yaqqol faworit",
+                analysis: "AI tahliliga ko'ra, Bavariya Bundesliganing eng kuchli jamoasi bo'lib, Borussiya M ga qarshi o'yinda aniq ustunlikka ega. Bavariya so'nggi o'yinlarda ajoyib natijalar ko'rsatdi va ularning hujumkor futboli barchani hayratda qoldiradi. Borussiya M esa so'nggi o'yinlarda himoyada muammolarga duch keldi va Bavariyaga qarshi o'yinda qiyin vaziyatda qolishi mumkin. Bavariya  katta g'alaba qozonishi kutilmoqda.",
                 odds: {
-                    home: 1.25,
-                    draw: 5.50,
-                    away: 12.00
+                    home: 1.22,
+                    draw: 7.00,
+                    away: 11.00
                 },
-                filter: "women",
+                filter: "bundesliga",
                 votes: {
                     home: 25,
-                    draw: 8,
+                    draw: 5,
                     away: 3
                 },
                 userVote: null,
-                flags: {
-                    home: "hungary",
-                    away: "luxembourg"
+                logos: {
+                    home: "bayern",
+                    away: "borussia m"
                 },
-                aiPrognoz: "-2 FORA VENGRIYA"
+                aiPrognoz: "BAVARIYA YUTADI -2 FORA (2.02 KF)"
             }
         ];
         
@@ -1284,13 +1159,13 @@
                 
                 const percentages = calculateVotePercentages(match.votes);
                 
-                // Bayroqlar uchun maxsus HTML
-                const homeFlag = match.flags && match.flags.home ? 
-                    `<div class="flag ${match.flags.home}-flag"></div>` : 
+                // Logolar uchun maxsus HTML
+                const homeLogo = match.logos && match.logos.home ? 
+                    `<div class="team-logo" style="background-image: url('${logoUrls[match.logos.home]}')"></div>` : 
                     `<div class="team-logo-default">${getShortTeamName(match.homeTeam)}</div>`;
                 
-                const awayFlag = match.flags && match.flags.away ? 
-                    `<div class="flag ${match.flags.away}-flag"></div>` : 
+                const awayLogo = match.logos && match.logos.away ? 
+                    `<div class="team-logo" style="background-image: url('${logoUrls[match.logos.away]}')"></div>` : 
                     `<div class="team-logo-default">${getShortTeamName(match.awayTeam)}</div>`;
                 
                 card.innerHTML = `
@@ -1301,21 +1176,17 @@
                     </div>
                     <div class="teams">
                         <div class="team">
-                            <div class="team-logo">
-                                ${homeFlag}
-                            </div>
+                            ${homeLogo}
                             <div class="team-name">${match.homeTeam}</div>
                         </div>
                         <div class="vs">VS</div>
                         <div class="team">
-                            <div class="team-logo">
-                                ${awayFlag}
-                            </div>
+                            ${awayLogo}
                             <div class="team-name">${match.awayTeam}</div>
                         </div>
                     </div>
                     <div class="prediction-preview">
-                        <div class="prediction-badge">${match.aiPrognoz || 'AI Prognoz: ' + match.predictedScore}</div>
+                        <div class="prediction-badge">${match.aiPrognoz || 'AI Prognoz'}</div>
                         <div class="view-details">Batafsil <i class="fas fa-arrow-right"></i></div>
                     </div>
                     <div class="voting-section">
@@ -1372,13 +1243,13 @@
             
             const percentages = calculateVotePercentages(match.votes);
             
-            // Modal uchun bayroqlar
-            const homeModalFlag = match.flags && match.flags.home ? 
-                `<div class="modal-flag modal-${match.flags.home}-flag"></div>` : 
+            // Modal uchun logolar
+            const homeModalLogo = match.logos && match.logos.home ? 
+                `<div class="modal-team-logo" style="background-image: url('${logoUrls[match.logos.home]}')"></div>` : 
                 `<div class="modal-team-logo-default">${getShortTeamName(match.homeTeam)}</div>`;
             
-            const awayModalFlag = match.flags && match.flags.away ? 
-                `<div class="modal-flag modal-${match.flags.away}-flag"></div>` : 
+            const awayModalLogo = match.logos && match.logos.away ? 
+                `<div class="modal-team-logo" style="background-image: url('${logoUrls[match.logos.away]}')"></div>` : 
                 `<div class="modal-team-logo-default">${getShortTeamName(match.awayTeam)}</div>`;
             
             const modalBody = document.getElementById('modalBody');
@@ -1386,16 +1257,12 @@
                 <div class="match-info">
                     <div class="modal-teams">
                         <div class="modal-team">
-                            <div class="modal-team-logo">
-                                ${homeModalFlag}
-                            </div>
+                            ${homeModalLogo}
                             <div class="modal-team-name">${match.homeTeam}</div>
                         </div>
                         <div class="modal-vs">VS</div>
                         <div class="modal-team">
-                            <div class="modal-team-logo">
-                                ${awayModalFlag}
-                            </div>
+                            ${awayModalLogo}
                             <div class="modal-team-name">${match.awayTeam}</div>
                         </div>
                     </div>
@@ -1403,10 +1270,6 @@
                         <div class="match-league">${match.league}</div>
                         <div class="match-date">Bugun, ${match.time}</div>
                     </div>
-                </div>
-                
-                <div class="predicted-score">
-                    <div class="score-box">AI Taxminiy hisob: ${match.predictedScore}</div>
                 </div>
                 
                 <div class="analysis-section">
@@ -1483,26 +1346,14 @@
         // Jamoalarning qisqa nomlari
         function getShortTeamName(fullName) {
             const shortNames = {
-                "Manchester United": "MU",
                 "Chelsea": "CHE",
-                "Barcelona": "BAR",
-                "Real Madrid": "RMA",
-                "Juventus": "JUV",
-                "Inter Milan": "INT",
-                "Bayern Munich": "BAY",
-                "Borussia Dortmund": "BVB",
-                "PSG": "PSG",
-                "Manchester City": "MCI",
-                "Arsenal": "ARS",
-                "Liverpool": "LIV",
-                "Germaniya Ayollar": "GER",
-                "Fransiya Ayollar": "FRA",
-                "Finlandiya Ayollar": "FIN",
-                "Daniya Ayollar": "DEN",
-                "Polsha Ayollar": "POL",
-                "Niderlandiya Ayollar": "NED",
-                "Vengriya Ayollar": "HUN",
-                "Lyuksenburg Ayollar": "LUX"
+                "Sanderlend": "SUN",
+                "Manchester United": "MU",
+                "Brayton": "BHA",
+                "Gamburg": "HSV",
+                "Wolsburg": "WOB",
+                "Bavariya": "BAY",
+                "Borussiya": "BVM"
             };
             return shortNames[fullName] || fullName.substring(0, 3).toUpperCase();
         }
