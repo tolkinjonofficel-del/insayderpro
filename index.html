@@ -915,9 +915,15 @@
             <!-- Filterlar -->
             <div class="filters">
                 <button class="filter-btn active" data-filter="all">Barchasi</button>
-                <button class="filter-btn" data-filter="premier">Angliya Chempionati</button>
-                <button class="filter-btn" data-filter="bundesliga">Germaniya Chempionati</button>
-                <button class="filter-btn" data-filter="laliga">Ispaniya Chempionati</button>
+                <button class="filter-btn" data-filter="laliga">Ispaniya La Liga</button>
+                <button class="filter-btn" data-filter="rpl">Rossiya Premer Ligasi</button>
+                <button class="filter-btn" data-filter="portugal">Portugaliya Ligasi</button>
+                <button class="filter-btn" data-filter="turkey">Turkiya Superligasi</button>
+                <button class="filter-btn" data-filter="argentina">Argentina Primerasi</button>
+                <button class="filter-btn" data-filter="bulgaria">Bolgariya Ligasi</button>
+                <button class="filter-btn" data-filter="croatia">Xorvatiya Ligasi</button>
+                <button class="filter-btn" data-filter="bosnia">Bosniya Ligasi</button>
+                <button class="filter-btn" data-filter="israel">Isroil Ligasi</button>
             </div>
             
             <!-- O'yin kartochkalari -->
@@ -988,208 +994,340 @@
         
         // Logolar uchun URL manzillar
         const logoUrls = {
-            // Angliya chempionati
-            wolverhampton: "https://upload.wikimedia.org/wikipedia/en/thumb/f/fc/Wolverhampton_Wanderers.svg/1200px-Wolverhampton_Wanderers.svg.png",
-            burnley: "https://upload.wikimedia.org/wikipedia/en/thumb/6/6d/Burnley_FC_Logo.svg/1200px-Burnley_FC_Logo.svg.png",
-            arsenal: "https://upload.wikimedia.org/wikipedia/en/thumb/5/53/Arsenal_FC.svg/1200px-Arsenal_FC.svg.png",
-            crystalpalace: "https://upload.wikimedia.org/wikipedia/en/thumb/0/0c/Crystal_Palace_FC_logo.svg/1200px-Crystal_Palace_FC_logo.svg.png",
-            astonvilla: "https://upload.wikimedia.org/wikipedia/en/thumb/f/f9/Aston_Villa_FC_crest_%282016%29.svg/1200px-Aston_Villa_FC_crest_%282016%29.svg.png",
-            manchestercity: "https://upload.wikimedia.org/wikipedia/en/thumb/e/eb/Manchester_City_FC_badge.svg/1200px-Manchester_City_FC_badge.svg.png",
-            everton: "https://upload.wikimedia.org/wikipedia/en/thumb/7/7c/Everton_FC_logo.svg/1200px-Everton_FC_logo.svg.png",
-            tottenham: "https://upload.wikimedia.org/wikipedia/en/thumb/b/b4/Tottenham_Hotspur.svg/1200px-Tottenham_Hotspur.svg.png",
+            // Ispaniya La Liga
+            realbetis: "https://tse3.mm.bing.net/th/id/OIP.Xso_OHuzEJHiCB0UbbhslgHaEK?rs=1&pid=ImgDetMain&o=7&rm=3",
+            atleticomadrid: "https://tse1.mm.bing.net/th/id/OIP.A6HjUcRpLIoBydJJlB2pgAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
             
-            // Germaniya chempionati
-            bayerleverkusen: "https://upload.wikimedia.org/wikipedia/en/thumb/5/59/Bayer_04_Leverkusen_logo.svg/1200px-Bayer_04_Leverkusen_logo.svg.png",
-            freiburg: "https://upload.wikimedia.org/wikipedia/en/thumb/2/2e/SC_Freiburg_logo.svg/1200px-SC_Freiburg_logo.svg.png",
+            // Rossiya Premer Ligasi
+            akhmat: "https://tse1.mm.bing.net/th/id/OIP.B4RUIvxnu1ADaQ9ESRHB2AHaFj?rs=1&pid=ImgDetMain&o=7&rm=3",
+            sochi: "https://tse4.mm.bing.net/th/id/OIP.CG0NeD6PtNOmLKQ1nHzJIAHaFj?rs=1&pid=ImgDetMain&o=7&rm=3",
             
-            // Ispaniya chempionati
-            osasuna: "https://upload.wikimedia.org/wikipedia/en/thumb/6/6b/CA_Osasuna_logo.svg/1200px-CA_Osasuna_logo.svg.png",
-            celtavigo: "https://upload.wikimedia.org/wikipedia/en/thumb/3/3e/RC_Celta_de_Vigo_logo.svg/1200px-RC_Celta_de_Vigo_logo.svg.png",
-            realmadrid: "https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Real_Madrid_CF.svg/1200px-Real_Madrid_CF.svg.png",
-            barcelona: "https://upload.wikimedia.org/wikipedia/en/thumb/4/47/FC_Barcelona_%28crest%29.svg/1200px-FC_Barcelona_%28crest%29.svg.png"
+            // Portugaliya Ligasi
+            moreirense: "https://tse2.mm.bing.net/th/id/OIP.frZ7vIJHRbc1zcrM8PZnWAHaEK?rs=1&pid=ImgDetMain&o=7&rm=3",
+            porto: "https://tse1.mm.bing.net/th/id/OIP.Lxgxtoq7yBDISBVNwX3n2QHaF_?rs=1&pid=ImgDetMain&o=7&rm=3",
+            
+            // Turkiya Superligasi
+            gaziantep: "https://tse2.mm.bing.net/th/id/OIP.-ywu6ytrjLJqcyOdKE8wVAHaHY?rs=1&pid=ImgDetMain&o=7&rm=3",
+            fenerbahce: "https://th.bing.com/th/id/R.75d72ea9e1bcc955eed113cd761caa48?rik=zgrfycncPKkiSg&pid=ImgRaw&r=0",
+            samsunspor: "https://tse1.mm.bing.net/th/id/OIP.RFzLj968PhpBEPycV9VsygHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
+            rizespor: "https://upload.wikimedia.org/wikipedia/tr/thumb/6/6e/%C3%87aykur_Rizespor_logo.png/800px-%C3%87aykur_Rizespor_logo.png",
+            
+            // Argentina Primerasi
+            barracascentral: "https://upload.wikimedia.org/wikipedia/en/thumb/6/6b/Barracas_Central_logo.svg/1200px-Barracas_Central_logo.svg.png",
+            bocajuniors: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Boca_Juniors_Logo.svg/1200px-Boca_Juniors_Logo.svg.png",
+            
+            // Bolgariya Ligasi
+            cska1948: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/CSKA_1948_Sofia_logo.png/800px-CSKA_1948_Sofia_logo.png",
+            ludogorets: "https://upload.wikimedia.org/wikipedia/en/thumb/6/6e/PFC_Ludogorets_Razgrad_logo.svg/1200px-PFC_Ludogorets_Razgrad_logo.svg.png",
+            
+            // Xorvatiya Ligasi
+            rijeka: "https://upload.wikimedia.org/wikipedia/en/thumb/9/9b/HNK_Rijeka.svg/1200px-HNK_Rijeka.svg.png",
+            osijek: "https://upload.wikimedia.org/wikipedia/en/thumb/3/3a/NK_Osijek_logo.svg/1200px-NK_Osijek_logo.svg.png",
+            vukovar: "https://upload.wikimedia.org/wikipedia/en/thumb/0/0e/NK_Vukovar_1991_logo.png/800px-NK_Vukovar_1991_logo.png",
+            dinamozagreb: "https://upload.wikimedia.org/wikipedia/en/thumb/4/47/GNK_Dinamo_Zagreb_logo.svg/1200px-GNK_Dinamo_Zagreb_logo.svg.png",
+            
+            // Bosniya Ligasi
+            zrinjski: "https://upload.wikimedia.org/wikipedia/en/thumb/4/4e/HŠK_Zrinjski_Mostar.png/800px-HŠK_Zrinjski_Mostar.png",
+            borac: "https://upload.wikimedia.org/wikipedia/en/thumb/6/6b/FK_Borac_Banja_Luka.png/800px-FK_Borac_Banja_Luka.png",
+            
+            // Isroil Ligasi
+            maccabitelaviv: "https://upload.wikimedia.org/wikipedia/en/thumb/7/7e/Maccabi_Tel_Aviv_FC.svg/1200px-Maccabi_Tel_Aviv_FC.svg.png",
+            hapoelkiryatshmona: "https://upload.wikimedia.org/wikipedia/en/thumb/7/7e/Hapoel_ironi_kiryat_shmona.png/800px-Hapoel_ironi_kiryat_shmona.png"
         };
         
         // O'yin prognozlari ma'lumotlari
         let predictionsData = [
-            // Angliya chempionati
+            // Ispaniya La Liga
             {
                 id: 1,
-                league: "Angliya Chempionati",
-                time: "19:00",
-                homeTeam: "Wolverhampton",
-                awayTeam: "Bernli",
+                league: "Ispaniya La Liga",
+                time: "01:00",
+                homeTeam: "Real Betis",
+                awayTeam: "Atletico Madrid",
                 odds: {
-                    home: 1.91,
-                    draw: 3.30,
-                    away: 4.34
-                },
-                filter: "premier",
-                votes: {
-                    home: 20,
-                    draw: 8,
-                    away: 5
-                },
-                userVote: null,
-                logos: {
-                    home: "wolverhampton",
-                    away: "burnley"
-                },
-                aiPrognoz: "HAR IKKALA JAMOA GOL URADI (2.01 KF)",
-                analysis: "AI tahliliga ko'ra, Wolverhampton uy maydonida kuchli jamoa bo'lib, Bernliga qarshi o'yinda aniq ustunlikka ega. Wolverhampton so'nggi o'yinlarda yaxshi natijalar ko'rsatmoqda va ularning hujumchilari tez-tez gol urish imkoniyatlarini yaratadi. Bernli esa safarda qiyin o'yin o'tkazadi va Wolverhampton himoyasiga qarshi gol urishda muammolarga duch kelishi mumkin. Biroq, Bernlining hujumkor futboli tufayli ikkala jamoa ham gol urishi mumkin."
-            },
-            {
-                id: 2,
-                league: "Angliya Chempionati",
-                time: "19:00",
-                homeTeam: "Arsenal",
-                awayTeam: "Kristal Peles",
-                odds: {
-                    home: 1.42,
-                    draw: 4.75,
-                    away: 7.00
-                },
-                filter: "premier",
-                votes: {
-                    home: 25,
-                    draw: 10,
-                    away: 3
-                },
-                userVote: null,
-                logos: {
-                    home: "arsenal",
-                    away: "crystalpalace"
-                },
-                aiPrognoz: "1 TAYM 2X (1.77 KF)",
-                analysis: "AI tahliliga ko'ra, Arsenal uy maydonida kuchli jamoa, ammo Kristal Peles himoyasi mustahkam. Arsenal so'nggi o'yinlarda barqaror natijalar ko'rsatmoqda, Kristal Peles esa tashqi maydonda himoyaviy futbol o'ynaydi. O'yin birinchi bo'limda teng bo'lishi kutilmoqda, ammo Arsenal ikkinchi bo'limda ustunlik qilishi mumkin."
-            },
-            {
-                id: 3,
-                league: "Angliya Chempionati",
-                time: "19:00",
-                homeTeam: "Aston Villa",
-                awayTeam: "Manchester Sity",
-                odds: {
-                    home: 4.33,
-                    draw: 4.00,
-                    away: 1.75
-                },
-                filter: "premier",
-                votes: {
-                    home: 8,
-                    draw: 15,
-                    away: 20
-                },
-                userVote: null,
-                logos: {
-                    home: "astonvilla",
-                    away: "manchestercity"
-                },
-                aiPrognoz: "1 TAYM TOTAL 1 KO'P (1.67 KF)",
-                analysis: "AI tahliliga ko'ra, Aston Villa uy maydonida kuchli, ammo Manchester Sity chempionlik uchun kurashayotgan jamoa. Manchester Sity so'nggi o'yinlarda ajoyib natijalar ko'rsatdi va ularning hujumkor futboli barchani hayratda qoldiradi. Aston Villa esa so'nggi o'yinlarda himoyada muammolarga duch keldi va Manchester Sityga qarshi o'yinda qiyin vaziyatda qolishi mumkin. O'yin birinchi bo'limida kamida bir gol kutilmoqda."
-            },
-            {
-                id: 4,
-                league: "Angliya Chempionati",
-                time: "21:00",
-                homeTeam: "Everton",
-                awayTeam: "Totenhem",
-                odds: {
-                    home: 2.30,
-                    draw: 3.40,
-                    away: 3.10
-                },
-                filter: "premier",
-                votes: {
-                    home: 12,
-                    draw: 18,
-                    away: 15
-                },
-                userVote: null,
-                logos: {
-                    home: "everton",
-                    away: "tottenham"
-                },
-                aiPrognoz: "TOTENHEM YUTQAZMAYDI 2X (1.66 KF)",
-                analysis: "AI tahliliga ko'ra, Everton uy maydonida kuchli jamoa, ammo Totenhem safarda ham yaxshi o'ynay oladi. Totenhem so'nggi o'yinlarda barqaror natijalar ko'rsatmoqda, Everton esa pastki qismda kurash olib bormoqda. O'yin ochiq bo'lishi kutilmoqda va Totenhem kamida durang o'ynashi kutilmoqda."
-            },
-            
-            // Germaniya chempionati
-            {
-                id: 5,
-                league: "Germaniya Chempionati",
-                time: "19:30",
-                homeTeam: "Bayer Leverkuzen",
-                awayTeam: "Frayburg",
-                odds: {
-                    home: 1.91,
-                    draw: 3.70,
-                    away: 3.80
-                },
-                filter: "bundesliga",
-                votes: {
-                    home: 22,
-                    draw: 10,
-                    away: 8
-                },
-                userVote: null,
-                logos: {
-                    home: "bayerleverkusen",
-                    away: "freiburg"
-                },
-                aiPrognoz: "BAYER GALABA QOZONADI (1.91 KF)",
-                analysis: "AI tahliliga ko'ra, Bayer Leverkuzen Bundesliganing eng kuchli jamoalaridan biri bo'lib, Frayburgga qarshi o'yinda aniq ustunlikka ega. Bayer so'nggi o'yinlarda ajoyib natijalar ko'rsatdi va ularning hujumkor futboli barchani hayratda qoldiradi. Frayburg esa so'nggi o'yinlarda himoyada muammolarga duch keldi va Bayerga qarshi o'yinda qiyin vaziyatda qolishi mumkin. Bayer o'z maydonida g'alaba qozonishi kutilmoqda."
-            },
-            
-            // Ispaniya chempionati
-            {
-                id: 6,
-                league: "Ispaniya Chempionati",
-                time: "22:30",
-                homeTeam: "Osasuna",
-                awayTeam: "Selta Vigo",
-                odds: {
-                    home: 2.55,
-                    draw: 3.10,
-                    away: 3.00
+                    home: 2.80,
+                    draw: 3.20,
+                    away: 2.50
                 },
                 filter: "laliga",
                 votes: {
-                    home: 14,
-                    draw: 16,
+                    home: 15,
+                    draw: 20,
+                    away: 25
+                },
+                userVote: null,
+                logos: {
+                    home: "realbetis",
+                    away: "atleticomadrid"
+                },
+                aiPrognoz: "TOTAL 3 KO'P (2.3 KF)",
+                analysis: "AI tahliliga ko'ra, Real Betis uy maydonida hujumkor futbol o'ynaydi, Atletico Madrid esa safarda mustahkam himoyaga ega. Biroq, ikkala jamoa ham so'nggi o'yinlarda ko'p gol urgan. Real Betisning uy maydonidagi hujumi va Atleticoning kontratakalar tufayli o'yinda kamida 3 gol kutilmoqda."
+            },
+            
+            // Rossiya Premer Ligasi
+            {
+                id: 2,
+                league: "Rossiya Premer Ligasi",
+                time: "21:30",
+                homeTeam: "Axmat",
+                awayTeam: "Sochi",
+                odds: {
+                    home: 2.10,
+                    draw: 3.40,
+                    away: 3.50
+                },
+                filter: "rpl",
+                votes: {
+                    home: 18,
+                    draw: 15,
                     away: 12
                 },
                 userVote: null,
                 logos: {
-                    home: "osasuna",
-                    away: "celtavigo"
+                    home: "akhmat",
+                    away: "sochi"
                 },
-                aiPrognoz: "HAR IKKI JAMOA GOL URADI (1.88 KF)",
-                analysis: "AI tahliliga ko'ra, Osasuna uy maydonida kuchli jamoa, ammo Selta Vigo hujumkor futbol o'ynashi bilan ajralib turadi. Osasuna so'nggi o'yinlarda barqaror natijalar ko'rsatmoqda, Selta Vigo esa tashqi maydonda ham yaxshi o'ynay oladi. O'yin ochiq bo'lishi kutilmoqda va ikkala jamoa ham gol urish imkoniyatiga ega. Selta Vigoning tezkor hujumlari Osasuna himoyasiga muammo tug'dirishi mumkin."
+                aiPrognoz: "2 TAYM TOTAL AXMAT 1 KO'P (2.17 KF)",
+                analysis: "AI tahliliga ko'ra, Axmat uy maydonida kuchli jamoa bo'lib, Sochiga qarshi o'yinda hujumkor futbol o'ynashi kutilmoqda. Sochi esa safarda himoyaviy taktika bilan o'ynaydi. O'yin ikkinchi bo'limda ochilishi va Axmatning kamida bir gol urishi kutilmoqda."
             },
+            
+            // Portugaliya Ligasi
             {
-                id: 7,
-                league: "Ispaniya Chempionati",
-                time: "20:15",
-                homeTeam: "Real Madrid",
-                awayTeam: "Barselona",
+                id: 3,
+                league: "Portugaliya Ligasi",
+                time: "01:15",
+                homeTeam: "Moreyrense",
+                awayTeam: "Portu",
                 odds: {
-                    home: 1.91,
-                    draw: 4.20,
-                    away: 3.40
+                    home: 4.50,
+                    draw: 3.80,
+                    away: 1.75
                 },
-                filter: "laliga",
+                filter: "portugal",
                 votes: {
-                    home: 18,
-                    draw: 15,
-                    away: 20
+                    home: 8,
+                    draw: 12,
+                    away: 30
                 },
                 userVote: null,
                 logos: {
-                    home: "realmadrid",
-                    away: "barcelona"
+                    home: "moreirense",
+                    away: "porto"
                 },
-                aiPrognoz: "BARSELONA TOTALI 1.5 KO'P (1.92 KF)",
-                analysis: "AI tahliliga ko'ra, Real Madrid uy maydonida kuchli jamoa bo'lib, Barselonaga qarshi o'yinda aniq ustunlikka ega. Real Madrid so'nggi o'yinlarda yaxshi natijalar ko'rsatmoqda va ularning hujumchilari tez-tez gol urish imkoniyatlarini yaratadi. Barselona esa safarda qiyin o'yin o'tkazadi va Real Madrid himoyasiga qarshi gol urishda muammolarga duch kelishi mumkin. Biroq, Barselona hujumkor futboli tufayli kamida bir gol urishi kutilmoqda."
+                aiPrognoz: "PORTU TOTAL 2 KO'P (1.72 KF)",
+                analysis: "AI tahliliga ko'ra, Portu Portugaliya ligasining eng kuchli jamoalaridan biri bo'lib, Moreyrensega qarshi o'yinda aniq ustunlikka ega. Portu so'nggi o'yinlarda ajoyib natijalar ko'rsatdi va ularning hujumkor futboli barchani hayratda qoldiradi. Moreyrense esa so'nggi o'yinlarda himoyada muammolarga duch keldi va Portuga qarshi o'yinda qiyin vaziyatda qolishi mumkin."
+            },
+            
+            // Turkiya Superligasi
+            {
+                id: 4,
+                league: "Turkiya Superligasi",
+                time: "22:00",
+                homeTeam: "Gaziantep",
+                awayTeam: "Fenerbaxche",
+                odds: {
+                    home: 4.20,
+                    draw: 3.80,
+                    away: 1.70
+                },
+                filter: "turkey",
+                votes: {
+                    home: 10,
+                    draw: 15,
+                    away: 25
+                },
+                userVote: null,
+                logos: {
+                    home: "gaziantep",
+                    away: "fenerbahce"
+                },
+                aiPrognoz: "FENERBAXCHE GALABA -1 FORA (2.08 KF)",
+                analysis: "AI tahliliga ko'ra, Fenerbaxche Turkiya Superligasining eng kuchli jamoasi bo'lib, Gaziantepga qarshi o'yinda aniq ustunlikka ega. Fenerbaxche so'nggi o'yinlarda ajoyib natijalar ko'rsatdi va ularning hujumkor futboli barchani hayratda qoldiradi. Gaziantep esa so'nggi o'yinlarda himoyada muammolarga duch keldi va Fenerbaxchega qarshi o'yinda qiyin vaziyatda qolishi mumkin."
+            },
+            {
+                id: 5,
+                league: "Turkiya Superligasi",
+                time: "22:00",
+                homeTeam: "Samsunspor",
+                awayTeam: "Rizespor",
+                odds: {
+                    home: 2.40,
+                    draw: 3.30,
+                    away: 2.90
+                },
+                filter: "turkey",
+                votes: {
+                    home: 16,
+                    draw: 18,
+                    away: 14
+                },
+                userVote: null,
+                logos: {
+                    home: "samsunspor",
+                    away: "rizespor"
+                },
+                aiPrognoz: "RIZESPOR TOTAL 0.5 KO'P (1.47 KF)",
+                analysis: "AI tahliliga ko'ra, Samsunspor uy maydonida kuchli jamoa, ammo Rizespor hujumkor futbol o'ynashi bilan ajralib turadi. Rizespor so'nggi o'yinlarda barqaror natijalar ko'rsatmoqda va ularning hujumchilari yuqori darajada o'ynaydi. Samsunspor himoyasi mustahkam, lekin Rizesporning hujum kuchiga qarshi turish ular uchun qiyin bo'ladi."
+            },
+            
+            // Argentina Primerasi
+            {
+                id: 6,
+                league: "Argentina Primerasi",
+                time: "00:00",
+                homeTeam: "Barrakas Sentral",
+                awayTeam: "Boka Xuniors",
+                odds: {
+                    home: 3.50,
+                    draw: 3.20,
+                    away: 2.10
+                },
+                filter: "argentina",
+                votes: {
+                    home: 12,
+                    draw: 20,
+                    away: 18
+                },
+                userVote: null,
+                logos: {
+                    home: "barracascentral",
+                    away: "bocajuniors"
+                },
+                aiPrognoz: "2 TAYM BARRACAS SENTRAL YUTQAZMAYDI 1X (1.49 KF)",
+                analysis: "AI tahliliga ko'ra, Barrakas Sentral uy maydonida kuchli jamoa bo'lib, Boka Xuniorsga qarshi o'yinda mustahkam himoya va kontratakalar orqali natija qayd etishi mumkin. Boka Xuniors esa safarda qiyin o'yin o'tkazadi va Barrakas Sentral himoyasiga qarshi gol urishda muammolarga duch kelishi mumkin. O'yin ikkinchi bo'limda Barrakas Sentralning kamida durang o'ynashi kutilmoqda."
+            },
+            
+            // Bolgariya Ligasi
+            {
+                id: 7,
+                league: "Bolgariya Ligasi",
+                time: "20:30",
+                homeTeam: "CSKA 1948",
+                awayTeam: "Ludogorets",
+                odds: {
+                    home: 3.80,
+                    draw: 3.50,
+                    away: 1.95
+                },
+                filter: "bulgaria",
+                votes: {
+                    home: 10,
+                    draw: 15,
+                    away: 25
+                },
+                userVote: null,
+                logos: {
+                    home: "cska1948",
+                    away: "ludogorets"
+                },
+                aiPrognoz: "2 TAYM TOTAL 1.5 KO'P (2.23 KF)",
+                analysis: "AI tahliliga ko'ra, CSKA 1948 uy maydonida kuchli jamoa, ammo Ludogorets Bolgariya ligasining eng kuchli jamoasi. Ludogorets so'nggi o'yinlarda ajoyib natijalar ko'rsatdi va ularning hujumkor futboli barchani hayratda qoldiradi. CSKA 1948 esa so'nggi o'yinlarda himoyada muammolarga duch keldi va Ludogoretsga qarshi o'yinda qiyin vaziyatda qolishi mumkin. O'yin ikkinchi bo'limda kamida 2 gol kutilmoqda."
+            },
+            
+            // Xorvatiya Ligasi
+            {
+                id: 8,
+                league: "Xorvatiya Ligasi",
+                time: "20:30",
+                homeTeam: "Riyeka",
+                awayTeam: "Osiyek",
+                odds: {
+                    home: 2.20,
+                    draw: 3.30,
+                    away: 3.20
+                },
+                filter: "croatia",
+                votes: {
+                    home: 20,
+                    draw: 15,
+                    away: 12
+                },
+                userVote: null,
+                logos: {
+                    home: "rijeka",
+                    away: "osijek"
+                },
+                aiPrognoz: "TOTAL 3 KO'P (2.59 KF)",
+                analysis: "AI tahliliga ko'ra, Riyeka uy maydonida hujumkor futbol o'ynaydi, Osiyek esa safarda mustahkam himoyaga ega. Biroq, ikkala jamoa ham so'nggi o'yinlarda ko'p gol urgan. Riyekaning uy maydonidagi hujumi va Osiyekning kontratakalar tufayli o'yinda kamida 3 gol kutilmoqda."
+            },
+            {
+                id: 9,
+                league: "Xorvatiya Ligasi",
+                time: "23:00",
+                homeTeam: "Vukovar",
+                awayTeam: "Dinamo Zagreb",
+                odds: {
+                    home: 5.50,
+                    draw: 4.00,
+                    away: 1.55
+                },
+                filter: "croatia",
+                votes: {
+                    home: 8,
+                    draw: 15,
+                    away: 27
+                },
+                userVote: null,
+                logos: {
+                    home: "vukovar",
+                    away: "dinamozagreb"
+                },
+                aiPrognoz: "1 TAYM VUKOVAR YUTQAZMAYDI 1X (2.01 KF)",
+                analysis: "AI tahliliga ko'ra, Vukovar uy maydonida kuchli jamoa bo'lib, Dinamo Zagrebga qarshi o'yinda mustahkam himoya va kontratakalar orqali natija qayd etishi mumkin. Dinamo Zagreb esa safarda qiyin o'yin o'tkazadi va Vukovar himoyasiga qarshi gol urishda muammolarga duch kelishi mumkin. O'yin birinchi bo'limda Vukovarning kamida durang o'ynashi kutilmoqda."
+            },
+            
+            // Bosniya Ligasi
+            {
+                id: 10,
+                league: "Bosniya Ligasi",
+                time: "22:00",
+                homeTeam: "Zryinski",
+                awayTeam: "Borats",
+                odds: {
+                    home: 2.10,
+                    draw: 3.20,
+                    away: 3.50
+                },
+                filter: "bosnia",
+                votes: {
+                    home: 18,
+                    draw: 16,
+                    away: 14
+                },
+                userVote: null,
+                logos: {
+                    home: "zrinjski",
+                    away: "borac"
+                },
+                aiPrognoz: "2 TAYM TOTAL 1 KO'P",
+                analysis: "AI tahliliga ko'ra, Zryinski uy maydonida kuchli jamoa bo'lib, Boratsga qarshi o'yinda hujumkor futbol o'ynashi kutilmoqda. Borats esa safarda himoyaviy taktika bilan o'ynaydi. O'yin ikkinchi bo'limda ochilishi va kamida bir gol kutilmoqda."
+            },
+            
+            // Isroil Ligasi
+            {
+                id: 11,
+                league: "Isroil Ligasi",
+                time: "23:00",
+                homeTeam: "Makkabi Tel-Aviv",
+                awayTeam: "Hapoel Kiryat-Shmona",
+                odds: {
+                    home: 1.65,
+                    draw: 3.80,
+                    away: 5.00
+                },
+                filter: "israel",
+                votes: {
+                    home: 25,
+                    draw: 12,
+                    away: 8
+                },
+                userVote: null,
+                logos: {
+                    home: "maccabitelaviv",
+                    away: "hapoelkiryatshmona"
+                },
+                aiPrognoz: "TOTAL 2.5 KO'P",
+                analysis: "AI tahliliga ko'ra, Makkabi Tel-Aviv uy maydonida hujumkor futbol o'ynaydi, Hapoel Kiryat-Shmona esa safarda mustahkam himoyaga ega. Biroq, ikkala jamoa ham so'nggi o'yinlarda ko'p gol urgan. Makkabi Tel-Avivning uy maydonidagi hujumi va Hapoel Kiryat-Shmonaning kontratakalar tufayli o'yinda kamida 3 gol kutilmoqda."
             }
         ];
         
@@ -1432,20 +1570,28 @@
         // Jamoalarning qisqa nomlari
         function getShortTeamName(fullName) {
             const shortNames = {
-                "Wolverhampton": "WOL",
-                "Bernli": "BUR",
-                "Arsenal": "ARS",
-                "Kristal Peles": "CRY",
-                "Aston Villa": "AVL",
-                "Manchester Sity": "MCI",
-                "Everton": "EVE",
-                "Totenhem": "TOT",
-                "Bayer Leverkuzen": "LEV",
-                "Frayburg": "FRE",
-                "Osasuna": "OSA",
-                "Selta Vigo": "CEL",
-                "Real Madrid": "RMA",
-                "Barselona": "BAR"
+                "Real Betis": "BET",
+                "Atletico Madrid": "ATM",
+                "Axmat": "AKH",
+                "Sochi": "SOC",
+                "Moreyrense": "MOR",
+                "Portu": "POR",
+                "Gaziantep": "GAZ",
+                "Fenerbaxche": "FEN",
+                "Samsunspor": "SAM",
+                "Rizespor": "RIZ",
+                "Barrakas Sentral": "BAR",
+                "Boka Xuniors": "BOC",
+                "CSKA 1948": "CSK",
+                "Ludogorets": "LUD",
+                "Riyeka": "RIJ",
+                "Osiyek": "OSI",
+                "Vukovar": "VUK",
+                "Dinamo Zagreb": "DIN",
+                "Zryinski": "ZRI",
+                "Borats": "BOR",
+                "Makkabi Tel-Aviv": "MTA",
+                "Hapoel Kiryat-Shmona": "HKS"
             };
             return shortNames[fullName] || fullName.substring(0, 3).toUpperCase();
         }
