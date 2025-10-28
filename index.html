@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIFUT - Futbol Prognozlari</title>
+    <title>AIFUT - 28 Oktyabr Prognozlari</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* Asosiy CSS */
@@ -909,21 +909,15 @@
     <main>
         <div class="container">
             <h1 class="page-title">
-                <i class="fas fa-bolt"></i> Bugungi O'yinlar
+                <i class="fas fa-bolt"></i> 28 Oktyabr O'yinlari
             </h1>
             
             <!-- Filterlar -->
             <div class="filters">
                 <button class="filter-btn active" data-filter="all">Barchasi</button>
-                <button class="filter-btn" data-filter="laliga">Ispaniya La Liga</button>
-                <button class="filter-btn" data-filter="rpl">Rossiya Premer Ligasi</button>
-                <button class="filter-btn" data-filter="portugal">Portugaliya Ligasi</button>
-                <button class="filter-btn" data-filter="turkey">Turkiya Superligasi</button>
-                <button class="filter-btn" data-filter="argentina">Argentina Primerasi</button>
-                <button class="filter-btn" data-filter="bulgaria">Bolgariya Ligasi</button>
-                <button class="filter-btn" data-filter="croatia">Xorvatiya Ligasi</button>
-                <button class="filter-btn" data-filter="bosnia">Bosniya Ligasi</button>
-                <button class="filter-btn" data-filter="israel">Isroil Ligasi</button>
+                <button class="filter-btn" data-filter="seriea">Italiya Serie A</button>
+                <button class="filter-btn" data-filter="germany">Germaniya Kubogi</button>
+                <button class="filter-btn" data-filter="netherlands">Niderlandiya Kubogi</button>
             </div>
             
             <!-- O'yin kartochkalari -->
@@ -989,121 +983,51 @@
             const now = new Date();
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             const formattedDate = now.toLocaleDateString('uz-UZ', options);
-            document.getElementById('current-date').textContent = formattedDate;
+            document.getElementById('current-date').textContent = "28 Oktyabr 2023";
         }
         
         // Logolar uchun URL manzillar
         const logoUrls = {
-            // Ispaniya La Liga
-            realbetis: "https://tse3.mm.bing.net/th/id/OIP.Xso_OHuzEJHiCB0UbbhslgHaEK?rs=1&pid=ImgDetMain&o=7&rm=3",
-            atleticomadrid: "https://tse1.mm.bing.net/th/id/OIP.A6HjUcRpLIoBydJJlB2pgAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
+            // Italiya Serie A
+            lecce: "https://upload.wikimedia.org/wikipedia/en/thumb/3/33/U.S._Lecce_logo.svg/1200px-U.S._Lecce_logo.svg.png",
+            napoli: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/S.S.C._Napoli_logo.svg/1200px-S.S.C._Napoli_logo.svg.png",
+            atalanta: "https://upload.wikimedia.org/wikipedia/en/thumb/6/66/AtalantaBC.svg/1200px-AtalantaBC.svg.png",
+            milan: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Logo_of_AC_Milan.svg/1200px-Logo_of_AC_Milan.svg.png",
             
-            // Rossiya Premer Ligasi
-            akhmat: "https://tse1.mm.bing.net/th/id/OIP.B4RUIvxnu1ADaQ9ESRHB2AHaFj?rs=1&pid=ImgDetMain&o=7&rm=3",
-            sochi: "https://tse4.mm.bing.net/th/id/OIP.CG0NeD6PtNOmLKQ1nHzJIAHaFj?rs=1&pid=ImgDetMain&o=7&rm=3",
+            // Germaniya Kubogi
+            wolfsburg: "https://upload.wikimedia.org/wikipedia/en/thumb/f/f3/VfL_Wolfsburg_logo.svg/1200px-VfL_Wolfsburg_logo.svg.png",
+            holstein: "https://upload.wikimedia.org/wikipedia/en/thumb/4/4a/Holstein_Kiel_logo.svg/1200px-Holstein_Kiel_logo.svg.png",
+            heidenheim: "https://upload.wikimedia.org/wikipedia/en/thumb/5/5e/1._FC_Heidenheim_1846_logo.svg/1200px-1._FC_Heidenheim_1846_logo.svg.png",
+            hamburg: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/HSV-Logo.svg/1200px-HSV-Logo.svg.png",
+            eintracht: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Eintracht_Frankfurt_Logo.svg/1200px-Eintracht_Frankfurt_Logo.svg.png",
+            dortmund: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Borussia_Dortmund_logo.svg/1200px-Borussia_Dortmund_logo.svg.png",
+            hertha: "https://upload.wikimedia.org/wikipedia/en/thumb/5/5d/Hertha_BSC_Logo_2012.svg/1200px-Hertha_BSC_Logo_2012.svg.png",
+            elversberg: "https://upload.wikimedia.org/wikipedia/en/thumb/7/7c/SV_Elversberg_logo.svg/1200px-SV_Elversberg_logo.svg.png",
+            energie: "https://upload.wikimedia.org/wikipedia/en/thumb/5/5c/FC_Energie_Cottbus_logo.svg/1200px-FC_Energie_Cottbus_logo.svg.png",
+            leipzig: "https://upload.wikimedia.org/wikipedia/en/thumb/0/04/RB_Leipzig_2014_logo.svg/1200px-RB_Leipzig_2014_logo.svg.png",
+            monchengladbach: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Borussia_Mönchengladbach_logo.svg/1200px-Borussia_Mönchengladbach_logo.svg.png",
+            karlsruhe: "https://upload.wikimedia.org/wikipedia/en/thumb/0/02/Karlsruher_SC_Logo.svg/1200px-Karlsruher_SC_Logo.svg.png",
             
-            // Portugaliya Ligasi
-            moreirense: "https://tse2.mm.bing.net/th/id/OIP.frZ7vIJHRbc1zcrM8PZnWAHaEK?rs=1&pid=ImgDetMain&o=7&rm=3",
-            porto: "https://tse1.mm.bing.net/th/id/OIP.Lxgxtoq7yBDISBVNwX3n2QHaF_?rs=1&pid=ImgDetMain&o=7&rm=3",
-            
-            // Turkiya Superligasi
-            gaziantep: "https://tse2.mm.bing.net/th/id/OIP.-ywu6ytrjLJqcyOdKE8wVAHaHY?rs=1&pid=ImgDetMain&o=7&rm=3",
-            fenerbahce: "https://th.bing.com/th/id/R.75d72ea9e1bcc955eed113cd761caa48?rik=zgrfycncPKkiSg&pid=ImgRaw&r=0",
-            samsunspor: "https://tse1.mm.bing.net/th/id/OIP.RFzLj968PhpBEPycV9VsygHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
-            rizespor: "https://upload.wikimedia.org/wikipedia/tr/thumb/6/6e/%C3%87aykur_Rizespor_logo.png/800px-%C3%87aykur_Rizespor_logo.png",
-            
-            // Argentina Primerasi
-            barracascentral: "https://upload.wikimedia.org/wikipedia/en/thumb/6/6b/Barracas_Central_logo.svg/1200px-Barracas_Central_logo.svg.png",
-            bocajuniors: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Boca_Juniors_Logo.svg/1200px-Boca_Juniors_Logo.svg.png",
-            
-            // Bolgariya Ligasi
-            cska1948: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/CSKA_1948_Sofia_logo.png/800px-CSKA_1948_Sofia_logo.png",
-            ludogorets: "https://upload.wikimedia.org/wikipedia/en/thumb/6/6e/PFC_Ludogorets_Razgrad_logo.svg/1200px-PFC_Ludogorets_Razgrad_logo.svg.png",
-            
-            // Xorvatiya Ligasi
-            rijeka: "https://upload.wikimedia.org/wikipedia/en/thumb/9/9b/HNK_Rijeka.svg/1200px-HNK_Rijeka.svg.png",
-            osijek: "https://upload.wikimedia.org/wikipedia/en/thumb/3/3a/NK_Osijek_logo.svg/1200px-NK_Osijek_logo.svg.png",
-            vukovar: "https://upload.wikimedia.org/wikipedia/en/thumb/0/0e/NK_Vukovar_1991_logo.png/800px-NK_Vukovar_1991_logo.png",
-            dinamozagreb: "https://upload.wikimedia.org/wikipedia/en/thumb/4/47/GNK_Dinamo_Zagreb_logo.svg/1200px-GNK_Dinamo_Zagreb_logo.svg.png",
-            
-            // Bosniya Ligasi
-            zrinjski: "https://upload.wikimedia.org/wikipedia/en/thumb/4/4e/HŠK_Zrinjski_Mostar.png/800px-HŠK_Zrinjski_Mostar.png",
-            borac: "https://upload.wikimedia.org/wikipedia/en/thumb/6/6b/FK_Borac_Banja_Luka.png/800px-FK_Borac_Banja_Luka.png",
-            
-            // Isroil Ligasi
-            maccabitelaviv: "https://upload.wikimedia.org/wikipedia/en/thumb/7/7e/Maccabi_Tel_Aviv_FC.svg/1200px-Maccabi_Tel_Aviv_FC.svg.png",
-            hapoelkiryatshmona: "https://upload.wikimedia.org/wikipedia/en/thumb/7/7e/Hapoel_ironi_kiryat_shmona.png/800px-Hapoel_ironi_kiryat_shmona.png"
+            // Niderlandiya Kubogi
+            helmond: "https://upload.wikimedia.org/wikipedia/en/thumb/5/5d/Helmond_Sport_logo.svg/1200px-Helmond_Sport_logo.svg.png",
+            zwolle: "https://upload.wikimedia.org/wikipedia/en/thumb/7/7f/PEC_Zwolle_logo.svg/1200px-PEC_Zwolle_logo.svg.png"
         };
         
         // O'yin prognozlari ma'lumotlari
         let predictionsData = [
-            // Ispaniya La Liga
+            // Italiya Serie A
             {
                 id: 1,
-                league: "Ispaniya La Liga",
-                time: "01:00",
-                homeTeam: "Real Betis",
-                awayTeam: "Atletico Madrid",
-                odds: {
-                    home: 2.80,
-                    draw: 3.20,
-                    away: 2.50
-                },
-                filter: "laliga",
-                votes: {
-                    home: 15,
-                    draw: 20,
-                    away: 25
-                },
-                userVote: null,
-                logos: {
-                    home: "realbetis",
-                    away: "atleticomadrid"
-                },
-                aiPrognoz: "TOTAL 3 KO'P (2.3 KF)",
-                analysis: "AI tahliliga ko'ra, Real Betis uy maydonida hujumkor futbol o'ynaydi, Atletico Madrid esa safarda mustahkam himoyaga ega. Biroq, ikkala jamoa ham so'nggi o'yinlarda ko'p gol urgan. Real Betisning uy maydonidagi hujumi va Atleticoning kontratakalar tufayli o'yinda kamida 3 gol kutilmoqda."
-            },
-            
-            // Rossiya Premer Ligasi
-            {
-                id: 2,
-                league: "Rossiya Premer Ligasi",
-                time: "21:30",
-                homeTeam: "Axmat",
-                awayTeam: "Sochi",
-                odds: {
-                    home: 2.10,
-                    draw: 3.40,
-                    away: 3.50
-                },
-                filter: "rpl",
-                votes: {
-                    home: 18,
-                    draw: 15,
-                    away: 12
-                },
-                userVote: null,
-                logos: {
-                    home: "akhmat",
-                    away: "sochi"
-                },
-                aiPrognoz: "2 TAYM TOTAL AXMAT 1 KO'P (2.17 KF)",
-                analysis: "AI tahliliga ko'ra, Axmat uy maydonida kuchli jamoa bo'lib, Sochiga qarshi o'yinda hujumkor futbol o'ynashi kutilmoqda. Sochi esa safarda himoyaviy taktika bilan o'ynaydi. O'yin ikkinchi bo'limda ochilishi va Axmatning kamida bir gol urishi kutilmoqda."
-            },
-            
-            // Portugaliya Ligasi
-            {
-                id: 3,
-                league: "Portugaliya Ligasi",
-                time: "01:15",
-                homeTeam: "Moreyrense",
-                awayTeam: "Portu",
+                league: "Italiya Serie A",
+                time: "20:30",
+                homeTeam: "Lechche",
+                awayTeam: "Napoli",
                 odds: {
                     home: 4.50,
                     draw: 3.80,
                     away: 1.75
                 },
-                filter: "portugal",
+                filter: "seriea",
                 votes: {
                     home: 8,
                     draw: 12,
@@ -1111,211 +1035,51 @@
                 },
                 userVote: null,
                 logos: {
-                    home: "moreirense",
-                    away: "porto"
+                    home: "lecce",
+                    away: "napoli"
                 },
-                aiPrognoz: "PORTU TOTAL 2 KO'P (1.72 KF)",
-                analysis: "AI tahliliga ko'ra, Portu Portugaliya ligasining eng kuchli jamoalaridan biri bo'lib, Moreyrensega qarshi o'yinda aniq ustunlikka ega. Portu so'nggi o'yinlarda ajoyib natijalar ko'rsatdi va ularning hujumkor futboli barchani hayratda qoldiradi. Moreyrense esa so'nggi o'yinlarda himoyada muammolarga duch keldi va Portuga qarshi o'yinda qiyin vaziyatda qolishi mumkin."
-            },
-            
-            // Turkiya Superligasi
-            {
-                id: 4,
-                league: "Turkiya Superligasi",
-                time: "22:00",
-                homeTeam: "Gaziantep",
-                awayTeam: "Fenerbaxche",
-                odds: {
-                    home: 4.20,
-                    draw: 3.80,
-                    away: 1.70
-                },
-                filter: "turkey",
-                votes: {
-                    home: 10,
-                    draw: 15,
-                    away: 25
-                },
-                userVote: null,
-                logos: {
-                    home: "gaziantep",
-                    away: "fenerbahce"
-                },
-                aiPrognoz: "FENERBAXCHE GALABA -1 FORA (2.08 KF)",
-                analysis: "AI tahliliga ko'ra, Fenerbaxche Turkiya Superligasining eng kuchli jamoasi bo'lib, Gaziantepga qarshi o'yinda aniq ustunlikka ega. Fenerbaxche so'nggi o'yinlarda ajoyib natijalar ko'rsatdi va ularning hujumkor futboli barchani hayratda qoldiradi. Gaziantep esa so'nggi o'yinlarda himoyada muammolarga duch keldi va Fenerbaxchega qarshi o'yinda qiyin vaziyatda qolishi mumkin."
+                aiPrognoz: "TOTAL 2 TAYM 1.5 KO'P",
+                analysis: "AI tahliliga ko'ra, Napoli Italiya Seria A ning eng kuchli jamoalaridan biri bo'lib, Lechchega qarshi o'yinda aniq ustunlikka ega. Napoli so'nggi o'yinlarda ajoyib natijalar ko'rsatdi va ularning hujumkor futboli barchani hayratda qoldiradi. Lechche esa so'nggi o'yinlarda himoyada muammolarga duch keldi va Napoliga qarshi o'yinda qiyin vaziyatda qolishi mumkin. O'yin ikkinchi bo'limda kamida 2 gol kutilmoqda."
             },
             {
-                id: 5,
-                league: "Turkiya Superligasi",
-                time: "22:00",
-                homeTeam: "Samsunspor",
-                awayTeam: "Rizespor",
+                id: 2,
+                league: "Italiya Serie A",
+                time: "22:45",
+                homeTeam: "Atalanta",
+                awayTeam: "Milan",
                 odds: {
                     home: 2.40,
-                    draw: 3.30,
+                    draw: 3.40,
                     away: 2.90
                 },
-                filter: "turkey",
-                votes: {
-                    home: 16,
-                    draw: 18,
-                    away: 14
-                },
-                userVote: null,
-                logos: {
-                    home: "samsunspor",
-                    away: "rizespor"
-                },
-                aiPrognoz: "RIZESPOR TOTAL 0.5 KO'P (1.47 KF)",
-                analysis: "AI tahliliga ko'ra, Samsunspor uy maydonida kuchli jamoa, ammo Rizespor hujumkor futbol o'ynashi bilan ajralib turadi. Rizespor so'nggi o'yinlarda barqaror natijalar ko'rsatmoqda va ularning hujumchilari yuqori darajada o'ynaydi. Samsunspor himoyasi mustahkam, lekin Rizesporning hujum kuchiga qarshi turish ular uchun qiyin bo'ladi."
-            },
-            
-            // Argentina Primerasi
-            {
-                id: 6,
-                league: "Argentina Primerasi",
-                time: "00:00",
-                homeTeam: "Barrakas Sentral",
-                awayTeam: "Boka Xuniors",
-                odds: {
-                    home: 3.50,
-                    draw: 3.20,
-                    away: 2.10
-                },
-                filter: "argentina",
-                votes: {
-                    home: 12,
-                    draw: 20,
-                    away: 18
-                },
-                userVote: null,
-                logos: {
-                    home: "barracascentral",
-                    away: "bocajuniors"
-                },
-                aiPrognoz: "2 TAYM BARRACAS SENTRAL YUTQAZMAYDI 1X (1.49 KF)",
-                analysis: "AI tahliliga ko'ra, Barrakas Sentral uy maydonida kuchli jamoa bo'lib, Boka Xuniorsga qarshi o'yinda mustahkam himoya va kontratakalar orqali natija qayd etishi mumkin. Boka Xuniors esa safarda qiyin o'yin o'tkazadi va Barrakas Sentral himoyasiga qarshi gol urishda muammolarga duch kelishi mumkin. O'yin ikkinchi bo'limda Barrakas Sentralning kamida durang o'ynashi kutilmoqda."
-            },
-            
-            // Bolgariya Ligasi
-            {
-                id: 7,
-                league: "Bolgariya Ligasi",
-                time: "20:30",
-                homeTeam: "CSKA 1948",
-                awayTeam: "Ludogorets",
-                odds: {
-                    home: 3.80,
-                    draw: 3.50,
-                    away: 1.95
-                },
-                filter: "bulgaria",
-                votes: {
-                    home: 10,
-                    draw: 15,
-                    away: 25
-                },
-                userVote: null,
-                logos: {
-                    home: "cska1948",
-                    away: "ludogorets"
-                },
-                aiPrognoz: "2 TAYM TOTAL 1.5 KO'P (2.23 KF)",
-                analysis: "AI tahliliga ko'ra, CSKA 1948 uy maydonida kuchli jamoa, ammo Ludogorets Bolgariya ligasining eng kuchli jamoasi. Ludogorets so'nggi o'yinlarda ajoyib natijalar ko'rsatdi va ularning hujumkor futboli barchani hayratda qoldiradi. CSKA 1948 esa so'nggi o'yinlarda himoyada muammolarga duch keldi va Ludogoretsga qarshi o'yinda qiyin vaziyatda qolishi mumkin. O'yin ikkinchi bo'limda kamida 2 gol kutilmoqda."
-            },
-            
-            // Xorvatiya Ligasi
-            {
-                id: 8,
-                league: "Xorvatiya Ligasi",
-                time: "20:30",
-                homeTeam: "Riyeka",
-                awayTeam: "Osiyek",
-                odds: {
-                    home: 2.20,
-                    draw: 3.30,
-                    away: 3.20
-                },
-                filter: "croatia",
+                filter: "seriea",
                 votes: {
                     home: 20,
-                    draw: 15,
-                    away: 12
+                    draw: 18,
+                    away: 22
                 },
                 userVote: null,
                 logos: {
-                    home: "rijeka",
-                    away: "osijek"
+                    home: "atalanta",
+                    away: "milan"
                 },
-                aiPrognoz: "TOTAL 3 KO'P (2.59 KF)",
-                analysis: "AI tahliliga ko'ra, Riyeka uy maydonida hujumkor futbol o'ynaydi, Osiyek esa safarda mustahkam himoyaga ega. Biroq, ikkala jamoa ham so'nggi o'yinlarda ko'p gol urgan. Riyekaning uy maydonidagi hujumi va Osiyekning kontratakalar tufayli o'yinda kamida 3 gol kutilmoqda."
-            },
-            {
-                id: 9,
-                league: "Xorvatiya Ligasi",
-                time: "23:00",
-                homeTeam: "Vukovar",
-                awayTeam: "Dinamo Zagreb",
-                odds: {
-                    home: 5.50,
-                    draw: 4.00,
-                    away: 1.55
-                },
-                filter: "croatia",
-                votes: {
-                    home: 8,
-                    draw: 15,
-                    away: 27
-                },
-                userVote: null,
-                logos: {
-                    home: "vukovar",
-                    away: "dinamozagreb"
-                },
-                aiPrognoz: "1 TAYM VUKOVAR YUTQAZMAYDI 1X (2.01 KF)",
-                analysis: "AI tahliliga ko'ra, Vukovar uy maydonida kuchli jamoa bo'lib, Dinamo Zagrebga qarshi o'yinda mustahkam himoya va kontratakalar orqali natija qayd etishi mumkin. Dinamo Zagreb esa safarda qiyin o'yin o'tkazadi va Vukovar himoyasiga qarshi gol urishda muammolarga duch kelishi mumkin. O'yin birinchi bo'limda Vukovarning kamida durang o'ynashi kutilmoqda."
+                aiPrognoz: "TOTAL ATALANTA 1 KO'P",
+                analysis: "AI tahliliga ko'ra, Atalanta uy maydonida hujumkor futbol o'ynaydi, Milan esa safarda mustahkam himoyaga ega. Atalanta so'nggi o'yinlarda ko'p gol urgan, Milan esa yuqori darajadagi himoya ko'rsatmoqda. Biroq, Atalantaning uy maydonidagi hujumi tufayli ular kamida bir gol urishi kutilmoqda."
             },
             
-            // Bosniya Ligasi
+            // Germaniya Kubogi
             {
-                id: 10,
-                league: "Bosniya Ligasi",
-                time: "22:00",
-                homeTeam: "Zryinski",
-                awayTeam: "Borats",
-                odds: {
-                    home: 2.10,
-                    draw: 3.20,
-                    away: 3.50
-                },
-                filter: "bosnia",
-                votes: {
-                    home: 18,
-                    draw: 16,
-                    away: 14
-                },
-                userVote: null,
-                logos: {
-                    home: "zrinjski",
-                    away: "borac"
-                },
-                aiPrognoz: "2 TAYM TOTAL 1 KO'P",
-                analysis: "AI tahliliga ko'ra, Zryinski uy maydonida kuchli jamoa bo'lib, Boratsga qarshi o'yinda hujumkor futbol o'ynashi kutilmoqda. Borats esa safarda himoyaviy taktika bilan o'ynaydi. O'yin ikkinchi bo'limda ochilishi va kamida bir gol kutilmoqda."
-            },
-            
-            // Isroil Ligasi
-            {
-                id: 11,
-                league: "Isroil Ligasi",
-                time: "23:00",
-                homeTeam: "Makkabi Tel-Aviv",
-                awayTeam: "Hapoel Kiryat-Shmona",
+                id: 3,
+                league: "Germaniya Kubogi",
+                time: "20:30",
+                homeTeam: "Volfsburg",
+                awayTeam: "Xolshteyn",
                 odds: {
                     home: 1.65,
                     draw: 3.80,
                     away: 5.00
                 },
-                filter: "israel",
+                filter: "germany",
                 votes: {
                     home: 25,
                     draw: 12,
@@ -1323,11 +1087,163 @@
                 },
                 userVote: null,
                 logos: {
-                    home: "maccabitelaviv",
-                    away: "hapoelkiryatshmona"
+                    home: "wolfsburg",
+                    away: "holstein"
+                },
+                aiPrognoz: "TOTAL VOLFSBURG 2 TAYM 1 KO'P",
+                analysis: "AI tahliliga ko'ra, Volfsburg Bundesliganing yuqori divizion jamoasi bo'lib, Xolshteynga qarshi o'yinda aniq ustunlikka ega. Volfsburg so'nggi o'yinlarda yaxshi natijalar ko'rsatmoqda va ularning hujumchilari tez-tez gol urish imkoniyatlarini yaratadi. Xolshteyn esa pastki divizion jamoasi bo'lib, Volfsburg himoyasiga qarshi gol urishda muammolarga duch kelishi mumkin. O'yin ikkinchi bo'limda Volfsburgning kamida bir gol urishi kutilmoqda."
+            },
+            {
+                id: 4,
+                league: "Germaniya Kubogi",
+                time: "20:30",
+                homeTeam: "Xaydenxaym",
+                awayTeam: "Gamburg",
+                odds: {
+                    home: 2.30,
+                    draw: 3.40,
+                    away: 3.00
+                },
+                filter: "germany",
+                votes: {
+                    home: 16,
+                    draw: 20,
+                    away: 14
+                },
+                userVote: null,
+                logos: {
+                    home: "heidenheim",
+                    away: "hamburg"
+                },
+                aiPrognoz: "HAR IKKALA JAMOA GOL URADI",
+                analysis: "AI tahliliga ko'ra, Xaydenxaym uy maydonida kuchli jamoa, Gamburg esa hujumkor futbol o'ynashi bilan ajralib turadi. Xaydenxaym so'nggi o'yinlarda barqaror natijalar ko'rsatmoqda, Gamburg esa tashqi maydonda ham yaxshi o'ynay oladi. O'yin ochiq bo'lishi kutilmoqda va ikkala jamoa ham gol urish imkoniyatiga ega. Gamburgning tezkor hujumlari Xaydenxaym himoyasiga muammo tug'dirishi mumkin."
+            },
+            {
+                id: 5,
+                league: "Germaniya Kubogi",
+                time: "20:30",
+                homeTeam: "Ayntraxt",
+                awayTeam: "Borussiya D",
+                odds: {
+                    home: 2.80,
+                    draw: 3.60,
+                    away: 2.40
+                },
+                filter: "germany",
+                votes: {
+                    home: 15,
+                    draw: 18,
+                    away: 22
+                },
+                userVote: null,
+                logos: {
+                    home: "eintracht",
+                    away: "dortmund"
+                },
+                aiPrognoz: "GALABA DORTMUND -1 FORA",
+                analysis: "AI tahliliga ko'ra, Borussiya Dortmund Bundesliganing eng kuchli jamoalaridan biri bo'lib, Ayntraxtga qarshi o'yinda aniq ustunlikka ega. Dortmund so'nggi o'yinlarda ajoyib natijalar ko'rsatdi va ularning hujumkor futboli barchani hayratda qoldiradi. Ayntraxt esa so'nggi o'yinlarda himoyada muammolarga duch keldi va Dortmundga qarshi o'yinda qiyin vaziyatda qolishi mumkin. Dortmund kamida 2 gol farq bilan g'alaba qozonishi kutilmoqda."
+            },
+            {
+                id: 6,
+                league: "Germaniya Kubogi",
+                time: "20:30",
+                homeTeam: "Gerta",
+                awayTeam: "Elversberg",
+                odds: {
+                    home: 1.80,
+                    draw: 3.60,
+                    away: 4.20
+                },
+                filter: "germany",
+                votes: {
+                    home: 22,
+                    draw: 15,
+                    away: 8
+                },
+                userVote: null,
+                logos: {
+                    home: "hertha",
+                    away: "elversberg"
+                },
+                aiPrognoz: "GERTA 2 TAYMDA KAMIDA 1 TA GOL URADI",
+                analysis: "AI tahliliga ko'ra, Gerta Bundesliga 2 ning kuchli jamoasi bo'lib, Elversbergga qarshi o'yinda aniq ustunlikka ega. Gerta so'nggi o'yinlarda yaxshi natijalar ko'rsatmoqda va ularning hujumchilari tez-tez gol urish imkoniyatlarini yaratadi. Elversberg esa pastki divizion jamoasi bo'lib, Gerta himoyasiga qarshi gol urishda muammolarga duch kelishi mumkin. O'yin ikkinchi bo'limda Gertaning kamida bir gol urishi kutilmoqda."
+            },
+            {
+                id: 7,
+                league: "Germaniya Kubogi",
+                time: "22:45",
+                homeTeam: "Energi",
+                awayTeam: "RB Leypsig",
+                odds: {
+                    home: 6.50,
+                    draw: 4.50,
+                    away: 1.45
+                },
+                filter: "germany",
+                votes: {
+                    home: 5,
+                    draw: 10,
+                    away: 35
+                },
+                userVote: null,
+                logos: {
+                    home: "energie",
+                    away: "leipzig"
+                },
+                aiPrognoz: "2 TAYM GALABA LEYPSIG",
+                analysis: "AI tahliliga ko'ra, RB Leypsig Bundesliganing eng kuchli jamoalaridan biri bo'lib, Energiga qarshi o'yinda aniq ustunlikka ega. Leypsig so'nggi o'yinlarda ajoyib natijalar ko'rsatdi va ularning hujumkor futboli barchani hayratda qoldiradi. Energi esa pastki divizion jamoasi bo'lib, Leypsigga qarshi o'yinda qiyin vaziyatda qolishi mumkin. O'yin ikkinchi bo'limda Leypsigning g'alabasi kutilmoqda."
+            },
+            {
+                id: 8,
+                league: "Germaniya Kubogi",
+                time: "22:45",
+                homeTeam: "Borussiya M",
+                awayTeam: "Karlsrue",
+                odds: {
+                    home: 1.70,
+                    draw: 3.80,
+                    away: 4.50
+                },
+                filter: "germany",
+                votes: {
+                    home: 24,
+                    draw: 14,
+                    away: 7
+                },
+                userVote: null,
+                logos: {
+                    home: "monchengladbach",
+                    away: "karlsruhe"
+                },
+                aiPrognoz: "BORUSSIYA GALABA 2 TAYM -1 FORA",
+                analysis: "AI tahliliga ko'ra, Borussiya Myonxengladbach Bundesliganing yuqori divizion jamoasi bo'lib, Karlsruega qarshi o'yinda aniq ustunlikka ega. Borussiya so'nggi o'yinlarda yaxshi natijalar ko'rsatmoqda va ularning hujumchilari tez-tez gol urish imkoniyatlarini yaratadi. Karlsrue esa pastki divizion jamoasi bo'lib, Borussiya himoyasiga qarshi gol urishda muammolarga duch kelishi mumkin. O'yin ikkinchi bo'limda Borussiyaning kamida 2 gol farq bilan g'alabasi kutilmoqda."
+            },
+            
+            // Niderlandiya Kubogi
+            {
+                id: 9,
+                league: "Niderlandiya Kubogi",
+                time: "22:00",
+                homeTeam: "Xelmond",
+                awayTeam: "Zvolle",
+                odds: {
+                    home: 4.20,
+                    draw: 3.80,
+                    away: 1.75
+                },
+                filter: "netherlands",
+                votes: {
+                    home: 8,
+                    draw: 15,
+                    away: 22
+                },
+                userVote: null,
+                logos: {
+                    home: "helmond",
+                    away: "zwolle"
                 },
                 aiPrognoz: "TOTAL 2.5 KO'P",
-                analysis: "AI tahliliga ko'ra, Makkabi Tel-Aviv uy maydonida hujumkor futbol o'ynaydi, Hapoel Kiryat-Shmona esa safarda mustahkam himoyaga ega. Biroq, ikkala jamoa ham so'nggi o'yinlarda ko'p gol urgan. Makkabi Tel-Avivning uy maydonidagi hujumi va Hapoel Kiryat-Shmonaning kontratakalar tufayli o'yinda kamida 3 gol kutilmoqda."
+                analysis: "AI tahliliga ko'ra, Zvolle Niderlandiya ligasining yuqori divizion jamoasi bo'lib, Xelmondga qarshi o'yinda aniq ustunlikka ega. Zvolle so'nggi o'yinlarda ko'p gol urgan, Xelmond esa himoyada muammolarga duch keldi. O'yin ochiq bo'lishi va kamida 3 gol kutilmoqda."
             }
         ];
         
@@ -1493,7 +1409,7 @@
                     </div>
                     <div class="match-details">
                         <div class="match-league">${match.league}</div>
-                        <div class="match-date">Bugun, ${match.time}</div>
+                        <div class="match-date">28 Oktyabr, ${match.time}</div>
                     </div>
                 </div>
                 
@@ -1570,28 +1486,24 @@
         // Jamoalarning qisqa nomlari
         function getShortTeamName(fullName) {
             const shortNames = {
-                "Real Betis": "BET",
-                "Atletico Madrid": "ATM",
-                "Axmat": "AKH",
-                "Sochi": "SOC",
-                "Moreyrense": "MOR",
-                "Portu": "POR",
-                "Gaziantep": "GAZ",
-                "Fenerbaxche": "FEN",
-                "Samsunspor": "SAM",
-                "Rizespor": "RIZ",
-                "Barrakas Sentral": "BAR",
-                "Boka Xuniors": "BOC",
-                "CSKA 1948": "CSK",
-                "Ludogorets": "LUD",
-                "Riyeka": "RIJ",
-                "Osiyek": "OSI",
-                "Vukovar": "VUK",
-                "Dinamo Zagreb": "DIN",
-                "Zryinski": "ZRI",
-                "Borats": "BOR",
-                "Makkabi Tel-Aviv": "MTA",
-                "Hapoel Kiryat-Shmona": "HKS"
+                "Lechche": "LEC",
+                "Napoli": "NAP",
+                "Atalanta": "ATA",
+                "Milan": "MIL",
+                "Volfsburg": "WOB",
+                "Xolshteyn": "KIE",
+                "Xaydenxaym": "HEI",
+                "Gamburg": "HSV",
+                "Ayntraxt": "SGE",
+                "Borussiya D": "BVB",
+                "Gerta": "BSC",
+                "Elversberg": "SVE",
+                "Energi": "FCB",
+                "RB Leypsig": "RBL",
+                "Borussiya M": "BMG",
+                "Karlsrue": "KSC",
+                "Xelmond": "HEL",
+                "Zvolle": "PEC"
             };
             return shortNames[fullName] || fullName.substring(0, 3).toUpperCase();
         }
@@ -1626,9 +1538,6 @@
                     closeModal();
                 }
             });
-            
-            // Har 24 soatda yangilash (simulyatsiya)
-            setInterval(updateDate, 24 * 60 * 60 * 1000);
         });
     </script>
 </body>
