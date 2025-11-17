@@ -206,22 +206,73 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 'points_history': []
             }
             data['stats']['total_users'] += 1
-            data['stats']['today_users'] += 1
+            save_data(data)
+            logger.info(f"Yangi foydalanuvchi qo'shildi: {user_id}")
+        else:
+            data['users'][str(user_id)]['last_active'] = datetime.now().timestamp()
             save_data(data)
         
+        if context.args:
+            ref_id = context.args[0]
+            logger.info(f"Referal argument: {ref_id}")
+            if ref_id.startswith('ref'):
+                try:
+                    referrer_id = int(ref_id[3:])
+                    if str(referrer_id) in data['users'] and referrer_id != user_id:
+                        data['users'][str(referrer_id)]['referrals'] += 1
+                        data['stats']['today_referrals'] += 1
+                        
+                        points_to_add = 5
+                        add_user_points(referrer_id, points_to_add, f"Referal taklif: {user.first_name}")
+                        
+                        save_data(data)
+                        
+                        try:
+                            await context.bot.send_message(
+                                chat_id=referrer_id,
+                                text=f"🎉 *Tabriklaymiz!*\n\n"
+                                     f"📤 Sizning referal havolangiz orqali yangi foydalanuvchi qo'shildi!\n"
+                                     f"👤 Yangi foydalanuvchi: {user.first_name}\n"
+                                     f"💰 Sizga {points_to_add} ball qo'shildi!\n"
+                                     f"🎯 Jami ball: {get_user_points(referrer_id)}",
+                                parse_mode='Markdown'
+                            )
+                        except Exception as e:
+                            logger.error(f"Referal bildirishnoma yuborishda xato: {e}")
+                except Exception as e:
+                    logger.error(f"Referal qayd etishda xato: {e}")
+
         welcome_text = f"""
 🎉 *SALOM {user.first_name}!* 🏆
 
 ⚽ *FUTBOL BAHOLARI BOTIGA XUSH KELIBSIZ!*
 
-💰 Ball to'plang, kuponlar oling va yutuqlarga erishing!
+💰 *HAR KUNI YANGI KUPONLAR!*
+• 🎯 Kunlik bepul kuponlar
+• 💰 Ball evaziga kuponlar
+• 🎁 Bonuslar
+
+📊 *SIZNING HOLATINGIZ:*
+👥 Referallar: {data['users'][str(user_id)]['referrals']} ta
+💰 HISOBINGIZDA: {data['users'][str(user_id)]['points']} ball
+
+🚀 *HOZIRROQ BOSHLANG!*
+Ball to'plang, kuponlar oling va yutuqlarga erishing!
 """
 
         keyboard = [
-            [InlineKeyboardButton("🎯 KUPONLAR OLISH", callback_data="get_coupons")],
-            [InlineKeyboardButton("💰 BALL ALMASHISH", callback_data="exchange_points")],
-            [InlineKeyboardButton("📊 MENING BALLIM", callback_data="my_points")],
-            [InlineKeyboardButton("📤 REFERAL HAVOLA", callback_data="get_referral_link")]
+            [
+                InlineKeyboardButton("🎯 KUPONLAR OLISH", callback_data="get_coupons"),
+                InlineKeyboardButton("💰 PUL ISHLASH", callback_data="exchange_points")
+            ],
+            [
+                InlineKeyboardButton("🎁 BONUSLAR", callback_data="bonuses"),
+                InlineKeyboardButton("📊 MENING BALLIM", callback_data="my_points")
+            ],
+            [
+                InlineKeyboardButton("📤 REFERAL HAVOLA", callback_data="get_referral_link"),
+                InlineKeyboardButton("ℹ️ YORDAM", callback_data="help")
+            ]
         ]
         
         if is_admin(user_id):
@@ -245,6 +296,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.answer()
         
         user_id = query.from_user.id
+        logger.info(f"Button handler: {query.data} from user {user_id}")
         
         global data
         data = load_data()
@@ -255,10 +307,14 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await send_today_coupons(query)
         elif query.data == "exchange_points":
             await show_exchange_points(query, user_id)
+        elif query.data == "bonuses":
+            await show_bonuses(query)
         elif query.data == "my_points":
             await show_my_points(query, user_id)
         elif query.data == "get_referral_link":
             await show_referral_link(query, user_id)
+        elif query.data == "help":
+            await show_help(query)
         elif query.data == "back":
             await back_to_main(query)
         
@@ -266,6 +322,8 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         elif query.data == "admin":
             if is_admin(user_id):
                 await show_admin_panel(query)
+            else:
+                await query.message.reply_text("❌ Siz admin emassiz!")
         elif query.data == "admin_stats":
             await show_admin_stats(query)
         elif query.data == "admin_manage_points":
@@ -280,11 +338,11 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except Exception as e:
         logger.error(f"Button handlerda xato: {e}")
         try:
-            await query.message.reply_text("❌ Xatolik yuz berdi. Iltimos, qayta urinib ko'ring.")
+            await update.callback_query.message.reply_text("❌ Xatolik yuz berdi. Iltimos, qayta urinib ko'ring.")
         except:
             pass
 
-# Soddalashtirilgan Admin Panel
+# YAXSHILANGAN ADMIN PANEL
 async def show_admin_panel(query):
     """Admin panelini ko'rsatish"""
     try:
@@ -298,6 +356,7 @@ async def show_admin_panel(query):
 👥 Foydalanuvchilar: {stats['total_users']} ta
 💰 Jami ballar: {total_points} ball
 🎯 Bepul kuponlar: {len(data['coupons']['today']['matches'])} ta
+💰 VIP kuponlar: {len(data['coupons']['ball_coupons']['available'])} ta
 """
 
         keyboard = [
@@ -335,7 +394,7 @@ async def show_admin_stats(query):
 
 ⚽ **Kuponlar:**
 • Bepul kuponlar: {len(data['coupons']['today']['matches'])} ta
-• Ball kuponlar: {len(data['coupons']['ball_coupons']['available'])} ta
+• VIP kuponlar: {len(data['coupons']['ball_coupons']['available'])} ta
 """
         
         keyboard = [
@@ -350,7 +409,7 @@ async def show_admin_stats(query):
         logger.error(f"show_admin_stats da xato: {e}")
 
 async def show_admin_manage_points(query):
-    """Ball boshqarish sahifasi"""
+    """YAXSHILANGAN Ball boshqarish sahifasi"""
     try:
         text = """
 💰 *BALL BOSHQARISH*
@@ -385,12 +444,15 @@ async def show_admin_manage_coupons(query):
 
 📊 **Joriy holat:**
 • Bepul kuponlar: {len(data['coupons']['today']['matches'])} ta
-• Ball kuponlar: {len(data['coupons']['ball_coupons']['available'])} ta
+• VIP kuponlar: {len(data['coupons']['ball_coupons']['available'])} ta
 
 📝 **Yangi kupon qo'shish:**
 
 Bepul kupon formati:
 `sana|vaqt|liga|jamoalar|bashorat|koeffitsient|ishonch`
+
+VIP kupon formati:
+`vaqt|liga|jamoalar|bashorat|koeffitsient|ishonch`
 
 📋 **Misol:**
 `2024-01-20|20:00|Premier League|Man City vs Arsenal|1X|1.50|85%`
@@ -429,7 +491,7 @@ Barcha {len(data['users'])} ta foydalanuvchilarga xabar yuborish:
     except Exception as e:
         logger.error(f"show_admin_broadcast da xato: {e}")
 
-# ADMIN XABARLARINI QAYTA ISHLASH
+# YAXSHILANGAN ADMIN XABARLARINI QAYTA ISHLASH
 async def handle_admin_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Admin xabarlarini qayta ishlash"""
     user_id = update.effective_user.id
@@ -488,8 +550,6 @@ Ball operatsiyasini tanlang:
                 target_user_id = admin_state['data']['user_id']
                 current_points = get_user_points(target_user_id)
                 
-                # Tugma orqali qaysi operatsiya ekanligini aniqlash
-                # Bu yerda biz faqat raqam qabul qilamiz, operatsiya turi keyinroq
                 # Hozircha faqat ball qo'shamiz
                 if add_user_points(target_user_id, points, f"Admin tomonidan qo'shildi"):
                     user_data = data['users'].get(str(target_user_id), {})
@@ -515,7 +575,6 @@ Ball operatsiyasini tanlang:
             parts = message.text.split('|')
             
             if len(parts) >= 7:  # Bepul kupon (kamida 7 qism)
-                # Qo'shimcha kodlar bo'lmasa ham ishlaydi
                 date = parts[0] if len(parts) > 0 else datetime.now().strftime("%Y-%m-%d")
                 time = parts[1] if len(parts) > 1 else "20:00"
                 league = parts[2] if len(parts) > 2 else "Liga"
@@ -586,7 +645,7 @@ Ball operatsiyasini tanlang:
         logger.error(f"handle_admin_message da xato: {e}")
         await update.message.reply_text("❌ Xatolik yuz berdi. Iltimos, qayta urinib ko'ring.")
 
-# Ball operatsiyalari uchun yangi handler
+# YANGI BALL OPERATSIYALARI HANDLERI
 async def handle_admin_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Admin callback handler"""
     try:
@@ -628,10 +687,18 @@ async def back_to_main(query):
         user_id = user.id
         
         keyboard = [
-            [InlineKeyboardButton("🎯 KUPONLAR OLISH", callback_data="get_coupons")],
-            [InlineKeyboardButton("💰 BALL ALMASHISH", callback_data="exchange_points")],
-            [InlineKeyboardButton("📊 MENING BALLIM", callback_data="my_points")],
-            [InlineKeyboardButton("📤 REFERAL HAVOLA", callback_data="get_referral_link")]
+            [
+                InlineKeyboardButton("🎯 KUPONLAR OLISH", callback_data="get_coupons"),
+                InlineKeyboardButton("💰 PUL ISHLASH", callback_data="exchange_points")
+            ],
+            [
+                InlineKeyboardButton("🎁 BONUSLAR", callback_data="bonuses"),
+                InlineKeyboardButton("📊 MENING BALLIM", callback_data="my_points")
+            ],
+            [
+                InlineKeyboardButton("📤 REFERAL HAVOLA", callback_data="get_referral_link"),
+                InlineKeyboardButton("ℹ️ YORDAM", callback_data="help")
+            ]
         ]
         
         if is_admin(user_id):
@@ -687,6 +754,12 @@ async def show_referral_link(query, user_id):
     ref_link = f"https://t.me/{bot_username}?start=ref{user_id}"
     await query.edit_message_text(f"📤 Referal havolangiz:\n`{ref_link}`", parse_mode='Markdown')
 
+async def show_bonuses(query):
+    await query.edit_message_text("🎁 Bonuslar bo'limi", parse_mode='Markdown')
+
+async def show_help(query):
+    await query.edit_message_text("ℹ️ Yordam bo'limi", parse_mode='Markdown')
+
 # ASOSIY DASTUR
 def main():
     """Asosiy dastur"""
@@ -703,6 +776,10 @@ def main():
         print("✅ Bot muvaffaqiyatli ishga tushdi!")
         print("🤖 Bot ishlayapti...")
         print(f"👑 Admin ID: {ADMIN_ID}")
+        print("🎯 YANGI ADMIN FUNKSIYALARI:")
+        print("   • 🔍 Foydalanuvchi qidirish (username/ID)")
+        print("   • 💰 Ball qo'shish/ayirish")
+        print("   • 📊 Soddalashtirilgan admin panel")
         
         application.run_polling()
         
