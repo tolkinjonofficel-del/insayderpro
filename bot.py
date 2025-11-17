@@ -247,32 +247,14 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 ⚽ *FUTBOL BAHOLARI BOTIGA XUSH KELIBSIZ!*
 
-💰 *HAR KUNI YANGI KUPONLAR!*
-• 🎯 Kunlik bepul kuponlar
-• 💰 Ball evaziga kuponlar
-• 🎁 Bonuslar
-
-📊 *SIZNING HOLATINGIZ:*
-👥 Referallar: {data['users'][str(user_id)]['referrals']} ta
-💰 HISOBINGIZDA: {data['users'][str(user_id)]['points']} ball
-
-🚀 *HOZIRROQ BOSHLANG!*
-Ball to'plang, kuponlar oling va yutuqlarga erishing!
+💰 Ball to'plang, kuponlar oling va yutuqlarga erishing!
 """
 
         keyboard = [
-            [
-                InlineKeyboardButton("🎯 KUPONLAR OLISH", callback_data="get_coupons"),
-                InlineKeyboardButton("💰 PUL ISHLASH", callback_data="exchange_points")
-            ],
-            [
-                InlineKeyboardButton("🎁 BONUSLAR", callback_data="bonuses"),
-                InlineKeyboardButton("📊 MENING BALLIM", callback_data="my_points")
-            ],
-            [
-                InlineKeyboardButton("📤 REFERAL HAVOLA", callback_data="get_referral_link"),
-                InlineKeyboardButton("ℹ️ YORDAM", callback_data="help")
-            ]
+            [InlineKeyboardButton("🎯 KUPONLAR OLISH", callback_data="get_coupons")],
+            [InlineKeyboardButton("💰 PUL ISHLASH", callback_data="exchange_points")],
+            [InlineKeyboardButton("📊 MENING BALLIM", callback_data="my_points")],
+            [InlineKeyboardButton("📤 REFERAL HAVOLA", callback_data="get_referral_link")]
         ]
         
         if is_admin(user_id):
@@ -296,7 +278,6 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.answer()
         
         user_id = query.from_user.id
-        logger.info(f"Button handler: {query.data} from user {user_id}")
         
         global data
         data = load_data()
@@ -307,8 +288,6 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await send_today_coupons(query)
         elif query.data == "exchange_points":
             await show_exchange_points(query, user_id)
-        elif query.data == "bonuses":
-            await show_bonuses(query)
         elif query.data == "my_points":
             await show_my_points(query, user_id)
         elif query.data == "get_referral_link":
@@ -322,8 +301,6 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         elif query.data == "admin":
             if is_admin(user_id):
                 await show_admin_panel(query)
-            else:
-                await query.message.reply_text("❌ Siz admin emassiz!")
         elif query.data == "admin_stats":
             await show_admin_stats(query)
         elif query.data == "admin_manage_points":
@@ -338,11 +315,11 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except Exception as e:
         logger.error(f"Button handlerda xato: {e}")
         try:
-            await update.callback_query.message.reply_text("❌ Xatolik yuz berdi. Iltimos, qayta urinib ko'ring.")
+            await query.message.reply_text("❌ Xatolik yuz berdi. Iltimos, qayta urinib ko'ring.")
         except:
             pass
 
-# YAXSHILANGAN ADMIN PANEL
+# ADMIN PANELI
 async def show_admin_panel(query):
     """Admin panelini ko'rsatish"""
     try:
@@ -409,7 +386,7 @@ async def show_admin_stats(query):
         logger.error(f"show_admin_stats da xato: {e}")
 
 async def show_admin_manage_points(query):
-    """YAXSHILANGAN Ball boshqarish sahifasi"""
+    """Ball boshqarish sahifasi"""
     try:
         text = """
 💰 *BALL BOSHQARISH*
@@ -491,7 +468,7 @@ Barcha {len(data['users'])} ta foydalanuvchilarga xabar yuborish:
     except Exception as e:
         logger.error(f"show_admin_broadcast da xato: {e}")
 
-# YAXSHILANGAN ADMIN XABARLARINI QAYTA ISHLASH
+# YANGI VA TO'G'RI ISHLAYDIAGAN ADMIN XABARLARINI QAYTA ISHLASH
 async def handle_admin_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Admin xabarlarini qayta ishlash"""
     user_id = update.effective_user.id
@@ -502,14 +479,19 @@ async def handle_admin_message(update: Update, context: ContextTypes.DEFAULT_TYP
         message = update.message
         admin_state = get_admin_state(user_id)
         
+        logger.info(f"Admin message: {message.text}, State: {admin_state.get('state')}")
+        
         # Foydalanuvchi qidirish holati
         if admin_state.get('state') == 'search_user':
             search_term = message.text.strip()
+            logger.info(f"Searching for user: {search_term}")
             
             # Foydalanuvchini topish
             user = find_user_by_username_or_id(search_term)
             
             if user:
+                logger.info(f"User found: {user['name']} (ID: {user['user_id']})")
+                
                 # Foydalanuvchi topildi - ball operatsiyalari uchun tugmalar
                 text = f"""
 👤 *FOYDALANUVCHI TOPILDI*
@@ -519,7 +501,7 @@ async def handle_admin_message(update: Update, context: ContextTypes.DEFAULT_TYP
 🆔 **ID:** {user['user_id']}
 💰 **Ballar:** {user['points']} ball
 
-Ball operatsiyasini tanlang:
+Quyidagi amallardan birini tanlang:
 """
                 keyboard = [
                     [
@@ -533,31 +515,35 @@ Ball operatsiyasini tanlang:
                 reply_markup = InlineKeyboardMarkup(keyboard)
                 await message.reply_text(text, reply_markup=reply_markup, parse_mode='Markdown')
                 
-                # Foydalanuvchi ma'lumotlarini saqlash
-                set_admin_state(user_id, "user_found", {"user_id": user['user_id']})
+                # Admin holatini tozalash
+                clear_admin_state(user_id)
+                
             else:
+                logger.info(f"User not found: {search_term}")
                 await message.reply_text(
                     f"❌ *'{search_term}'* topilmadi!\n\n" +
-                    "Qaytadan urinib ko'ring:",
+                    "Iltimos, qaytadan urinib ko'ring yoki boshqa username/ID kiriting.",
                     parse_mode='Markdown'
                 )
             return
         
-        # Ball qo'shish/olib tashlash holati
-        elif admin_state.get('state') == 'user_found':
+        # Ball qo'shish holati
+        elif admin_state.get('state') == 'add_points':
             try:
                 points = int(message.text)
                 target_user_id = admin_state['data']['user_id']
                 current_points = get_user_points(target_user_id)
                 
-                # Hozircha faqat ball qo'shamiz
+                logger.info(f"Adding {points} points to user {target_user_id}")
+                
                 if add_user_points(target_user_id, points, f"Admin tomonidan qo'shildi"):
                     user_data = data['users'].get(str(target_user_id), {})
                     await message.reply_text(
                         f"✅ *Ball qo'shildi!*\n\n" +
                         f"👤 Foydalanuvchi: {user_data.get('name', 'Noma lum')}\n" +
                         f"💰 Qo'shildi: {points} ball\n" +
-                        f"🎯 Jami ball: {get_user_points(target_user_id)}",
+                        f"📊 Avval: {current_points} ball\n" +
+                        f"🎯 Keyin: {get_user_points(target_user_id)} ball",
                         parse_mode='Markdown'
                     )
                 else:
@@ -570,8 +556,42 @@ Ball operatsiyasini tanlang:
                 await message.reply_text("❌ Iltimos, faqat raqam yuboring!")
                 return
         
+        # Ball ayirish holati
+        elif admin_state.get('state') == 'remove_points':
+            try:
+                points = int(message.text)
+                target_user_id = admin_state['data']['user_id']
+                current_points = get_user_points(target_user_id)
+                
+                logger.info(f"Removing {points} points from user {target_user_id}")
+                
+                if remove_user_points(target_user_id, points, f"Admin tomonidan olindi"):
+                    user_data = data['users'].get(str(target_user_id), {})
+                    await message.reply_text(
+                        f"✅ *Ball olindi!*\n\n" +
+                        f"👤 Foydalanuvchi: {user_data.get('name', 'Noma lum')}\n" +
+                        f"💰 Olindi: {points} ball\n" +
+                        f"📊 Avval: {current_points} ball\n" +
+                        f"🎯 Keyin: {get_user_points(target_user_id)} ball",
+                        parse_mode='Markdown'
+                    )
+                else:
+                    await message.reply_text(
+                        f"❌ *Ball olib bo'lmadi!*\n\n" +
+                        f"Foydalanuvchida {current_points} ball mavjud, " +
+                        f"siz {points} ball olmoqchisiz!",
+                        parse_mode='Markdown'
+                    )
+                
+                clear_admin_state(user_id)
+                return
+                
+            except ValueError:
+                await message.reply_text("❌ Iltimos, faqat raqam yuboring!")
+                return
+        
         # Kupon qo'shish
-        if '|' in message.text:
+        elif '|' in message.text:
             parts = message.text.split('|')
             
             if len(parts) >= 7:  # Bepul kupon (kamida 7 qism)
@@ -604,9 +624,41 @@ Ball operatsiyasini tanlang:
                     f"📊 Jami bepul kuponlar: {len(data['coupons']['today']['matches'])} ta",
                     parse_mode='Markdown'
                 )
+                
+            elif len(parts) >= 6:  # VIP kupon (kamida 6 qism)
+                time = parts[0] if len(parts) > 0 else "20:00"
+                league = parts[1] if len(parts) > 1 else "Liga"
+                teams = parts[2] if len(parts) > 2 else "Jamoa 1 vs Jamoa 2"
+                prediction = parts[3] if len(parts) > 3 else "1X"
+                odds = parts[4] if len(parts) > 4 else "1.50"
+                confidence = parts[5] if len(parts) > 5 else "85%"
+                
+                new_coupon = {
+                    'time': time.strip(),
+                    'league': league.strip(),
+                    'teams': teams.strip(),
+                    'prediction': prediction.strip(),
+                    'odds': odds.strip(),
+                    'confidence': confidence.strip(),
+                    'added_date': datetime.now().strftime("%Y-%m-%d %H:%M")
+                }
+                
+                data['coupons']['ball_coupons']['available'].append(new_coupon)
+                data['coupons']['ball_coupons']['last_update'] = datetime.now().strftime("%Y-%m-%d %H:%M")
+                save_data(data)
+                
+                await message.reply_text(
+                    f"✅ *VIP kupon qo'shildi!*\n\n" +
+                    f"🏆 {teams.strip()}\n" +
+                    f"⏰ {time.strip()} | {league.strip()}\n" +
+                    f"🎯 {prediction.strip()} | 📊 {odds.strip()}\n" +
+                    f"💰 Narxi: 15 ball\n\n" +
+                    f"📊 Jami VIP kuponlar: {len(data['coupons']['ball_coupons']['available'])} ta",
+                    parse_mode='Markdown'
+                )
         
-        # Reklama yuborish
-        else:
+        # Reklama yuborish (faqat oddiy matn yoki rasm bo'lsa)
+        elif not admin_state:
             total_users = len(data['users'])
             successful = 0
             
@@ -645,7 +697,7 @@ Ball operatsiyasini tanlang:
         logger.error(f"handle_admin_message da xato: {e}")
         await update.message.reply_text("❌ Xatolik yuz berdi. Iltimos, qayta urinib ko'ring.")
 
-# YANGI BALL OPERATSIYALARI HANDLERI
+# YANGI VA TO'G'RI ISHLAYDIAGAN BALL OPERATSIYALARI HANDLERI
 async def handle_admin_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Admin callback handler"""
     try:
@@ -656,10 +708,10 @@ async def handle_admin_callback(update: Update, context: ContextTypes.DEFAULT_TY
         if not is_admin(user_id):
             return
         
-        data = query.data
+        callback_data = query.data
         
-        if data.startswith("add_"):
-            target_user_id = int(data.split("_")[1])
+        if callback_data.startswith("add_"):
+            target_user_id = int(callback_data.split("_")[1])
             set_admin_state(user_id, "add_points", {"user_id": target_user_id})
             await query.edit_message_text(
                 f"➕ *Ball qo'shish*\n\n" +
@@ -667,8 +719,8 @@ async def handle_admin_callback(update: Update, context: ContextTypes.DEFAULT_TY
                 parse_mode='Markdown'
             )
             
-        elif data.startswith("remove_"):
-            target_user_id = int(data.split("_")[1])
+        elif callback_data.startswith("remove_"):
+            target_user_id = int(callback_data.split("_")[1])
             set_admin_state(user_id, "remove_points", {"user_id": target_user_id})
             await query.edit_message_text(
                 f"➖ *Ball ayirish*\n\n" +
@@ -687,18 +739,10 @@ async def back_to_main(query):
         user_id = user.id
         
         keyboard = [
-            [
-                InlineKeyboardButton("🎯 KUPONLAR OLISH", callback_data="get_coupons"),
-                InlineKeyboardButton("💰 PUL ISHLASH", callback_data="exchange_points")
-            ],
-            [
-                InlineKeyboardButton("🎁 BONUSLAR", callback_data="bonuses"),
-                InlineKeyboardButton("📊 MENING BALLIM", callback_data="my_points")
-            ],
-            [
-                InlineKeyboardButton("📤 REFERAL HAVOLA", callback_data="get_referral_link"),
-                InlineKeyboardButton("ℹ️ YORDAM", callback_data="help")
-            ]
+            [InlineKeyboardButton("🎯 KUPONLAR OLISH", callback_data="get_coupons")],
+            [InlineKeyboardButton("💰 PUL ISHLASH", callback_data="exchange_points")],
+            [InlineKeyboardButton("📊 MENING BALLIM", callback_data="my_points")],
+            [InlineKeyboardButton("📤 REFERAL HAVOLA", callback_data="get_referral_link")]
         ]
         
         if is_admin(user_id):
@@ -770,16 +814,18 @@ def main():
         application.add_handler(CallbackQueryHandler(button_handler))
         application.add_handler(CallbackQueryHandler(handle_admin_callback, pattern="^(add_|remove_)"))
         application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_admin_message))
-        application.add_handler(MessageHandler(filters.PHOTO | filters.Document.ALL, handle_admin_message))
+        application.add_handler(MessageHandler(filters.PHOTO & ~filters.COMMAND, handle_admin_message))
         
         logger.info("Bot ishga tushmoqda...")
         print("✅ Bot muvaffaqiyatli ishga tushdi!")
         print("🤖 Bot ishlayapti...")
         print(f"👑 Admin ID: {ADMIN_ID}")
-        print("🎯 YANGI ADMIN FUNKSIYALARI:")
+        print("🎯 YANGI VA TO'G'RI ISHLAYDIAGAN ADMIN FUNKSIYALARI:")
         print("   • 🔍 Foydalanuvchi qidirish (username/ID)")
         print("   • 💰 Ball qo'shish/ayirish")
-        print("   • 📊 Soddalashtirilgan admin panel")
+        print("   • 📊 Statistika")
+        print("   • 🎯 Kupon qo'shish")
+        print("   • 📢 Reklama yuborish")
         
         application.run_polling()
         
