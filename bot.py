@@ -228,7 +228,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 📊 *SIZNING HOLATINGIZ:*
 👥 Referallar: {get_user_referrals(user_id)} ta
-💰 Ballar: {get_user_points(user_id)} ball
+💰 HISOBINGIZDA: {get_user_points(user_id)} ball
 
 🚀 *HOZIRROQ BOSHLANG!*
 Ball to'plang, kuponlar oling va yutuqlarga erishing!
@@ -237,7 +237,7 @@ Ball to'plang, kuponlar oling va yutuqlarga erishing!
         keyboard = [
             [
                 InlineKeyboardButton("🎯 KUPONLAR OLISH", callback_data="get_coupons"),
-                InlineKeyboardButton("💰 BALL ALMASHISH", callback_data="exchange_points")
+                InlineKeyboardButton("💰 PUL ISHLASH", callback_data="exchange_points")
             ],
             [
                 InlineKeyboardButton("🎁 BONUSLAR", callback_data="bonuses"),
@@ -372,26 +372,26 @@ async def show_coupon_selection(query, user_id):
 
 💰 **Sizning balansingiz:** {user_points} ball
 
-💎 *Quyidagi kuponlardan birini tanlang:*
+💎 *XISOBINGIZDA YETARLICHA BALL TOPLAGANIZDAN SO'NG VIP KUPONLAR KORINDI!:*
 """
 
         keyboard = [
-            [InlineKeyboardButton("🎯 BEPUL KUPON OLISH", callback_data="get_free_coupon")],
+            [InlineKeyboardButton("🎯 KUNLIK BEPUL KUPON", callback_data="get_free_coupon")],
         ]
         
         ball_coupons_count = len(data['coupons']['ball_coupons']['available'])
         
         if ball_coupons_count > 0:
             if user_points >= coupon_price:
-                keyboard.append([InlineKeyboardButton(f"💰 BALL EVAZIGA KUPON OLISH ({coupon_price} ball)", callback_data="get_ball_coupon")])
-                text += f"\n✅ *{ball_coupons_count} ta ball kupon mavjud!*"
+                keyboard.append([InlineKeyboardButton(f"💰 VIP KUPON OLISH ({coupon_price} ball)", callback_data="get_ball_coupon")])
+                text += f"\n✅ *{ball_coupons_count} ta VIP  kupon mavjud!*"
             else:
                 text += f"\n❌ *Ball yetarli emas!* {coupon_price - user_points} ball yetishmayapti."
         else:
             text += f"\n📭 *Hozircha ball kuponlar mavjud emas.*"
         
         keyboard.extend([
-            [InlineKeyboardButton("💰 Ball Almashish", callback_data="exchange_points")],
+            [InlineKeyboardButton("💰 PUL ISHLASH", callback_data="exchange_points")],
             [InlineKeyboardButton("📤 Bal To'plash", callback_data="get_referral_link")],
             [InlineKeyboardButton("🔙 Bosh Menyu", callback_data="back")]
         ])
@@ -462,7 +462,7 @@ async def send_today_coupons(query):
         await query.message.reply_text("❌ Xatolik yuz berdi. Iltimos, qayta urinib ko'ring.")
 
 async def get_ball_coupon(query, user_id):
-    """Ball evaziga kupon olish"""
+    """VIP KUPON"""
     try:
         user_points = get_user_points(user_id)
         coupon_price = data['settings']['coupon_price']
@@ -553,7 +553,7 @@ async def show_exchange_points(query, user_id):
         exchange_rate = data['settings']['exchange_rate']
         
         text = f"""
-💰 *BALL ALMASHISH*
+💰 *ALMASHISH*
 
 🎯 **Sizning ballaringiz:** {user_points} ball
 💵 **Minimal almashish:** {min_points} ball
@@ -564,7 +564,7 @@ async def show_exchange_points(query, user_id):
 • {min_points * 2} ball = {exchange_rate * 2} {data['settings']['currency']}
 • {min_points * 5} ball = {exchange_rate * 5} {data['settings']['currency']}
 
-💡 *Ball almashish uchun @baxtga_olga ga murojaat qiling!*
+💡 *Ballni pulga almashish uchun @baxtga_olga ga murojaat qiling!*
 """
 
         keyboard = []
@@ -598,12 +598,12 @@ async def show_bonuses(query):
 
 🎰 **1xBet:**
 • Yangi foydalanuvchilar uchun 100% bonus
-• Birinchi depozitga 100% gacha bonus
+• INSAYDER PROMOKODINI kiriting va Birinchi depozitga 100% gacha bonus
 • Har qanday yo'qotish uchun 100% cashback
 
 🎯 **MelBet:**
 • Ro'yxatdan o'ting va bonus oling
-• Birinchi stavkangiz uchun maxsus taklif
+• AIFUT promokodini kiriting  Birinchi stavkangiz uchun maxsus taklif
 • Kunlik bonuslar va aksiyalar
 
 📱 *APK fayllarni yuklab oling va mobil ilovadan foydalaning!*
@@ -615,12 +615,12 @@ async def show_bonuses(query):
                 InlineKeyboardButton("🎯 MelBet Ro'yxatdan o'tish", url=BUKMAKER_LINKS['melbet'])
             ],
             [
-                InlineKeyboardButton("📱 1xBet APK Yuklash", url="https://t.me/bonusliapkbot"),
-                InlineKeyboardButton("📱 MelBet APK Yuklash", url="https://t.me/bonusliapkbot")
+                InlineKeyboardButton("📱 1xBet APK Yuklash", url="https://t.me/BonusAPKxbetbot"),
+                InlineKeyboardButton("📱 MelBet APK Yuklash", url="https://t.me/BonusAPKxbetbot")
             ],
             [
                 InlineKeyboardButton("🎯 Kupon Olish", callback_data="get_coupons"),
-                InlineKeyboardButton("💰 Ball Almashish", callback_data="exchange_points")
+                InlineKeyboardButton("💰 PUL ISHLASH", callback_data="exchange_points")
             ],
             [InlineKeyboardButton("🔙 Bosh Menyu", callback_data="back")]
         ]
@@ -644,7 +644,7 @@ async def show_my_points(query, user_id):
         text = f"""
 🏆 *MENING HISOBIM*
 
-💰 **Ballar:** {points} ball
+💰 **HISOBINGIZDA:** {points} ball
 👥 **Referallar:** {referrals} ta
 💵 **1 referal:** {data['settings']['referral_points']} ball
 
@@ -668,7 +668,7 @@ async def show_my_points(query, user_id):
                 text += f"• {sign}{history['points']} ball - {history['reason']}\n"
         
         keyboard = [
-            [InlineKeyboardButton("💰 Ball Almashish", callback_data="exchange_points")],
+            [InlineKeyboardButton("💰 PUL ISHLASH", callback_data="exchange_points")],
             [InlineKeyboardButton("🎯 Kupon Olish", callback_data="get_coupons")],
             [InlineKeyboardButton("📤 Referal Havola", callback_data="get_referral_link")],
             [InlineKeyboardButton("🔙 Bosh Menyu", callback_data="back")]
@@ -702,7 +702,7 @@ async def show_referral_link(query, user_id):
 
 📊 **Sizning holatingiz:**
 • Do'stlar: {referrals_count} ta
-• Ballar: {user_points} ball
+• HISOBINGIZ: {user_points} ball
 • Jami olingan ball: {referrals_count * points_per_ref} ball
 
 💡 **Qanday ball to'plasaniz:**
@@ -1059,7 +1059,7 @@ async def back_to_main(query):
         keyboard = [
             [
                 InlineKeyboardButton("🎯 KUPONLAR OLISH", callback_data="get_coupons"),
-                InlineKeyboardButton("💰 BALL ALMASHISH", callback_data="exchange_points")
+                InlineKeyboardButton("💰 PUL ISHLASH", callback_data="exchange_points")
             ],
             [
                 InlineKeyboardButton("🎁 BONUSLAR", callback_data="bonuses"),
