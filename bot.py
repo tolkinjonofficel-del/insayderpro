@@ -1040,15 +1040,16 @@ async def admin_search_user_by_username(query):
         text = """
 🔍 *USERNAME BO'YICHA QIDIRISH*
 
-Foydalanuvchi @username ni yuboring (@ belgisiz):
+Foydalanuvchi @username yoki ismini yuboring:
 
-`username`
+`qidiruv_sozi`
 
 📝 *Misollar:*
-`john_doe` - @john_doe foydalanuvchisini qidiradi
+`john` - @john yoki ismi John bo'lgan foydalanuvchilarni qidiradi
 `baxtga_olga` - @baxtga_olga foydalanuvchisini qidiradi
+`ali` - Ismi Ali bo'lgan barcha foydalanuvchilarni topadi
 
-💡 *Eslatma:* Faqat username ni yozing, @ belgisiz.
+💡 *Eslatma:* Faqat username yoki ismni yozing, @ belgisiz.
 """
 
         keyboard = [
@@ -1266,45 +1267,125 @@ async def handle_admin_message(update: Update, context: ContextTypes.DEFAULT_TYP
         message = update.message
         message_text = message.text.strip()
         
+        # Username bo'yicha qidirish - BU QISMNI BIRINCHI QILAMIZ
+        if context.user_data.get('admin_action') == 'search_user':
+            username = message_text.lower().strip()
+            found_users = []
+            
+            # Barcha foydalanuvchilarni tekshiramiz
+            for user_id_str, user_data in data['users'].items():
+                user_username = user_data.get('username', '').lower()
+                user_name = user_data.get('name', '').lower()
+                
+                # Username yoki ismda qidirish
+                if username in user_username or username in user_name:
+                    found_users.append((user_id_str, user_data))
+            
+            if found_users:
+                text = f"🔍 *Qidiruv natijasi:* `{username}`\n\n"
+                text += f"📊 Topilgan foydalanuvchilar: {len(found_users)} ta\n\n"
+                
+                for user_id_str, user_data in found_users[:5]:  # Faqat 5 tasini ko'rsatish
+                    name = user_data.get('name', 'Noma\'lum')
+                    username_found = user_data.get('username', '')
+                    points = user_data.get('points', 0)
+                    referrals = user_data.get('referrals', 0)
+                    joined_date = user_data.get('joined_date', 'Noma\'lum')
+                    
+                    username_display = f"(@{username_found})" if username_found else ""
+                    
+                    text += f"👤 *{name}* {username_display}\n"
+                    text += f"🆔 ID: `{user_id_str}`\n"
+                    text += f"💰 Ball: {points} | 👥 Referallar: {referrals} ta\n"
+                    text += f"📅 Qo'shilgan: {joined_date}\n\n"
+                
+                if len(found_users) > 5:
+                    text += f"⚠️ ... va yana {len(found_users) - 5} ta foydalanuvchi\n\n"
+                
+                keyboard = []
+                for user_id_str, user_data in found_users[:5]:  # Faqat 5 ta uchun tugma
+                    name = user_data.get('name', 'Noma\'lum')[:12]
+                    keyboard.extend([
+                        [
+                            InlineKeyboardButton(f"➕ {name}", callback_data=f"admin_add_points_{user_id_str}"),
+                            InlineKeyboardButton(f"➖ {name}", callback_data=f"admin_remove_points_{user_id_str}")
+                        ]
+                    ])
+                
+                keyboard.append([InlineKeyboardButton("🔙 Ball Boshqarish", callback_data="admin_manage_points")])
+                
+                reply_markup = InlineKeyboardMarkup(keyboard)
+                await message.reply_text(text, reply_markup=reply_markup, parse_mode='Markdown')
+                
+            else:
+                await message.reply_text(
+                    f"❌ Foydalanuvchi topilmadi!\n\n"
+                    f"🔍 Qidiruv so'zi: `{username}`\n"
+                    f"Bu username yoki ism bilan foydalanuvchi mavjud emas.\n\n"
+                    f"💡 *Eslatma:*\n"
+                    f"- Faqat username ni kiriting (@ belgisiz)\n"
+                    f"- Ism bo'yicha ham qidirish mumkin\n"
+                    f"- Katta-kichik harflar farqi yo'q",
+                    parse_mode='Markdown'
+                )
+            
+            context.user_data.pop('admin_action', None)
+            return
+        
         # ID bo'yicha ball qo'shish
-        if context.user_data.get('admin_action') == 'add_points_by_id':
+        elif context.user_data.get('admin_action') == 'add_points_by_id':
             try:
                 parts = message_text.split()
                 if len(parts) == 2:
-                    user_id_to_edit = int(parts[0])
+                    user_id_to_edit = parts[0]  # String sifatida olamiz
                     points_to_add = int(parts[1])
                     
-                    if str(user_id_to_edit) in data['users']:
-                        user_data = data['users'][str(user_id_to_edit)]
+                    if user_id_to_edit in data['users']:
+                        user_data = data['users'][user_id_to_edit]
                         user_name = user_data.get('name', 'Noma\'lum')
                         current_points = user_data.get('points', 0)
                         
-                        if add_user_points(user_id_to_edit, points_to_add, f"Admin tomonidan qo'shildi"):
+                        if add_user_points(int(user_id_to_edit), points_to_add, f"Admin tomonidan qo'shildi"):
                             await message.reply_text(
                                 f"✅ *Ball muvaffaqiyatli qo'shildi!*\n\n"
                                 f"👤 Foydalanuvchi: {user_name}\n"
                                 f"🆔 ID: `{user_id_to_edit}`\n"
                                 f"💰 Qo'shildi: {points_to_add} ball\n"
                                 f"📊 Avval: {current_points} ball\n"
-                                f"🎯 Keyin: {get_user_points(user_id_to_edit)} ball\n\n"
+                                f"🎯 Keyin: {get_user_points(int(user_id_to_edit))} ball\n\n"
                                 f"✅ Amal muvaffaqiyatli bajarildi!",
                                 parse_mode='Markdown'
                             )
                         else:
                             await message.reply_text("❌ Ball qo'shishda xatolik yuz berdi!")
                     else:
-                        await message.reply_text(
-                            f"❌ Foydalanuvchi topilmadi!\n\n"
-                            f"🆔 ID: `{user_id_to_edit}`\n"
-                            f"Bu ID bilan foydalanuvchi mavjud emas.",
-                            parse_mode='Markdown'
-                        )
+                        # Foydalanuvchi topilmasa, barcha foydalanuvchilarni ko'rsatamiz
+                        users_list = list(data['users'].items())[:5]
+                        users_text = "❌ Foydalanuvchi topilmadi!\n\n"
+                        users_text += f"🆔 ID: `{user_id_to_edit}`\n\n"
+                        users_text += "📋 Oxirgi 5 ta foydalanuvchi:\n"
+                        
+                        for uid, udata in users_list:
+                            name = udata.get('name', 'Noma\'lum')
+                            username = udata.get('username', '')
+                            points = udata.get('points', 0)
+                            
+                            username_display = f"(@{username})" if username else ""
+                            users_text += f"• {name} {username_display} - 🆔 `{uid}` - 💰 {points} ball\n"
+                        
+                        users_text += f"\n💡 Jami foydalanuvchilar: {len(data['users'])} ta"
+                        
+                        await message.reply_text(users_text, parse_mode='Markdown')
+                
                 else:
                     await message.reply_text(
                         "❌ Noto'g'ri format!\n\n"
                         "Iltimos, quyidagi formatda yuboring:\n"
                         "`user_id ball_miqdori`\n\n"
-                        "📝 Misol: `123456789 50`",
+                        "📝 Misol: `123456789 50`\n\n"
+                        "🆔 Foydalanuvchi ID sini olish uchun:\n"
+                        "• Admin panel > Foydalanuvchilar bo'limiga o'ting\n"
+                        "• Yoki @username bo'yicha qidiring",
                         parse_mode='Markdown'
                     )
                 
@@ -1314,7 +1395,7 @@ async def handle_admin_message(update: Update, context: ContextTypes.DEFAULT_TYP
             except ValueError:
                 await message.reply_text(
                     "❌ Noto'g'ri qiymat!\n\n"
-                    "Iltimos, ID va ball miqdorini raqam sifatida kiriting.\n"
+                    "Iltimos, ball miqdorini raqam sifatida kiriting.\n"
                     "📝 Misol: `123456789 50`",
                     parse_mode='Markdown'
                 )
@@ -1325,22 +1406,22 @@ async def handle_admin_message(update: Update, context: ContextTypes.DEFAULT_TYP
             try:
                 parts = message_text.split()
                 if len(parts) == 2:
-                    user_id_to_edit = int(parts[0])
+                    user_id_to_edit = parts[0]  # String sifatida olamiz
                     points_to_remove = int(parts[1])
                     
-                    if str(user_id_to_edit) in data['users']:
-                        user_data = data['users'][str(user_id_to_edit)]
+                    if user_id_to_edit in data['users']:
+                        user_data = data['users'][user_id_to_edit]
                         user_name = user_data.get('name', 'Noma\'lum')
                         current_points = user_data.get('points', 0)
                         
-                        if remove_user_points(user_id_to_edit, points_to_remove, f"Admin tomonidan olindi"):
+                        if remove_user_points(int(user_id_to_edit), points_to_remove, f"Admin tomonidan olindi"):
                             await message.reply_text(
                                 f"✅ *Ball muvaffaqiyatli olindi!*\n\n"
                                 f"👤 Foydalanuvchi: {user_name}\n"
                                 f"🆔 ID: `{user_id_to_edit}`\n"
                                 f"💰 Olindi: {points_to_remove} ball\n"
                                 f"📊 Avval: {current_points} ball\n"
-                                f"🎯 Keyin: {get_user_points(user_id_to_edit)} ball\n\n"
+                                f"🎯 Keyin: {get_user_points(int(user_id_to_edit))} ball\n\n"
                                 f"⚠️ Amalni bekor qilib bo'lmaydi!",
                                 parse_mode='Markdown'
                             )
@@ -1356,7 +1437,9 @@ async def handle_admin_message(update: Update, context: ContextTypes.DEFAULT_TYP
                     else:
                         await message.reply_text(
                             f"❌ Foydalanuvchi topilmadi!\n\n"
-                            f"🆔 ID: `{user_id_to_edit}`",
+                            f"🆔 ID: `{user_id_to_edit}`\n\n"
+                            f"Bu ID bilan foydalanuvchi mavjud emas.\n"
+                            f"Foydalanuvchi ID sini tekshirib ko'ring.",
                             parse_mode='Markdown'
                         )
                 else:
@@ -1374,60 +1457,11 @@ async def handle_admin_message(update: Update, context: ContextTypes.DEFAULT_TYP
             except ValueError:
                 await message.reply_text(
                     "❌ Noto'g'ri qiymat!\n\n"
-                    "Iltimos, ID va ball miqdorini raqam sifatida kiriting.\n"
+                    "Iltimos, ball miqdorini raqam sifatida kiriting.\n"
                     "📝 Misol: `123456789 25`",
                     parse_mode='Markdown'
                 )
                 return
-        
-        # Username bo'yicha qidirish
-        elif context.user_data.get('admin_action') == 'search_user':
-            username = message_text.lower()
-            found_users = []
-            
-            for user_id, user_data in data['users'].items():
-                if user_data.get('username', '').lower() == username:
-                    found_users.append((user_id, user_data))
-            
-            if found_users:
-                text = f"🔍 *Qidiruv natijasi:* @{username}\n\n"
-                
-                for user_id, user_data in found_users:
-                    name = user_data.get('name', 'Noma\'lum')
-                    points = user_data.get('points', 0)
-                    referrals = user_data.get('referrals', 0)
-                    joined_date = user_data.get('joined_date', 'Noma\'lum')
-                    
-                    text += f"👤 *{name}*\n"
-                    text += f"🆔 ID: `{user_id}`\n"
-                    text += f"💰 Ball: {points} | 👥 Referallar: {referrals} ta\n"
-                    text += f"📅 Qo'shilgan: {joined_date}\n\n"
-                
-                keyboard = []
-                for user_id, user_data in found_users:
-                    name = user_data.get('name', 'Noma\'lum')[:15]
-                    keyboard.extend([
-                        [
-                            InlineKeyboardButton(f"➕ {name}", callback_data=f"admin_add_points_{user_id}"),
-                            InlineKeyboardButton(f"➖ {name}", callback_data=f"admin_remove_points_{user_id}")
-                        ]
-                    ])
-                
-                keyboard.append([InlineKeyboardButton("🔙 Ball Boshqarish", callback_data="admin_manage_points")])
-                
-                reply_markup = InlineKeyboardMarkup(keyboard)
-                await message.reply_text(text, reply_markup=reply_markup, parse_mode='Markdown')
-                
-            else:
-                await message.reply_text(
-                    f"❌ Foydalanuvchi topilmadi!\n\n"
-                    f"🔍 Username: @{username}\n"
-                    f"Bu username bilan foydalanuvchi mavjud emas.",
-                    parse_mode='Markdown'
-                )
-            
-            context.user_data.pop('admin_action', None)
-            return
         
         # Ball qo'shish/olish rejimi
         if context.user_data.get('editing_user'):
