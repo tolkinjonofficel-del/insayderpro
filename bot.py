@@ -26,28 +26,20 @@ logger = logging.getLogger(__name__)
 # Boshlang'ich ma'lumotlar
 default_data = {
     "users": {},
-    "signals": {
-        "available": [],
-        "sent": {},
-        "price": 15,
-        "last_update": ""
-    },
     "settings": {
         "referral_points": 5,
-        "new_user_points": 15,
-        "signal_price": 15,
-        "min_exchange_points": 50,
-        "exchange_rate": 10000,
-        "currency": "so'm",
-        "payment_details": "💳 *To'lov qilish uchun:*\n\n🏦 **HUMO:** `9860356622837710`\n📱 **Payme:** `mavjud emas`\n💳 **Uzumbank visa:** `4916990318695001`\n\n✅ To'lov qilgach, chek skrinshotini @baxtga_olga ga yuboring."
+        "new_user_points": 40,
+        "regular_signal_price": 20,
+        "vip_signal_price": 50,
+        "signal_url": "https://www.signal7.digital/"
     },
     "stats": {
         "total_users": 0,
         "today_users": 0,
         "today_referrals": 0,
         "total_points_given": 0,
-        "total_signals_sold": 0,
-        "total_exchanges": 0
+        "total_signals_used": 0,
+        "total_vip_signals_used": 0
     }
 }
 
@@ -147,7 +139,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 'name': user.first_name,
                 'username': user.username,
                 'referrals': 0,
-                'points': 0,
+                'points': data['settings']['new_user_points'],
                 'joined_date': datetime.now().strftime("%Y-%m-%d"),
                 'last_active': datetime.now().timestamp(),
                 'points_history': []
@@ -155,6 +147,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             data['stats']['total_users'] += 1
             data['stats']['today_users'] += 1
             is_new_user = True
+            
+            # Yangi foydalanuvchi uchun ball qo'shish
+            add_user_points(user_id, data['settings']['new_user_points'], "Yangi foydalanuvchi bonusi")
             
         data['users'][str(user_id)]['last_active'] = datetime.now().timestamp()
         
@@ -171,11 +166,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
                         add_user_points(referrer_id, data['settings']['referral_points'], 
                                       f"Referal taklif: {user.first_name}")
                         
-                        # Yangi odamga 15 ball (faqat yangi foydalanuvchilar uchun)
-                        if is_new_user:
-                            add_user_points(user_id, data['settings']['new_user_points'], 
-                                          "Yangi foydalanuvchi bonusi")
-                        
                         data['stats']['today_referrals'] += 1
                         save_data(data)
                         
@@ -186,7 +176,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
                                      f"📤 Sizning referal havolangiz orqali yangi foydalanuvchi qo'shildi!\n"
                                      f"👤 Yangi foydalanuvchi: {user.first_name}\n"
                                      f"💰 Sizga {data['settings']['referral_points']} ball qo'shildi!\n"
-                                     f"🎯 Jami ball: {get_user_points(referrer_id)}",
+                                     f"🎯 Jami ball: {get_user_points(referrer_id)}\n\n"
+                                     f"📊 Jami referallar: {get_user_referrals(referrer_id)} ta",
                                 parse_mode='Markdown'
                             )
                         except Exception as e:
@@ -199,35 +190,37 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         welcome_text = f"""
 🍎 *APPLE OF FORTUNE SIGNAL BOTIGA XUSH KELIBSIZ!* 🎰
 
-💰 *APPLE OF FORTUNE EXCLUSIVE SIGNALLAR!*
-• 🎯 Har bir signal - 15 ball
+✨ *Exclusive Signallar - Faqat Bizda!*
+• 🎯 Oddiy Signal - 20 ball
+• 💎 VIP Signal (100%) - 50 ball
 • 📊 Professional tahlillar
-• 💰 Yuqori daromad imkoniyati
+• 💰 Yuqori daromad kafolati
+
+🎁 *BONUS: Yangi foydalanuvchilar uchun 40 ball BEPUL!*
 
 🏆 *BALL TIZIMI:*
 • 📤 1 do'st taklif = *5 ball*
-• 🎁 Yangi foydalanuvchi = *15 ball*
-• 💰 50 ball = *10,000 so'm*
+• 🎁 Har bir yangi do'st = *40 ball* (bepul start)
+• 💰 Tez va oson ball to'plash
 
 📊 *SIZNING HOLATINGIZ:*
-👥 Referallar: {get_user_referrals(user_id)} ta
-💰 Balans: {get_user_points(user_id)} ball
+💰 Balans: *{get_user_points(user_id)} ball*
+👥 Referallar: *{get_user_referrals(user_id)} ta*
 
 🚀 *HOZIRROQ BOSHLANG!*
-Ball to'plang, signallar oling va yutuqlarga erishing!
+Ball to'plang, signallar oling va yutuqqa erishing!
 """
 
         keyboard = [
             [
                 InlineKeyboardButton("🎯 SIGNAL OLISH", callback_data="get_signals"),
-                InlineKeyboardButton("💰 PUL ISHLASH", callback_data="exchange_points")
-            ],
-            [
-                InlineKeyboardButton("🎁 BONUSLAR", callback_data="bonuses"),
                 InlineKeyboardButton("📊 MENING BALLIM", callback_data="my_points")
             ],
             [
                 InlineKeyboardButton("📤 REFERAL HAVOLA", callback_data="get_referral_link"),
+                InlineKeyboardButton("🎁 BONUSLAR", callback_data="bonuses")
+            ],
+            [
                 InlineKeyboardButton("ℹ️ YORDAM", callback_data="help")
             ]
         ]
@@ -260,18 +253,18 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         
         if query.data == "get_signals":
             await show_signal_selection(query, user_id)
-        elif query.data == "buy_signal":
-            await buy_signal(query, user_id)
-        elif query.data == "exchange_points":
-            await show_exchange_points(query, user_id)
-        elif query.data == "bonuses":
-            await show_bonuses(query)
+        elif query.data == "get_regular_signal":
+            await get_regular_signal(query, user_id)
+        elif query.data == "get_vip_signal":
+            await get_vip_signal(query, user_id)
         elif query.data == "my_points":
             await show_my_points(query, user_id)
         elif query.data == "get_referral_link":
             await show_referral_link(query, user_id)
         elif query.data == "share_referral":
             await share_referral_link(query, user_id)
+        elif query.data == "bonuses":
+            await show_bonuses(query)
         elif query.data == "help":
             await show_help(query)
         elif query.data == "back":
@@ -281,51 +274,11 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         elif query.data == "admin":
             if is_admin(user_id):
                 await show_admin_panel(query)
+        
         elif query.data == "admin_stats":
             await show_admin_stats(query)
-        elif query.data == "admin_users":
-            await show_admin_users(query)
-        elif query.data == "admin_add_signal":
-            await show_admin_add_signal(query)
-        elif query.data == "admin_manage_points":
-            await show_admin_manage_points(query)
         elif query.data == "admin_broadcast":
             await show_admin_broadcast(query)
-        elif query.data == "admin_clear_signals":
-            await admin_clear_signals(query)
-        
-        # BALL BOSHQARISH
-        elif query.data.startswith("admin_add_points_"):
-            user_id_to_edit = query.data.replace("admin_add_points_", "")
-            context.user_data['editing_user'] = user_id_to_edit
-            context.user_data['action'] = 'add_points'
-            user_data = data['users'].get(user_id_to_edit, {})
-            user_name = user_data.get('name', 'Noma\'lum')
-            current_points = user_data.get('points', 0)
-            
-            await query.message.reply_text(
-                f"👤 *Foydalanuvchi:* {user_name}\n"
-                f"💰 *Joriy ball:* {current_points} ball\n"
-                f"💳 *Qancha ball qo'shmoqchisiz?*\n\n"
-                f"Raqam kiriting:",
-                parse_mode='Markdown'
-            )
-            
-        elif query.data.startswith("admin_remove_points_"):
-            user_id_to_edit = query.data.replace("admin_remove_points_", "")
-            context.user_data['editing_user'] = user_id_to_edit
-            context.user_data['action'] = 'remove_points'
-            user_data = data['users'].get(user_id_to_edit, {})
-            user_name = user_data.get('name', 'Noma\'lum')
-            current_points = user_data.get('points', 0)
-            
-            await query.message.reply_text(
-                f"👤 *Foydalanuvchi:* {user_name}\n"
-                f"💰 *Joriy ball:* {current_points} ball\n"
-                f"💳 *Qancha ball olib tashlamoqchisiz?*\n\n"
-                f"Raqam kiriting:",
-                parse_mode='Markdown'
-            )
         
         else:
             await query.message.reply_text("❌ Noma'lum buyruq!")
@@ -338,37 +291,47 @@ async def show_signal_selection(query, user_id):
     """Signal olish sahifasi"""
     try:
         user_points = get_user_points(user_id)
-        signal_price = data['settings']['signal_price']
-        available_signals = len(data['signals']['available'])
+        regular_price = data['settings']['regular_signal_price']
+        vip_price = data['settings']['vip_signal_price']
         
         text = f"""
-🎯 *APPLE OF FORTUNE SIGNALLARI*
+🎰 *APPLE OF FORTUNE SIGNALLARI*
 
 💰 **Sizning balansingiz:** {user_points} ball
-🎰 **Signal narxi:** {signal_price} ball
-📊 **Mavjud signallar:** {available_signals} ta
 
-💎 *Professional Apple of Fortune signallari:*
-• Yuqori aniqlikdagi tahlillar
-• Optimal stavka strategiyalari
-• Maximum daromad imkoniyati
+💎 *Signallar:*
+
+🎯 **ODDIY SIGNAL** - {regular_price} ball
+• Professional tahlillar
+• O'rtacha daromad
+• Doimiy yangilanadi
+
+💎 **VIP SIGNAL (100%)** - {vip_price} ball  
+• Premium tahlillar
+• Maximum daromad
+• 100% ishonch
+• Cheklangan soni
+
+🔗 *Signal olish uchun ball to'lang va havolani oling!*
 """
 
         keyboard = []
         
-        if available_signals > 0:
-            if user_points >= signal_price:
-                keyboard.append([InlineKeyboardButton(f"🎯 SIGNAL OLISH ({signal_price} ball)", callback_data="buy_signal")])
-                text += f"\n✅ *Siz signal olishingiz mumkin!*"
-            else:
-                text += f"\n❌ *Ball yetarli emas!* {signal_price - user_points} ball yetishmayapti."
-                keyboard.append([InlineKeyboardButton("📤 Ball To'plash", callback_data="get_referral_link")])
+        # Oddiy signal tugmasi
+        if user_points >= regular_price:
+            keyboard.append([InlineKeyboardButton(f"🎯 ODDIY SIGNAL OLISH ({regular_price} ball)", callback_data="get_regular_signal")])
         else:
-            text += f"\n📭 *Hozircha signallar mavjud emas.* Tez orada yangilanadi!"
+            keyboard.append([InlineKeyboardButton(f"❌ ODDIY SIGNAL ({regular_price} ball)", callback_data="get_regular_signal")])
+        
+        # VIP signal tugmasi
+        if user_points >= vip_price:
+            keyboard.append([InlineKeyboardButton(f"💎 VIP SIGNAL OLISH ({vip_price} ball)", callback_data="get_vip_signal")])
+        else:
+            keyboard.append([InlineKeyboardButton(f"❌ VIP SIGNAL ({vip_price} ball)", callback_data="get_vip_signal")])
         
         keyboard.extend([
-            [InlineKeyboardButton("💰 PUL ISHLASH", callback_data="exchange_points")],
             [InlineKeyboardButton("📤 Ball To'plash", callback_data="get_referral_link")],
+            [InlineKeyboardButton("💰 Mening Ballim", callback_data="my_points")],
             [InlineKeyboardButton("🔙 Bosh Menyu", callback_data="back")]
         ])
         
@@ -378,159 +341,147 @@ async def show_signal_selection(query, user_id):
     except Exception as e:
         logger.error(f"show_signal_selection da xato: {e}")
 
-async def buy_signal(query, user_id):
-    """Signal sotib olish"""
+async def get_regular_signal(query, user_id):
+    """Oddiy signal olish"""
     try:
         user_points = get_user_points(user_id)
-        signal_price = data['settings']['signal_price']
+        signal_price = data['settings']['regular_signal_price']
         
         if user_points < signal_price:
-            await query.message.reply_text(
-                f"❌ Ballaringiz yetarli emas!\n"
-                f"💰 Sizda: {user_points} ball\n"
-                f"💵 Kerak: {signal_price} ball\n\n"
-                f"📤 Ball to'plash uchun referal havolangizni tarqating!",
-                parse_mode='Markdown'
-            )
+            await query.answer(f"❌ Ball yetarli emas! {signal_price - user_points} ball yetishmayapti", show_alert=True)
             return await show_signal_selection(query, user_id)
-        
-        available_signals = data['signals']['available']
-        if not available_signals:
-            await query.message.reply_text(
-                "❌ Hozircha mavjud signallar yo'q. Tez orada yangilanadi! 🔄",
-                parse_mode='Markdown'
-            )
-            return await show_signal_selection(query, user_id)
-        
-        signal = available_signals[0]  # Birinchi signalni olamiz
         
         # Ball olib tashlash
-        data['users'][str(user_id)]['points'] -= signal_price
-        data['stats']['total_signals_sold'] += 1
+        if not remove_user_points(user_id, signal_price, "Oddiy signal uchun to'lov"):
+            await query.answer("❌ Xatolik yuz berdi!", show_alert=True)
+            return
         
-        # Signalni yuborish
-        signal_text = f"""
-🍎 *APPLE OF FORTUNE SIGNAL* 🎰
+        data['stats']['total_signals_used'] += 1
+        save_data(data)
+        
+        signal_url = data['settings']['signal_url']
+        
+        text = f"""
+✅ *ODDIY SIGNAL MUVAFFAQIYATLI SOTIB OLINDI!*
 
-⏰ **Vaqt:** {signal['time']}
-💰 **Stavka:** {signal['bet_amount']}
-🎯 **Strategiya:** {signal['strategy']}
-📊 **Bashorat:** {signal['prediction']}
-💎 **Ishonch darajasi:** {signal['confidence']}
+💰 **Sarflangan ball:** {signal_price} ball
+💰 **Qolgan ball:** {get_user_points(user_id)} ball
+🎯 **Signal turi:** Oddiy Signal
+⏰ **Amal qilish muddati:** 1 soat
 
-📝 **Tavsiya:**
-{signal['recommendation']}
+🔗 **Signal havolasi:**
+{signal_url}
 
-⚠️ **Eslatma:** 
-- Stavkalarni ehtiyotkorlik bilan qo'ying
-- Bankrot bo'lmaslik uchun mablag'ingizni boshqaring
-- Signal faqat 1 soat davomida amal qiladi
+📝 *Ko'rsatma:*
+1. Havolani bosing
+2. Signalni oling
+3️. O'yinda foydalaning
+4️. Daromadingizni oling!
+
+🎉 *Omad tilaymiz!*
 """
-
+        
         keyboard = [
+            [InlineKeyboardButton("🔗 SIGNALNI OLISH", url=signal_url)],
             [InlineKeyboardButton("🔄 Yana Signal Olish", callback_data="get_signals")],
             [InlineKeyboardButton("💰 Mening Ballim", callback_data="my_points")],
             [InlineKeyboardButton("🔙 Bosh Menyu", callback_data="back")]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
         
-        await query.edit_message_text(signal_text, reply_markup=reply_markup, parse_mode='Markdown')
-        
-        # Signalni available ro'yxatdan olib tashlash
-        data['signals']['available'].pop(0)
-        
-        # Sent signals ga qo'shish
-        if 'sent' not in data['signals']:
-            data['signals']['sent'] = {}
-        
-        if str(user_id) not in data['signals']['sent']:
-            data['signals']['sent'][str(user_id)] = []
-        
-        data['signals']['sent'][str(user_id)].append({
-            **signal,
-            'purchased_date': datetime.now().strftime("%Y-%m-%d %H:%M"),
-            'price_paid': signal_price
-        })
-        
-        save_data(data)
-        
-    except Exception as e:
-        logger.error(f"buy_signal da xato: {e}")
-
-# BALL ALMASHISH TIZIMI
-async def show_exchange_points(query, user_id):
-    """Ball almashish sahifasi"""
-    try:
-        user_points = get_user_points(user_id)
-        min_points = data['settings']['min_exchange_points']
-        exchange_rate = data['settings']['exchange_rate']
-        
-        text = f"""
-💰 *BALL ALMASHISH*
-
-🎯 **Sizning ballaringiz:** {user_points} ball
-💵 **Minimal almashish:** {min_points} ball
-💰 **Almashish kursi:** {min_points} ball = {exchange_rate} {data['settings']['currency']}
-
-📊 **Hisob-kitob:**
-• {min_points} ball = {exchange_rate} {data['settings']['currency']}
-• {min_points * 2} ball = {exchange_rate * 2} {data['settings']['currency']}
-• {min_points * 5} ball = {exchange_rate * 5} {data['settings']['currency']}
-
-💡 *Ballni pulga almashish uchun @baxtga_olga ga murojaat qiling!*
-"""
-
-        keyboard = []
-        
-        if user_points >= min_points:
-            keyboard.append([InlineKeyboardButton("📨 SO'ROV YUBORISH", url="https://t.me/baxtga_olga")])
-        else:
-            text += f"\n❌ *Ball yetarli emas!* {min_points - user_points} ball yetishmayapti."
-            keyboard.append([InlineKeyboardButton("📤 Ball To'plash", callback_data="get_referral_link")])
-        
-        keyboard.extend([
-            [InlineKeyboardButton("🎯 Signal Olish", callback_data="get_signals")],
-            [InlineKeyboardButton("💰 Mening Ballim", callback_data="my_points")],
-            [InlineKeyboardButton("🔙 Bosh Menyu", callback_data="back")]
-        ])
-        
-        reply_markup = InlineKeyboardMarkup(keyboard)
         await query.edit_message_text(text, reply_markup=reply_markup, parse_mode='Markdown')
         
     except Exception as e:
-        logger.error(f"show_exchange_points da xato: {e}")
+        logger.error(f"get_regular_signal da xato: {e}")
+
+async def get_vip_signal(query, user_id):
+    """VIP signal olish"""
+    try:
+        user_points = get_user_points(user_id)
+        signal_price = data['settings']['vip_signal_price']
+        
+        if user_points < signal_price:
+            await query.answer(f"❌ Ball yetarli emas! {signal_price - user_points} ball yetishmayapti", show_alert=True)
+            return await show_signal_selection(query, user_id)
+        
+        # Ball olib tashlash
+        if not remove_user_points(user_id, signal_price, "VIP signal uchun to'lov"):
+            await query.answer("❌ Xatolik yuz berdi!", show_alert=True)
+            return
+        
+        data['stats']['total_vip_signals_used'] += 1
+        save_data(data)
+        
+        signal_url = data['settings']['signal_url']
+        
+        text = f"""
+💎 *VIP SIGNAL MUVAFFAQIYATLI SOTIB OLINDI!*
+
+💰 **Sarflangan ball:** {signal_price} ball
+💰 **Qolgan ball:** {get_user_points(user_id)} ball
+🎯 **Signal turi:** VIP Signal (100%)
+⏰ **Amal qilish muddati:** 30 daqiqa
+⭐ **Ishonch darajasi:** 100%
+
+🔗 **Signal havolasi:**
+{signal_url}
+
+📝 *Ko'rsatma:*
+1. Havolani bosing
+2. VIP signalni oling
+3️. Darhol o'yinda foydalaning
+4️️. Maximum daromad oling!
+
+⚡ *VIP signal - Maximum yutuq kafolati!*
+"""
+        
+        keyboard = [
+            [InlineKeyboardButton("🔗 VIP SIGNALNI OLISH", url=signal_url)],
+            [InlineKeyboardButton("🔄 Yana Signal Olish", callback_data="get_signals")],
+            [InlineKeyboardButton("💰 Mening Ballim", callback_data="my_points")],
+            [InlineKeyboardButton("🔙 Bosh Menyu", callback_data="back")]
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        
+        await query.edit_message_text(text, reply_markup=reply_markup, parse_mode='Markdown')
+        
+    except Exception as e:
+        logger.error(f"get_vip_signal da xato: {e}")
 
 # BONUSLAR BO'LIMI
 async def show_bonuses(query):
     """Bonuslar sahifasi"""
     try:
-        text = """
+        text = f"""
 🎁 *BONUS TIZIMI*
 
-🏆 *Ball to'plashning tez yo'llari:*
+✨ *Ball to'plashning tez yo'llari:*
+
+🎁 **Yangi foydalanuvchi bonusi:**
+• Ro'yxatdan o'ting = *{data['settings']['new_user_points']} ball* BEPUL!
 
 📤 **Referal tizimi:**
-• Har bir do'st taklif = *5 ball*
-• Yangi foydalanuvchi = *15 ball*
+• Har bir do'st taklif = *{data['settings']['referral_points']} ball*
+• Do'stingiz = *{data['settings']['new_user_points']} ball* BEPUL!
 • Cheksiz do'st taklif qiling!
 
-💰 **Ball almashish:**
-• 50 ball = 10,000 so'm
-• 100 ball = 20,000 so'm
-• 500 ball = 100,000 so'm
-
 🎯 **Signallar:**
-• Har bir signal = 15 ball
-• Professional tahlillar
-• Yuqori daromad imkoniyati
+• Oddiy signal = {data['settings']['regular_signal_price']} ball
+• VIP signal = {data['settings']['vip_signal_price']} ball
 
-🚀 *Ko'proq do'st taklif qiling, tezroq ball to'plang!*
+💡 *Qanday tez ball to'plasaniz:*
+1. Do'stlaringizni taklif qiling (har biri 5 ball)
+2. Har bir yangi do'st 40 ball bilan boshlaydi
+3. Ko'proq do'st = Ko'proq ball
+4. Signallar oling va yutuqqa erishing!
+
+🚀 *Jamoangizni yig'ing va birgalikda boyiging!*
 """
-
+        
         keyboard = [
             [InlineKeyboardButton("📤 Referal Havola", callback_data="get_referral_link")],
             [InlineKeyboardButton("🎯 Signal Olish", callback_data="get_signals")],
-            [InlineKeyboardButton("💰 PUL ISHLASH", callback_data="exchange_points")],
+            [InlineKeyboardButton("💰 Mening Ballim", callback_data="my_points")],
             [InlineKeyboardButton("🔙 Bosh Menyu", callback_data="back")]
         ]
         
@@ -547,8 +498,8 @@ async def show_my_points(query, user_id):
         user_data = data['users'].get(str(user_id), {})
         points = user_data.get('points', 0)
         referrals = user_data.get('referrals', 0)
-        min_points = data['settings']['min_exchange_points']
-        exchange_rate = data['settings']['exchange_rate']
+        regular_price = data['settings']['regular_signal_price']
+        vip_price = data['settings']['vip_signal_price']
         
         text = f"""
 🏆 *MENING HISOBIM*
@@ -557,27 +508,31 @@ async def show_my_points(query, user_id):
 👥 **Referallar:** {referrals} ta
 💵 **1 referal:** {data['settings']['referral_points']} ball
 
-📊 **Almashish imkoniyatlari:**
-• {min_points} ball = {exchange_rate} {data['settings']['currency']}
-• {min_points * 2} ball = {exchange_rate * 2} {data['settings']['currency']}
-• {min_points * 5} ball = {exchange_rate * 5} {data['settings']['currency']}
+🎯 **Signallar xarid qilish:**
+• Oddiy signal: {regular_price} ball
+• VIP signal: {vip_price} ball
 
+📊 **Xarid qilish imkoniyatlari:**
 """
         
-        if points >= min_points:
-            text += f"✅ **Almashish mumkin:** {points // min_points} marta\n\n"
+        if points >= regular_price:
+            text += f"✅ Oddiy signal: {points // regular_price} ta\n"
         else:
-            text += f"❌ **Almashish uchun:** {min_points - points} ball yetishmayapti\n\n"
+            text += f"❌ Oddiy signal: {regular_price - points} ball yetishmayapti\n"
+            
+        if points >= vip_price:
+            text += f"💎 VIP signal: {points // vip_price} ta\n"
+        else:
+            text += f"❌ VIP signal: {vip_price - points} ball yetishmayapti\n"
         
         points_history = user_data.get('points_history', [])
         if points_history:
-            text += "📅 **So'nggi operatsiyalar:**\n"
+            text += "\n📅 **So'nggi operatsiyalar:**\n"
             for history in points_history[-5:]:
-                sign = "+" if history['points'] > 0 else ""
-                text += f"• {sign}{history['points']} ball - {history['reason']}\n"
+                sign = "+" if history['points'] > 0 else "-"
+                text += f"• {sign}{abs(history['points'])} ball - {history['reason']}\n"
         
         keyboard = [
-            [InlineKeyboardButton("💰 PUL ISHLASH", callback_data="exchange_points")],
             [InlineKeyboardButton("🎯 Signal Olish", callback_data="get_signals")],
             [InlineKeyboardButton("📤 Referal Havola", callback_data="get_referral_link")],
             [InlineKeyboardButton("🔙 Bosh Menyu", callback_data="back")]
@@ -607,16 +562,16 @@ async def show_referral_link(query, user_id):
 `{ref_link}`
 
 💰 **Ball to'plash formulasi:**
-• Har bir do'st taklif = {points_per_ref} ball
-• Yangi foydalanuvchi = {new_user_points} ball (bepul)
-• Ko'proq do'st = Ko'proq ball
+• Har bir do'st taklif = *{points_per_ref} ball*
+• Yangi foydalanuvchi = *{new_user_points} ball* (bepul)
+• Cheksiz taklif qilish mumkin
 
 📊 **Sizning holatingiz:**
 • Do'stlar: {referrals_count} ta
 • Balans: {user_points} ball
 • Jami olingan ball: {referrals_count * points_per_ref} ball
 
-💡 **Qanday ball to'plasaniz:**
+💡 **Qanday tez ball to'plasaniz:**
 1. Havolani nusxalang
 2. Do'stlaringizga yuboring  
 3. Har bir yangi do'st = {points_per_ref} ball
@@ -647,12 +602,14 @@ async def share_referral_link(query, user_id):
         share_text = f"""🍎 *Apple of Fortune Signal Boti*
 
 🎰 Exclusive Apple of Fortune signallari
-💰 Har bir signal - professional tahlillar
-🎁 Yangi foydalanuvchilar uchun 15 ball bepul!
+💰 Professional tahlillar va strategiyalar
+🎁 Yangi foydalanuvchilar uchun 40 ball BEPUL!
 
 📤 Do'stlaringizni taklif qiling va ball to'plang:
 • Har bir do'st = 5 ball
-• Do'stingiz = 15 ball bepul
+• Do'stingiz = 40 ball bepul
+
+🔗 Signallar olish uchun ball to'plang va yutuqqa erishing!
 
 Botga kirib, daromad olishni boshlang:
 {ref_link}"""
@@ -667,7 +624,9 @@ Botga kirib, daromad olishni boshlang:
         
         await query.edit_message_text(
             "🔗 *Havolani quyidagi tugma orqali osongina ulashing:*\n\n"
-            "Tugmani bosing va do'stlaringizga yuboring!",
+            "Tugmani bosing va do'stlaringizga yuboring!\n\n"
+            f"📊 Sizda hozir: {get_user_points(user_id)} ball\n"
+            f"👥 Jami referallar: {get_user_referrals(user_id)} ta",
             reply_markup=reply_markup,
             parse_mode='Markdown'
         )
@@ -679,28 +638,28 @@ Botga kirib, daromad olishni boshlang:
 async def show_help(query):
     """Yordam sahifasi"""
     try:
-        text = """
+        text = f"""
 ℹ️ *BOTDAN FOYDALANISH QO'LLANMASI*
 
 🍎 *Apple of Fortune Signallari:*
-• **Har bir signal** - 15 ball
+• **Oddiy Signal** - {data['settings']['regular_signal_price']} ball
+• **VIP Signal (100%)** - {data['settings']['vip_signal_price']} ball
 • **Professional tahlillar**
 • **Yuqori daromad imkoniyati**
 
 💰 *Ball Tizimi:*
-• **1 do'st taklif = 5 ball**
-• **Yangi foydalanuvchi = 15 ball** (bepul)
-• **50 ball = 10,000 so'm** almashish
-• **15 ball = 1 ta signal**
+• **Yangi foydalanuvchi** = {data['settings']['new_user_points']} ball (bepul)
+• **1 do'st taklif** = {data['settings']['referral_points']} ball
+• **Cheksiz taklif** qilish mumkin
 
 🎯 *Qanday boshlash kerak:*
-1. 📤 Do'stlaringizni taklif qiling
-2. 💰 Ball to'plang (har bir do'st = 5 ball)
-3. 🎯 Signallar oling (har biri 15 ball)
-4. 💸 Ballarni pulga aylantiring
+1. 📤 Do'stlaringizni taklif qiling (har biri 5 ball)
+2. 💰 Ball to'plang (do'stlar = ball)
+3. 🎯 Signallar oling (oddiy 20 ball, VIP 50 ball)
+4. 💸 Daromad oling va yana taklif qiling
 
 📞 *Qo'llab-quvvatlash:*
-@baxtga_olga
+Agar savollaringiz bo'lsa, @baxtga_olga ga murojaat qiling
 
 🚀 *Professional signallar bilan yutuqqa intiling!*
 """
@@ -729,21 +688,20 @@ async def show_admin_panel(query):
 📊 **Bot Statistikasi:**
 👥 Jami foydalanuvchilar: {stats['total_users']} ta
 💰 Jami ballar: {total_points} ball
-🎟️ Sotilgan signallar: {data['stats']['total_signals_sold']} ta
-🔄 Almashish so'rovlari: {data['stats']['total_exchanges']} ta
+🎯 Oddiy signallar: {data['stats']['total_signals_used']} ta
+💎 VIP signallar: {data['stats']['total_vip_signals_used']} ta
+📈 Bugungi yangi: {stats['today_users']} ta
+📤 Bugungi referallar: {stats['today_referrals']} ta
 
-🎰 **Signallar:**
-📊 Mavjud signallar: {len(data['signals']['available'])} ta
-
-🎯 **Admin Imkoniyatlari:**
+⚙️ **Sozlamalar:**
+• Yangi foydalanuvchi: {data['settings']['new_user_points']} ball
+• Referal ball: {data['settings']['referral_points']} ball
+• Oddiy signal: {data['settings']['regular_signal_price']} ball  
+• VIP signal: {data['settings']['vip_signal_price']} ball
 """
-        
+
         keyboard = [
-            [InlineKeyboardButton("📊 Statistika", callback_data="admin_stats")],
-            [InlineKeyboardButton("👥 Foydalanuvchilar", callback_data="admin_users")],
-            [InlineKeyboardButton("💰 Ball Boshqarish", callback_data="admin_manage_points")],
-            [InlineKeyboardButton("🎯 Signal Qo'shish", callback_data="admin_add_signal")],
-            [InlineKeyboardButton("🗑️ Signallarni Tozalash", callback_data="admin_clear_signals")],
+            [InlineKeyboardButton("📊 Batafsil Statistika", callback_data="admin_stats")],
             [InlineKeyboardButton("📢 Reklama Yuborish", callback_data="admin_broadcast")],
             [InlineKeyboardButton("🔙 Bosh Menyu", callback_data="back")]
         ]
@@ -754,7 +712,6 @@ async def show_admin_panel(query):
     except Exception as e:
         logger.error(f"show_admin_panel da xato: {e}")
 
-# QOLGAN ADMIN FUNKSIYALARI (qisqartirilgan versiya)
 async def show_admin_stats(query):
     """Batafsil statistika"""
     try:
@@ -762,30 +719,40 @@ async def show_admin_stats(query):
         total_points = sum(user.get('points', 0) for user in data['users'].values())
         total_referrals = sum(user.get('referrals', 0) for user in data['users'].values())
         
+        # Eng ko'p balli foydalanuvchilar
+        top_users = sorted(data['users'].items(), key=lambda x: x[1].get('points', 0), reverse=True)[:5]
+        
         text = f"""
 📊 *BATAFSIL STATISTIKA*
 
 👥 **Foydalanuvchilar:**
 • Jami: {stats['total_users']} ta
 • Bugungi yangi: {stats['today_users']} ta
+• Aktiv (7 kun): {stats['active_users']} ta
 
 💰 **Ball Tizimi:**
 • Jami berilgan: {data['stats']['total_points_given']} ball
 • Foydalanuvchilarda: {total_points} ball
-• Sotilgan signallar: {data['stats']['total_signals_sold']} ta
+• Oddiy signallar: {data['stats']['total_signals_used']} ta
+• VIP signallar: {data['stats']['total_vip_signals_used']} ta
 
 📈 **Referallar:**
 • Jami referallar: {total_referrals} ta
 • Bugungi referallar: {stats['today_referrals']} ta
 
-🎰 **Signallar:**
-• Mavjud signallar: {len(data['signals']['available'])} ta
-
-⏰ Yangilangan: {datetime.now().strftime('%Y-%m-%d %H:%M')}
+🏆 **TOP 5 Foydalanuvchi:**
 """
         
+        for i, (user_id, user_data) in enumerate(top_users, 1):
+            name = user_data.get('name', 'Noma\'lum')
+            points = user_data.get('points', 0)
+            referrals = user_data.get('referrals', 0)
+            text += f"{i}. {name} - {points} ball - {referrals} ref\n"
+        
+        text += f"\n⏰ Yangilangan: {datetime.now().strftime('%Y-%m-%d %H:%M')}"
+        
         keyboard = [
-            [InlineKeyboardButton("💰 Ball Boshqarish", callback_data="admin_manage_points")],
+            [InlineKeyboardButton("📢 Reklama Yuborish", callback_data="admin_broadcast")],
             [InlineKeyboardButton("🔄 Yangilash", callback_data="admin_stats")],
             [InlineKeyboardButton("👑 Admin Panel", callback_data="admin")],
             [InlineKeyboardButton("🔙 Bosh Menyu", callback_data="back")]
@@ -797,20 +764,17 @@ async def show_admin_stats(query):
     except Exception as e:
         logger.error(f"show_admin_stats da xato: {e}")
 
-async def show_admin_add_signal(query):
-    """Signal qo'shish sahifasi"""
+async def show_admin_broadcast(query):
+    """Reklama yuborish sahifasi"""
     try:
-        text = """
-🎯 *SIGNAL QO'SHISH*
+        text = f"""
+📢 *REKLAMA YUBORISH*
 
-Quyidagi formatda signal qo'shing:
+Barcha {len(data['users'])} ta foydalanuvchilarga xabar yuborish uchun xabar yuboring.
 
-`vaqt|stavka_miqdori|strategiya|bashorat|ishonch_darajasi|tavsiya`
+Xabar barcha foydalanuvchilarga yuboriladi.
 
-📝 *Misol:*
-`14:30|5000 so'm|3x Martingale|Qizil|85%|Avval kichik stavka qilib ko'ring`
-
-💡 *Eslatma:* Signal qo'shilgach, foydalanuvchilar 15 ball evaziga sotib olishlari mumkin.
+💡 *Eslatma:* Xabar yuborish biroz vaqt olishi mumkin.
 """
         
         keyboard = [
@@ -822,23 +786,7 @@ Quyidagi formatda signal qo'shing:
         await query.edit_message_text(text, reply_markup=reply_markup, parse_mode='Markdown')
         
     except Exception as e:
-        logger.error(f"show_admin_add_signal da xato: {e}")
-
-async def admin_clear_signals(query):
-    """Signallarni tozalash"""
-    try:
-        data['signals']['available'] = []
-        save_data(data)
-        
-        await query.message.reply_text(
-            "✅ *Barcha signallar tozalandi!*\n\n"
-            "Endi yangi signallar qo'shishingiz mumkin.",
-            parse_mode='Markdown'
-        )
-        await show_admin_panel(query)
-        
-    except Exception as e:
-        logger.error(f"admin_clear_signals da xato: {e}")
+        logger.error(f"show_admin_broadcast da xato: {e}")
 
 # YORDAMCHI FUNKSIYALAR
 async def back_to_main(query):
@@ -850,14 +798,13 @@ async def back_to_main(query):
         keyboard = [
             [
                 InlineKeyboardButton("🎯 SIGNAL OLISH", callback_data="get_signals"),
-                InlineKeyboardButton("💰 PUL ISHLASH", callback_data="exchange_points")
-            ],
-            [
-                InlineKeyboardButton("🎁 BONUSLAR", callback_data="bonuses"),
                 InlineKeyboardButton("📊 MENING BALLIM", callback_data="my_points")
             ],
             [
                 InlineKeyboardButton("📤 REFERAL HAVOLA", callback_data="get_referral_link"),
+                InlineKeyboardButton("🎁 BONUSLAR", callback_data="bonuses")
+            ],
+            [
                 InlineKeyboardButton("ℹ️ YORDAM", callback_data="help")
             ]
         ]
@@ -869,7 +816,8 @@ async def back_to_main(query):
         
         await query.edit_message_text(
             "🍎 *Apple of Fortune - Asosiy Menyu*\n\n"
-            "Ball to'plang, signallar oling va yutuqlarga erishing! 🚀",
+            "Ball to'plang, signallar oling va yutuqlarga erishing! 🚀\n\n"
+            f"💰 Sizning balansingiz: {get_user_points(user_id)} ball",
             reply_markup=reply_markup,
             parse_mode='Markdown'
         )
@@ -886,10 +834,18 @@ def get_user_statistics():
     
     today_referrals = data['stats']['today_referrals']
     
+    active_users = 0
+    week_ago = datetime.now().timestamp() - 7 * 24 * 60 * 60
+    for user_id, user_data in data['users'].items():
+        last_active = user_data.get('last_active', 0)
+        if last_active > week_ago:
+            active_users += 1
+    
     return {
         'total_users': total_users,
         'today_users': today_users,
-        'today_referrals': today_referrals
+        'today_referrals': today_referrals,
+        'active_users': active_users
     }
 
 # ADMIN XABARLARINI QAYTA ISHLASH
@@ -901,227 +857,48 @@ async def handle_admin_message(update: Update, context: ContextTypes.DEFAULT_TYP
     
     try:
         message = update.message
-        message_text = message.text.strip()
-        
-        # Signal qo'shish
-        if '|' in message.text:
-            parts = message.text.split('|')
-            
-            if len(parts) == 6:  # Signal format
-                time, bet_amount, strategy, prediction, confidence, recommendation = parts
-                
-                new_signal = {
-                    'time': time.strip(),
-                    'bet_amount': bet_amount.strip(),
-                    'strategy': strategy.strip(),
-                    'prediction': prediction.strip(),
-                    'confidence': confidence.strip(),
-                    'recommendation': recommendation.strip(),
-                    'added_date': datetime.now().strftime("%Y-%m-%d %H:%M")
-                }
-                
-                data['signals']['available'].append(new_signal)
-                data['signals']['last_update'] = datetime.now().strftime("%Y-%m-%d %H:%M")
-                save_data(data)
-                
-                await message.reply_text(
-                    f"✅ *Signal qo'shildi!*\n\n"
-                    f"⏰ Vaqt: {time.strip()}\n"
-                    f"💰 Stavka: {bet_amount.strip()}\n"
-                    f"🎯 Strategiya: {strategy.strip()}\n"
-                    f"📊 Bashorat: {prediction.strip()}\n"
-                    f"💎 Ishonch: {confidence.strip()}\n\n"
-                    f"📊 Jami signallar: {len(data['signals']['available'])} ta",
-                    parse_mode='Markdown'
-                )
-        
-        # Ball qo'shish/olish
-        elif context.user_data.get('editing_user'):
-            user_id_to_edit = context.user_data['editing_user']
-            action = context.user_data.get('action')
-            
-            try:
-                points = int(message.text)
-                user_data = data['users'].get(user_id_to_edit, {})
-                user_name = user_data.get('name', 'Noma\'lum')
-                current_points = user_data.get('points', 0)
-                
-                if action == 'add_points':
-                    add_user_points(int(user_id_to_edit), points, f"Admin tomonidan qo'shildi")
-                    await message.reply_text(
-                        f"✅ *Ball qo'shildi!*\n\n"
-                        f"👤 Foydalanuvchi: {user_name}\n"
-                        f"🆔 ID: {user_id_to_edit}\n"
-                        f"💰 Qo'shildi: {points} ball\n"
-                        f"📊 Avval: {current_points} ball\n"
-                        f"🎯 Keyin: {get_user_points(int(user_id_to_edit))} ball",
-                        parse_mode='Markdown'
-                    )
-                    
-                elif action == 'remove_points':
-                    if remove_user_points(int(user_id_to_edit), points, f"Admin tomonidan olindi"):
-                        await message.reply_text(
-                            f"✅ *Ball olindi!*\n\n"
-                            f"👤 Foydalanuvchi: {user_name}\n"
-                            f"🆔 ID: {user_id_to_edit}\n"
-                            f"💰 Olindi: {points} ball\n"
-                            f"📊 Avval: {current_points} ball\n"
-                            f"🎯 Keyin: {get_user_points(int(user_id_to_edit))} ball",
-                            parse_mode='Markdown'
-                        )
-                    else:
-                        await message.reply_text(
-                            f"❌ *Ball olib bo'lmadi!*\n\n"
-                            f"👤 Foydalanuvchi: {user_name}\n"
-                            f"💰 So'ralgan: {points} ball\n"
-                            f"🎯 Mavjud: {current_points} ball\n\n"
-                            f"Ball yetarli emas!",
-                            parse_mode='Markdown'
-                        )
-                
-                context.user_data.pop('editing_user', None)
-                context.user_data.pop('action', None)
-                return
-                
-            except ValueError:
-                await message.reply_text("❌ Iltimos, faqat raqam kiriting!")
-                return
         
         # Reklama yuborish
-        else:
-            total_users = len(data['users'])
-            successful = 0
-            
-            progress_msg = await message.reply_text(f"📤 Xabar yuborilmoqda... 0/{total_users}")
-            
-            for i, user_id_str in enumerate(data['users']):
-                try:
-                    if message.text:
-                        await context.bot.send_message(
-                            chat_id=int(user_id_str),
-                            text=message.text,
-                            parse_mode='Markdown'
-                        )
-                    successful += 1
+        total_users = len(data['users'])
+        successful = 0
+        
+        progress_msg = await message.reply_text(f"📤 Xabar yuborilmoqda... 0/{total_users}")
+        
+        for i, user_id_str in enumerate(data['users']):
+            try:
+                if message.text:
+                    await context.bot.send_message(
+                        chat_id=int(user_id_str),
+                        text=message.text,
+                        parse_mode='Markdown'
+                    )
+                elif message.photo:
+                    await context.bot.send_photo(
+                        chat_id=int(user_id_str),
+                        photo=message.photo[-1].file_id,
+                        caption=message.caption,
+                        parse_mode='Markdown'
+                    )
+                successful += 1
+                
+                if i % 10 == 0:
+                    await progress_msg.edit_text(f"📤 Xabar yuborilmoqda... {i}/{total_users}")
                     
-                    if i % 10 == 0:
-                        await progress_msg.edit_text(f"📤 Xabar yuborilmoqda... {i}/{total_users}")
-                        
-                except Exception as e:
-                    logger.error(f"Foydalanuvchiga xabar yuborishda xato {user_id_str}: {e}")
-                    continue
-            
-            await progress_msg.edit_text(
-                f"📊 *Reklama yuborildi!*\n\n"
-                f"👥 Jami foydalanuvchi: {total_users} ta\n"
-                f"✅ Muvaffaqiyatli: {successful} ta\n"
-                f"❌ Xatolik: {total_users - successful} ta\n"
-                f"📈 Muvaffaqiyat darajasi: {(successful/total_users*100):.1f}%",
-                parse_mode='Markdown'
-            )
+            except Exception as e:
+                logger.error(f"Foydalanuvchiga xabar yuborishda xato {user_id_str}: {e}")
+                continue
+        
+        await progress_msg.edit_text(
+            f"📊 *Reklama yuborildi!*\n\n"
+            f"👥 Jami foydalanuvchi: {total_users} ta\n"
+            f"✅ Muvaffaqiyatli: {successful} ta\n"
+            f"❌ Xatolik: {total_users - successful} ta\n"
+            f"📈 Muvaffaqiyat darajasi: {(successful/total_users*100):.1f}%",
+            parse_mode='Markdown'
+        )
             
     except Exception as e:
         logger.error(f"handle_admin_message da xato: {e}")
-
-# QOLGAN ADMIN FUNKSIYALARI (qisqartirilgan)
-async def show_admin_users(query):
-    """Foydalanuvchilar ro'yxati"""
-    try:
-        users = data['users']
-        users_list = list(users.items())[:10]
-        
-        text = f"""
-👥 *FOYDALANUVCHILAR RO'YXATI*
-
-Jami: {len(users)} ta foydalanuvchi
-
-"""
-        
-        for i, (user_id, user_data) in enumerate(users_list, 1):
-            name = user_data.get('name', 'Noma\'lum')
-            username = user_data.get('username', '')
-            points = user_data.get('points', 0)
-            referrals = user_data.get('referrals', 0)
-            
-            username_display = f"(@{username})" if username else ""
-            
-            text += f"{i}. {name} {username_display}\n"
-            text += f"   🆔: `{user_id}`\n"
-            text += f"   💰: {points} ball | 👥: {referrals} ta\n\n"
-        
-        keyboard = [
-            [InlineKeyboardButton("💰 Ball Boshqarish", callback_data="admin_manage_points")],
-            [InlineKeyboardButton("🔄 Yangilash", callback_data="admin_users")],
-            [InlineKeyboardButton("👑 Admin Panel", callback_data="admin")],
-            [InlineKeyboardButton("🔙 Bosh Menyu", callback_data="back")]
-        ]
-        
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        await query.edit_message_text(text, reply_markup=reply_markup, parse_mode='Markdown')
-        
-    except Exception as e:
-        logger.error(f"show_admin_users da xato: {e}")
-
-async def show_admin_manage_points(query):
-    """Ball boshqarish sahifasi"""
-    try:
-        text = """
-💰 *BALL BOSHQARISH*
-
-Foydalanuvchi ID sini va ball miqdorini yuboring:
-
-`user_id ball_miqdori`
-
-📝 *Misol:*
-`123456789 50` - 123456789 ID li foydalanuvchiga 50 ball qo'shadi
-
-Yoki foydalanuvchini tanlang:
-"""
-        
-        users = data['users']
-        sorted_users = sorted(users.items(), key=lambda x: x[1].get('points', 0), reverse=True)[:8]
-        
-        keyboard = []
-        
-        for user_id, user_data in sorted_users:
-            name = user_data.get('name', 'Noma\'lum')[:12]
-            keyboard.append([
-                InlineKeyboardButton(f"➕ {name}", callback_data=f"admin_add_points_{user_id}"),
-                InlineKeyboardButton(f"➖ {name}", callback_data=f"admin_remove_points_{user_id}")
-            ])
-        
-        keyboard.extend([
-            [InlineKeyboardButton("👑 Admin Panel", callback_data="admin")],
-            [InlineKeyboardButton("🔙 Bosh Menyu", callback_data="back")]
-        ])
-        
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        await query.edit_message_text(text, reply_markup=reply_markup, parse_mode='Markdown')
-        
-    except Exception as e:
-        logger.error(f"show_admin_manage_points da xato: {e}")
-
-async def show_admin_broadcast(query):
-    """Reklama yuborish sahifasi"""
-    try:
-        text = f"""
-📢 *REKLAMA YUBORISH*
-
-Barcha {len(data['users'])} ta foydalanuvchilarga xabar yuborish uchun xabar yuboring.
-
-Xabar barcha foydalanuvchilarga yuboriladi.
-"""
-        
-        keyboard = [
-            [InlineKeyboardButton("👑 Admin Panel", callback_data="admin")],
-            [InlineKeyboardButton("🔙 Bosh Menyu", callback_data="back")]
-        ]
-        
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        await query.edit_message_text(text, reply_markup=reply_markup, parse_mode='Markdown')
-        
-    except Exception as e:
-        logger.error(f"show_admin_broadcast da xato: {e}")
 
 # ASOSIY DASTUR
 def main():
@@ -1132,16 +909,20 @@ def main():
         application.add_handler(CommandHandler("start", start))
         application.add_handler(CallbackQueryHandler(button_handler))
         application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_admin_message))
+        application.add_handler(MessageHandler(filters.PHOTO, handle_admin_message))
         
         logger.info("Apple of Fortune Bot ishga tushmoqda...")
         print("✅ Bot muvaffaqiyatli ishga tushdi!")
         print("🍎 Apple of Fortune Signal Boti")
         print(f"👑 Admin ID: {ADMIN_ID}")
         print("🎯 BARCHA FUNKSIYALAR ISHLAYDI:")
-        print("   • 🎯 Signal olish tizimi (15 ball)")
-        print("   • 📤 Referal tizimi (5 ball + 15 ball yangi foydalanuvchi)")
-        print("   • 💰 Ball almashish")
-        print("   • 👑 Admin paneli")
+        print("   • 🎯 Oddiy signal (20 ball) -> signal7.digital")
+        print("   • 💎 VIP signal (50 ball) -> signal7.digital") 
+        print("   • 🎁 Yangi foydalanuvchi: 40 ball")
+        print("   • 📤 Referal tizimi: 5 ball har bir taklif")
+        print("   • 📊 Chiroyli statistika")
+        print("   • 📢 Reklama yuborish")
+        print("   • 👑 Soddalashtirilgan admin panel")
         
         application.run_polling()
         
