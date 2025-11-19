@@ -571,12 +571,10 @@ async def get_regular_signal(query, user_id):
 💰 **Sarflangan ball:** {signal_price} ball
 💰 **Qolgan ball:** {get_user_points(user_id)} ball
 🎯 **Signal turi:** Oddiy Signal
-
-🔗 **Signal havolasi:**
-{signal_url}
+⏰ **Amal qilish muddati:** 1 soat
 
 📝 *Ko'rsatma:*
-1. Havolani bosing
+1. Quyidagi tugmani bosing
 2. Signalni oling
 3. O'yinda foydalaning
 
@@ -632,12 +630,11 @@ async def get_vip_signal(query, user_id):
 💰 **Sarflangan ball:** {signal_price} ball
 💰 **Qolgan ball:** {get_user_points(user_id)} ball
 🎯 **Signal turi:** VIP Signal (100%)
-
-🔗 **Signal havolasi:**
-{signal_url}
+⏰ **Amal qilish muddati:** 30 daqiqa
+⭐ **Ishonch darajasi:** 100%
 
 📝 *Ko'rsatma:*
-1. Havolani bosing
+1. Quyidagi tugmani bosing
 2. VIP signalni oling
 3. Darhol o'yinda foydalaning
 
@@ -716,7 +713,7 @@ async def back_to_main(query):
     except Exception as e:
         logger.error(f"back_to_main da xato: {e}")
 
-# QOLGAN FUNKSIYALAR (oldingi kod bilan bir xil)
+# QOLGAN FUNKSIYALAR
 async def show_my_points(query, user_id):
     """Foydalanuvchi ballari va statistikasi"""
     try:
@@ -911,7 +908,7 @@ async def show_help(query):
     except Exception as e:
         logger.error(f"show_help da xato: {e}")
 
-# ADMIN FUNKSIYALARI (qisqartirilgan)
+# ADMIN FUNKSIYALARI
 async def show_admin_panel(query):
     """Admin panelini ko'rsatish"""
     try:
@@ -943,7 +940,7 @@ async def show_admin_panel(query):
     except Exception as e:
         logger.error(f"show_admin_panel da xato: {e}")
 
-# QOLGAN ADMIN FUNKSIYALARI (oldingi kod bilan bir xil)
+# QOLGAN ADMIN FUNKSIYALARI
 async def show_admin_stats(query):
     """Batafsil statistika"""
     try:
@@ -1153,7 +1150,7 @@ def main():
         print(f"👑 Admin ID: {ADMIN_ID}")
         print("🎯 BARCHA FUNKSIYALAR ISHLAYDI:")
         print("   • 📝 Ro'yxatdan o'tish tizimi (doimiy ko'rinadi)")
-        print("   • 🎯 Signal olish (20 va 50 ball)")
+        print("   • 🎯 Signal olish (20 va 50 ball) - havola faqat tugmada")
         print("   • 📤 Referal tizimi")
         print("   • 👑 Admin paneli")
         print("   • 🔥 Chiroyli tugma joylashuvi")
