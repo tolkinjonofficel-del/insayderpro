@@ -38,13 +38,13 @@ default_data = {
             "text": "🎰 *1xBET RO'YXATDAN O'TISH*\n\nAIFUT promokodini kiriting va 100% bonus oling!",
             "photo": None,
             "button_text": "🎰 1xBet Ro'yxatdan o'tish",
-            "url": "https://refpa58144.com/L?tag=d_4147173m_45361c_&site=4147173&ad=45361"
+            "url": "https://1xbet.com"
         },
         "melbet": {
             "text": "🎯 *MELBET RO'YXATDAN O'TISH*\n\nAIFUT promokodini kiriting va maxsus bonus oling!",
             "photo": None,
             "button_text": "🎯 MelBet Ro'yxatdan o'tish", 
-            "url": "https://melbet-76292.pro/ru/registration?tag=s_4856673m_66333c_"
+            "url": "https://melbet.com"
         }
     },
     "stats": {
