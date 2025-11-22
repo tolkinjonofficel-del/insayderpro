@@ -248,7 +248,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             ],
             [
                 InlineKeyboardButton("📝 RO'YXATDAN O'TISH", callback_data="registration"),
-                InlineKeyboardButton("📤 REFERAL", callback_data="get_referral_link")
+                InlineKeyboardButton("🌟 BALL TOPLASH", callback_data="get_referral_link")
             ],
             [
                 InlineKeyboardButton("🎁 BONUSLAR", callback_data="bonuses"),
@@ -463,7 +463,7 @@ async def confirm_registration(query, user_id):
             ],
             [
                 InlineKeyboardButton("📝 RO'YXATDAN O'TISH", callback_data="registration"),
-                InlineKeyboardButton("📤 REFERAL", callback_data="get_referral_link")
+                InlineKeyboardButton("🌟 BALL TOPLASH", callback_data="get_referral_link")
             ],
             [InlineKeyboardButton("🔙 BOSH MENYU", callback_data="back")]
         ]
@@ -691,7 +691,7 @@ async def back_to_main(query):
             ],
             [
                 InlineKeyboardButton("📝 RO'YXATDAN O'TISH", callback_data="registration"),
-                InlineKeyboardButton("📤 REFERAL", callback_data="get_referral_link")
+                InlineKeyboardButton("🌟 BALL TOPLASH", callback_data="get_referral_link")
             ],
             [
                 InlineKeyboardButton("🎁 BONUSLAR", callback_data="bonuses"),
@@ -738,7 +738,7 @@ async def show_my_points(query, user_id):
         keyboard = [
             [
                 InlineKeyboardButton("🎯 SIGNAL OLISH", callback_data="get_signals"),
-                InlineKeyboardButton("📤 REFERAL", callback_data="get_referral_link")
+                InlineKeyboardButton("🌟 BALL TOPLASH", callback_data="get_referral_link")
             ],
             [
                 InlineKeyboardButton("📝 RO'YXATDAN O'TISH", callback_data="registration"),
@@ -894,7 +894,7 @@ async def show_help(query):
         keyboard = [
             [
                 InlineKeyboardButton("🎯 SIGNALLAR", callback_data="get_signals"),
-                InlineKeyboardButton("📤 REFERAL", callback_data="get_referral_link")
+                InlineKeyboardButton("🌟 BALL TOPLASH", callback_data="get_referral_link")
             ],
             [
                 InlineKeyboardButton("📝 RO'YXATDAN O'TISH", callback_data="registration"),
@@ -1151,7 +1151,7 @@ def main():
         print("🎯 BARCHA FUNKSIYALAR ISHLAYDI:")
         print("   • 📝 Ro'yxatdan o'tish tizimi (doimiy ko'rinadi)")
         print("   • 🎯 Signal olish (20 va 50 ball) - havola faqat tugmada")
-        print("   • 📤 Referal tizimi")
+        print("   • 🌟 BALL TOPLASH tizimi")
         print("   • 👑 Admin paneli")
         print("   • 🔥 Chiroyli tugma joylashuvi")
         
