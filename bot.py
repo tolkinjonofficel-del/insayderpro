@@ -8,7 +8,7 @@ from telegram.ext import Application, CommandHandler, CallbackQueryHandler, Cont
 from datetime import datetime, timedelta
 
 # Bot tokeni
-TOKEN = "8573896084:AAFHLQ5l-HAz5A8_kwsy0xMImg6Yz1sfNSQ"
+TOKEN = "8114630640:AAFVJdZUikbL5eugTKvjYwmev_zeA93GW7M"
 
 # Admin ID
 ADMIN_ID = 7081746531
@@ -31,21 +31,8 @@ default_data = {
         "new_user_points": 40,
         "regular_signal_price": 20,
         "vip_signal_price": 50,
-        "signal_url": "https://www.signal7.digital/"
-    },
-    "registration_messages": {
-        "1xbet": {
-            "text": "🎰 *1xBET RO'YXATDAN O'TISH*\n\nAIFUT promokodini kiriting va 100% bonus oling!",
-            "photo": None,
-            "button_text": "🎰 1xBet Ro'yxatdan o'tish",
-            "url": "https://1xbet.com"
-        },
-        "melbet": {
-            "text": "🎯 *MELBET RO'YXATDAN O'TISH*\n\nAIFUT promokodini kiriting va maxsus bonus oling!",
-            "photo": None,
-            "button_text": "🎯 MelBet Ro'yxatdan o'tish", 
-            "url": "https://melbet.com"
-        }
+        "signal_url": "https://www.signal7.digital/",
+        "registration_url": "https://superlative-twilight-47ef34.netlify.app/"
     },
     "stats": {
         "total_users": 0,
@@ -248,7 +235,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             ],
             [
                 InlineKeyboardButton("📝 RO'YXATDAN O'TISH", callback_data="registration"),
-                InlineKeyboardButton("🌟 BALL TOPLASH", callback_data="get_referral_link")
+                InlineKeyboardButton("📤 REFERAL", callback_data="get_referral_link")
             ],
             [
                 InlineKeyboardButton("🎁 BONUSLAR", callback_data="bonuses"),
@@ -289,11 +276,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         elif query.data == "get_vip_signal":
             await get_vip_signal(query, user_id)
         elif query.data == "registration":
-            await show_registration_options(query, user_id)
-        elif query.data == "register_1xbet":
-            await show_1xbet_registration(query, user_id)
-        elif query.data == "register_melbet":
-            await show_melbet_registration(query, user_id)
+            await show_registration_page(query, user_id)
         elif query.data == "confirm_registration":
             await confirm_registration(query, user_id)
         elif query.data == "my_points":
@@ -308,8 +291,6 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await show_help(query)
         elif query.data == "back":
             await back_to_main(query)
-        elif query.data == "back_to_registration":
-            await show_registration_options(query, user_id)
         
         # ADMIN HANDLERLARI
         elif query.data == "admin":
@@ -320,12 +301,6 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await show_admin_stats(query)
         elif query.data == "admin_broadcast":
             await show_admin_broadcast(query)
-        elif query.data == "admin_manage_registration":
-            await show_admin_manage_registration(query)
-        elif query.data == "admin_edit_1xbet":
-            await admin_edit_1xbet_message(query)
-        elif query.data == "admin_edit_melbet":
-            await admin_edit_melbet_message(query)
         
         else:
             await query.message.reply_text("❌ Noma'lum buyruq!")
@@ -335,8 +310,8 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.message.reply_text("❌ Xatolik yuz berdi. Iltimos, qayta urinib ko'ring.")
 
 # RO'YXATDAN O'TISH TIZIMI
-async def show_registration_options(query, user_id):
-    """Ro'yxatdan o'tish variantlarini ko'rsatish"""
+async def show_registration_page(query, user_id):
+    """Ro'yxatdan o'tish sahifasi"""
     try:
         user_data = data['users'].get(str(user_id), {})
         has_registered = user_data.get('has_registered', False)
@@ -346,18 +321,21 @@ async def show_registration_options(query, user_id):
         text = f"""
 📝 *RO'YXATDAN O'TISH* {status_icon}
 
-🎯 *DIQQAT: Signallarni olish uchun quyidagi bukmeker kontorlaridan birida AIFUT promokodi orqali ro'yxatdan o'ting!*
+🎯 *DIQQAT: Signallarni olish uchun AIFUT promokodi orqali ro'yxatdan o'ting!*
 
 ✨ *AIFUT promokodini kiriting va maxsus bonuslardan bahramand bo'ling!*
 
-Quyidagi bukmeker kontorlaridan birini tanlang:
+🏆 *Ro'yxatdan o'tish afzalliklari:*
+• ✅ Signallarni olish imkoniyati
+• 🎁 AIFUT promokodi bilan bonus
+• 💰 Birinchi depozit uchun 100% bonus
+• 📈 Professional signallar
+
+🔗 *Ro'yxatdan o'tish uchun quyidagi tugmani bosing:*
 """
 
         keyboard = [
-            [
-                InlineKeyboardButton("🎰 1xBET", callback_data="register_1xbet"),
-                InlineKeyboardButton("🎯 MELBET", callback_data="register_melbet")
-            ],
+            [InlineKeyboardButton("🚀 RO'YXATDAN O'TISH", url=data['settings']['registration_url'])],
             [InlineKeyboardButton("✅ MEN RO'YXATDAN O'TDIM", callback_data="confirm_registration")],
             [
                 InlineKeyboardButton("🎯 SIGNALLAR", callback_data="get_signals"),
@@ -369,55 +347,7 @@ Quyidagi bukmeker kontorlaridan birini tanlang:
         await query.edit_message_text(text, reply_markup=reply_markup, parse_mode='Markdown')
         
     except Exception as e:
-        logger.error(f"show_registration_options da xato: {e}")
-
-async def show_1xbet_registration(query, user_id):
-    """1xBet ro'yxatdan o'tish sahifasi"""
-    try:
-        data['stats']['registration_clicks'] += 1
-        save_data(data)
-        
-        reg_data = data['registration_messages']['1xbet']
-        
-        text = reg_data['text'] + "\n\n🔗 *Havolani bosing va ro'yxatdan o'ting:*"
-        
-        keyboard = [
-            [InlineKeyboardButton(reg_data['button_text'], url=reg_data['url'])],
-            [
-                InlineKeyboardButton("✅ MEN RO'YXATDAN O'TDIM", callback_data="confirm_registration"),
-                InlineKeyboardButton("🔙 ORQAGA", callback_data="back_to_registration")
-            ]
-        ]
-        
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        await query.edit_message_text(text, reply_markup=reply_markup, parse_mode='Markdown')
-        
-    except Exception as e:
-        logger.error(f"show_1xbet_registration da xato: {e}")
-
-async def show_melbet_registration(query, user_id):
-    """MelBet ro'yxatdan o'tish sahifasi"""
-    try:
-        data['stats']['registration_clicks'] += 1
-        save_data(data)
-        
-        reg_data = data['registration_messages']['melbet']
-        
-        text = reg_data['text'] + "\n\n🔗 *Havolani bosing va ro'yxatdan o'ting:*"
-        
-        keyboard = [
-            [InlineKeyboardButton(reg_data['button_text'], url=reg_data['url'])],
-            [
-                InlineKeyboardButton("✅ MEN RO'YXATDAN O'TDIM", callback_data="confirm_registration"),
-                InlineKeyboardButton("🔙 ORQAGA", callback_data="back_to_registration")
-            ]
-        ]
-        
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        await query.edit_message_text(text, reply_markup=reply_markup, parse_mode='Markdown')
-        
-    except Exception as e:
-        logger.error(f"show_melbet_registration da xato: {e}")
+        logger.error(f"show_registration_page da xato: {e}")
 
 async def confirm_registration(query, user_id):
     """Ro'yxatdan o'tishni tasdiqlash"""
@@ -463,7 +393,7 @@ async def confirm_registration(query, user_id):
             ],
             [
                 InlineKeyboardButton("📝 RO'YXATDAN O'TISH", callback_data="registration"),
-                InlineKeyboardButton("🌟 BALL TOPLASH", callback_data="get_referral_link")
+                InlineKeyboardButton("📤 REFERAL", callback_data="get_referral_link")
             ],
             [InlineKeyboardButton("🔙 BOSH MENYU", callback_data="back")]
         ]
@@ -483,7 +413,7 @@ async def show_signal_selection(query, user_id):
         # Ro'yxatdan o'tganligini tekshirish
         if not user_data.get('has_registered', False):
             await query.answer("❌ Signallarni olish uchun avval ro'yxatdan o'ting!", show_alert=True)
-            return await show_registration_options(query, user_id)
+            return await show_registration_page(query, user_id)
         
         user_points = get_user_points(user_id)
         regular_price = data['settings']['regular_signal_price']
@@ -546,7 +476,7 @@ async def get_regular_signal(query, user_id):
         user_data = data['users'].get(str(user_id), {})
         if not user_data.get('has_registered', False):
             await query.answer("❌ Signallarni olish uchun avval ro'yxatdan o'ting!", show_alert=True)
-            return await show_registration_options(query, user_id)
+            return await show_registration_page(query, user_id)
             
         user_points = get_user_points(user_id)
         signal_price = data['settings']['regular_signal_price']
@@ -605,7 +535,7 @@ async def get_vip_signal(query, user_id):
         user_data = data['users'].get(str(user_id), {})
         if not user_data.get('has_registered', False):
             await query.answer("❌ Signallarni olish uchun avval ro'yxatdan o'ting!", show_alert=True)
-            return await show_registration_options(query, user_id)
+            return await show_registration_page(query, user_id)
             
         user_points = get_user_points(user_id)
         signal_price = data['settings']['vip_signal_price']
@@ -691,7 +621,7 @@ async def back_to_main(query):
             ],
             [
                 InlineKeyboardButton("📝 RO'YXATDAN O'TISH", callback_data="registration"),
-                InlineKeyboardButton("🌟 BALL TOPLASH", callback_data="get_referral_link")
+                InlineKeyboardButton("📤 REFERAL", callback_data="get_referral_link")
             ],
             [
                 InlineKeyboardButton("🎁 BONUSLAR", callback_data="bonuses"),
@@ -738,7 +668,7 @@ async def show_my_points(query, user_id):
         keyboard = [
             [
                 InlineKeyboardButton("🎯 SIGNAL OLISH", callback_data="get_signals"),
-                InlineKeyboardButton("🌟 BALL TOPLASH", callback_data="get_referral_link")
+                InlineKeyboardButton("📤 REFERAL", callback_data="get_referral_link")
             ],
             [
                 InlineKeyboardButton("📝 RO'YXATDAN O'TISH", callback_data="registration"),
@@ -894,7 +824,7 @@ async def show_help(query):
         keyboard = [
             [
                 InlineKeyboardButton("🎯 SIGNALLAR", callback_data="get_signals"),
-                InlineKeyboardButton("🌟 BALL TOPLASH", callback_data="get_referral_link")
+                InlineKeyboardButton("📤 REFERAL", callback_data="get_referral_link")
             ],
             [
                 InlineKeyboardButton("📝 RO'YXATDAN O'TISH", callback_data="registration"),
@@ -929,7 +859,6 @@ async def show_admin_panel(query):
 
         keyboard = [
             [InlineKeyboardButton("📊 Batafsil Statistika", callback_data="admin_stats")],
-            [InlineKeyboardButton("📝 Ro'yxatdan O'tish Xabarlari", callback_data="admin_manage_registration")],
             [InlineKeyboardButton("📢 Reklama Yuborish", callback_data="admin_broadcast")],
             [InlineKeyboardButton("🔙 Bosh Menyu", callback_data="back")]
         ]
@@ -1003,74 +932,6 @@ Xabar barcha foydalanuvchilarga yuboriladi.
     except Exception as e:
         logger.error(f"show_admin_broadcast da xato: {e}")
 
-async def show_admin_manage_registration(query):
-    """Ro'yxatdan o'tish xabarlarini boshqarish"""
-    try:
-        text = """
-👑 *RO'YXATDAN O'TISH XABARLARINI BOSHQARISH*
-
-Bu yerda siz foydalanuvchilar ko'radigan ro'yxatdan o'tish xabarlarini sozlashingiz mumkin.
-
-Quyidagi bukmeker kontorlari uchun xabarlarni sozlang:
-"""
-
-        keyboard = [
-            [InlineKeyboardButton("🎰 1xBet Xabarini Sozlash", callback_data="admin_edit_1xbet")],
-            [InlineKeyboardButton("🎯 MelBet Xabarini Sozlash", callback_data="admin_edit_melbet")],
-            [InlineKeyboardButton("👑 Admin Panel", callback_data="admin")],
-            [InlineKeyboardButton("🔙 Bosh Menyu", callback_data="back")]
-        ]
-        
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        await query.edit_message_text(text, reply_markup=reply_markup, parse_mode='Markdown')
-        
-    except Exception as e:
-        logger.error(f"show_admin_manage_registration da xato: {e}")
-
-async def admin_edit_1xbet_message(query):
-    """1xBet xabarini sozlash"""
-    try:
-        context = query.message._bot
-        context.user_data['admin_action'] = 'edit_1xbet'
-        
-        text = """
-📝 *1xBET XABARINI SOZLASH*
-
-1xBet ro'yxatdan o'tish sahifasi uchun yangi matn yuboring:
-
-Xabar quyidagilarni o'z ichiga olishi tavsiya etiladi:
-• AIFUT promokodi haqida ma'lumot
-• Ro'yxatdan o'tish bosqichlari
-• Bonuslar va afzalliklar
-"""
-
-        await query.edit_message_text(text, parse_mode='Markdown')
-        
-    except Exception as e:
-        logger.error(f"admin_edit_1xbet_message da xato: {e}")
-
-async def admin_edit_melbet_message(query):
-    """MelBet xabarini sozlash"""
-    try:
-        context = query.message._bot
-        context.user_data['admin_action'] = 'edit_melbet'
-        
-        text = """
-📝 *MELBET XABARINI SOZLASH*
-
-MelBet ro'yxatdan o'tish sahifasi uchun yangi matn yuboring:
-
-Xabar quyidagilarni o'z ichiga olishi tavsiya etiladi:
-• AIFUT promokodi haqida ma'lumot
-• Ro'yxatdan o'tish bosqichlari
-• Bonuslar va afzalliklar
-"""
-
-        await query.edit_message_text(text, parse_mode='Markdown')
-        
-    except Exception as e:
-        logger.error(f"admin_edit_melbet_message da xato: {e}")
-
 # ADMIN XABARLARINI QAYTA ISHLASH
 async def handle_admin_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Admin xabarlarini qayta ishlash"""
@@ -1080,25 +941,6 @@ async def handle_admin_message(update: Update, context: ContextTypes.DEFAULT_TYP
     
     try:
         message = update.message
-        
-        # Ro'yxatdan o'tish xabarlarini sozlash
-        admin_action = context.user_data.get('admin_action')
-        
-        if admin_action == 'edit_1xbet':
-            reg_data = data['registration_messages']['1xbet']
-            reg_data['text'] = message.text
-            save_data(data)
-            await message.reply_text("✅ 1xBet ro'yxatdan o'tish xabari yangilandi!")
-            context.user_data.pop('admin_action', None)
-            return
-            
-        elif admin_action == 'edit_melbet':
-            reg_data = data['registration_messages']['melbet']
-            reg_data['text'] = message.text
-            save_data(data)
-            await message.reply_text("✅ MelBet ro'yxatdan o'tish xabari yangilandi!")
-            context.user_data.pop('admin_action', None)
-            return
         
         # Reklama yuborish
         total_users = len(data['users'])
@@ -1149,11 +991,12 @@ def main():
         print("🍎 Apple of Fortune Signal Boti")
         print(f"👑 Admin ID: {ADMIN_ID}")
         print("🎯 BARCHA FUNKSIYALAR ISHLAYDI:")
-        print("   • 📝 Ro'yxatdan o'tish tizimi (doimiy ko'rinadi)")
-        print("   • 🎯 Signal olish (20 va 50 ball) - havola faqat tugmada")
-        print("   • 🌟 BALL TOPLASH tizimi")
+        print("   • 📝 Ro'yxatdan o'tish tizimi (bitta tugma)")
+        print("   • 🎯 Signal olish (20 va 50 ball)")
+        print("   • 📤 Referal tizimi")
         print("   • 👑 Admin paneli")
         print("   • 🔥 Chiroyli tugma joylashuvi")
+        print(f"   • 🔗 Ro'yxatdan o'tish havolasi: {data['settings']['registration_url']}")
         
         application.run_polling()
         
